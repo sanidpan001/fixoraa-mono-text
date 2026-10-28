@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="canonical" href="https://text.fixoraa.tech/echotype/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EchoType — Free Text Repeater | Repeat Text Up to 10,000 Times</title>
+<meta name="description" content="EchoType is a free text repeater that repeats any text 1 to 10,000 times with newline, space or custom separators, a live character count and one-tap copy. No signup, unlimited use.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body{font-family:'Nunito',sans-serif;background:#FFF5F9;}
+  h1,h2,h3,.font-display{font-family:'Baloo 2',cursive;}
+  .blob{border-radius:2rem;}
+  input[type=range]{accent-color:#DB2777;}
+  details summary::-webkit-details-marker{display:none;}
+  .pop{box-shadow:0 6px 0 #FBCFE8;}
+  .pop:active{transform:translateY(3px);box-shadow:0 3px 0 #FBCFE8;}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How many times can EchoType repeat my text?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "EchoType can repeat any text from 1 to 10,000 times in a single go. Type your text, set the number with the slider, the number box, or a quick preset button, and your repeated text appears instantly below with a live character count."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What separators can I put between each copy?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can separate copies with a new line, a single space, nothing at all, or your own custom separator. Custom separators can be anything you like, such as a comma and a space, a dash, a pipe symbol, or even an emoji, which makes lists and patterned text easy to build."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does EchoType work with emojis and text in other languages?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. EchoType repeats exactly what you type, including emojis, accented letters, and text in languages such as Hindi, Spanish, Arabic, or Japanese. Nothing is translated or changed, so every copy is identical to your original."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does EchoType show a live character count?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The live character count tells you exactly how long your repeated output is before you copy or download it. That helps you stay within limits on social posts, forms, messages, and test data, and it updates the moment you change the text, the count, or the separator."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I copy or save the repeated text?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use the big Copy button for one-tap copying to your clipboard, then paste the result anywhere you like. If the output is very long, use the Download button instead to save it as a plain text file on your device."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is EchoType free, and does it store my text?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "EchoType is completely free with unlimited usage, no signup, and no watermark. Everything runs in your browser on your own device, so the text you type is never uploaded or stored anywhere by the tool."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body id="top" class="text-slate-800 antialiased">
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b-4 border-pink-500 shadow-sm">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
+    <a href="#top" class="flex items-center gap-2 min-w-0">
+      <span class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-pink-600 text-white text-lg font-extrabold shrink-0" aria-hidden="true">&#x1F50A;</span>
+      <span class="font-display text-2xl font-extrabold text-pink-600 tracking-tight truncate">EchoType</span>
+    </a>
+    <nav class="flex items-center gap-2 sm:gap-4 shrink-0" aria-label="Main">
+      <a href="#top" class="font-bold text-pink-700 hover:text-pink-500 px-2 py-1">Home</a>
+      <a href="https://fixoraa.tech" class="font-bold bg-pink-600 text-white px-3 sm:px-4 py-2 rounded-full hover:bg-pink-500">More Tools</a>
+    </nav>
+  </div>
+</header>
+
+<main class="mx-auto max-w-6xl px-4 sm:px-6">
+  <section class="text-center pt-8 pb-2">
+    <span class="inline-block bg-pink-600 text-white text-xs sm:text-sm font-extrabold tracking-wide uppercase px-4 py-1.5 rounded-full">&#x2728; Unlimited Free Usage</span>
+    <h1 class="font-display text-4xl sm:text-5xl font-extrabold text-pink-700 mt-4 leading-tight">Say it once.<br class="sm:hidden"> Echo it <span class="text-pink-500 underline decoration-wavy decoration-pink-300">10,000 times.</span></h1>
+    <p class="mt-3 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto">EchoType is a playful text repeater. Type anything — a word, a sentence, an emoji — pick how many copies you want and how they should be separated, then copy the whole stack in one tap.</p>
+  </section>
+
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pt-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:728px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <div class="origin-top scale-[0.44] sm:scale-100 shrink-0">
+        <script>
+          atOptions = { 'key' : '4e68ac77881c17fe128a46565d9a4e8c', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+        </script>
+        <script src="https://www.highrevenueformat.com/4e68ac77881c17fe128a46565d9a4e8c/invoke.js"></script>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- TOOL: playful stack -->
+  <section aria-label="Text repeater tool" class="max-w-3xl mx-auto mt-4 space-y-5">
+    <div class="blob bg-white border-2 border-pink-200 p-5 sm:p-6 pop">
+      <label for="inputText" class="font-display text-xl font-bold text-pink-800 flex items-center gap-2"><span aria-hidden="true">&#x270F;&#xFE0F;</span> 1 &middot; Your text</label>
+      <textarea id="inputText" rows="3" placeholder="Type or paste the text you want to repeat, e.g. Hello! or &#x1F389;" class="mt-3 w-full rounded-2xl border-2 border-pink-200 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-200 px-4 py-3 text-base resize-y"></textarea>
+      <p class="mt-2 text-sm text-slate-500">Input length: <strong id="inputCount" class="text-pink-700">0</strong> characters</p>
+      <div class="mt-3 flex flex-wrap gap-2">
+        <button type="button" class="quick-text bg-pink-50 hover:bg-pink-100 border border-pink-200 text-pink-800 font-bold text-sm px-3 py-1.5 rounded-full" data-text="I love you">Try: I love you</button>
+        <button type="button" class="quick-text bg-pink-50 hover:bg-pink-100 border border-pink-200 text-pink-800 font-bold text-sm px-3 py-1.5 rounded-full" data-text="Thank you!">Try: Thank you!</button>
+        <button type="button" class="quick-text bg-pink-50 hover:bg-pink-100 border border-pink-200 text-pink-800 font-bold text-sm px-3 py-1.5 rounded-full" data-text="&#x2B50;">Try: a star</button>
+      </div>
+    </div>
+
+    <div class="blob bg-white border-2 border-pink-200 p-5 sm:p-6 pop">
+      <label for="countInput" class="font-display text-xl font-bold text-pink-800 flex items-center gap-2"><span aria-hidden="true">&#x1F522;</span> 2 &middot; How many copies?</label>
+      <div class="mt-3 flex flex-col sm:flex-row gap-3 sm:items-center">
+        <input id="countInput" type="number" min="1" max="10000" step="1" value="10" class="w-full sm:w-36 rounded-2xl border-2 border-pink-200 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-200 px-4 py-3 text-lg font-bold text-pink-800">
+        <input id="countRange" type="range" min="1" max="1000" step="1" value="10" class="flex-1 w-full" aria-label="Repeat count slider up to 1000">
+      </div>
+      <p class="mt-1 text-xs text-slate-500">Slider goes to 1,000 — type any number up to 10,000 in the box.</p>
+      <div class="mt-3 flex flex-wrap gap-2">
+        <button type="button" class="preset bg-pink-600 hover:bg-pink-500 text-white font-bold text-sm px-4 py-1.5 rounded-full" data-count="5">5&times;</button>
+        <button type="button" class="preset bg-pink-600 hover:bg-pink-500 text-white font-bold text-sm px-4 py-1.5 rounded-full" data-count="10">10&times;</button>
+        <button type="button" class="preset bg-pink-600 hover:bg-pink-500 text-white font-bold text-sm px-4 py-1.5 rounded-full" data-count="50">50&times;</button>
+        <button type="button" class="preset bg-pink-600 hover:bg-pink-500 text-white font-bold text-sm px-4 py-1.5 rounded-full" data-count="100">100&times;</button>
+        <button type="button" class="preset bg-pink-600 hover:bg-pink-500 text-white font-bold text-sm px-4 py-1.5 rounded-full" data-count="500">500&times;</button>
+        <button type="button" class="preset bg-pink-600 hover:bg-pink-500 text-white font-bold text-sm px-4 py-1.5 rounded-full" data-count="1000">1,000&times;</button>
+        <button type="button" class="preset bg-pink-600 hover:bg-pink-500 text-white font-bold text-sm px-4 py-1.5 rounded-full" data-count="10000">10,000&times;</button>
+      </div>
+      <p id="countError" class="mt-2 text-sm font-bold text-red-600 hidden" role="alert"></p>
+    </div>
+
+    <div class="blob bg-white border-2 border-pink-200 p-5 sm:p-6 pop">
+      <span class="font-display text-xl font-bold text-pink-800 flex items-center gap-2"><span aria-hidden="true">&#x1F517;</span> 3 &middot; What goes between copies?</span>
+      <div class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-2" role="radiogroup" aria-label="Separator">
+        <label class="cursor-pointer"><input type="radio" name="sep" value="newline" class="peer sr-only" checked><span class="block text-center font-bold px-3 py-2.5 rounded-2xl border-2 border-pink-200 peer-checked:bg-pink-600 peer-checked:text-white peer-checked:border-pink-600">New line</span></label>
+        <label class="cursor-pointer"><input type="radio" name="sep" value="space" class="peer sr-only"><span class="block text-center font-bold px-3 py-2.5 rounded-2xl border-2 border-pink-200 peer-checked:bg-pink-600 peer-checked:text-white peer-checked:border-pink-600">Space</span></label>
+        <label class="cursor-pointer"><input type="radio" name="sep" value="none" class="peer sr-only"><span class="block text-center font-bold px-3 py-2.5 rounded-2xl border-2 border-pink-200 peer-checked:bg-pink-600 peer-checked:text-white peer-checked:border-pink-600">Nothing</span></label>
+        <label class="cursor-pointer"><input type="radio" name="sep" value="custom" class="peer sr-only"><span class="block text-center font-bold px-3 py-2.5 rounded-2xl border-2 border-pink-200 peer-checked:bg-pink-600 peer-checked:text-white peer-checked:border-pink-600">Custom</span></label>
+      </div>
+      <div id="customSepWrap" class="mt-3 hidden">
+        <label for="customSep" class="text-sm font-bold text-pink-800">Your custom separator</label>
+        <input id="customSep" type="text" value=", " maxlength="20" placeholder="e.g. ,  or  -  or  |" class="mt-1 w-full rounded-2xl border-2 border-pink-200 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-200 px-4 py-2.5">
+        <p class="mt-1 text-xs text-slate-500">Tip: spaces count too, so &ldquo;, &rdquo; gives you a neat comma list.</p>
+      </div>
+    </div>
+
+    <div class="blob bg-pink-600 p-5 sm:p-6 shadow-lg">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <span class="font-display text-xl font-bold text-white flex items-center gap-2"><span aria-hidden="true">&#x1F4E3;</span> 4 &middot; Your echo</span>
+        <div class="flex flex-wrap gap-2 text-xs sm:text-sm font-extrabold">
+          <span class="bg-white text-pink-700 px-3 py-1 rounded-full"><span id="statChars">0</span> characters</span>
+          <span class="bg-white text-pink-700 px-3 py-1 rounded-full"><span id="statWords">0</span> words</span>
+          <span class="bg-white text-pink-700 px-3 py-1 rounded-full"><span id="statLines">0</span> lines</span>
+        </div>
+      </div>
+      <textarea id="outputText" rows="8" readonly placeholder="Your repeated text will appear here. Start typing above!" class="mt-4 w-full rounded-2xl border-2 border-pink-300 bg-white px-4 py-3 text-base resize-y focus:outline-none"></textarea>
+      <p id="bigNote" class="mt-2 text-sm font-bold text-pink-100 hidden">This echo is huge, so the box shows a preview. Copy or Download still gives you the complete text.</p>
+      <p id="toolMsg" class="mt-2 text-sm font-bold text-white hidden" role="status"></p>
+      <div class="mt-4 flex flex-col sm:flex-row gap-3">
+        <button id="copyBtn" type="button" class="flex-1 bg-white text-pink-700 font-extrabold text-lg px-6 py-3 rounded-full hover:bg-pink-50 pop">&#x1F4CB; Copy all — one tap</button>
+        <button id="downloadBtn" type="button" class="bg-pink-800 text-white font-extrabold text-lg px-6 py-3 rounded-full hover:bg-pink-900 pop">Download .txt</button>
+        <button id="clearBtn" type="button" class="bg-pink-400 text-white font-extrabold text-lg px-6 py-3 rounded-full hover:bg-pink-500 pop">Clear</button>
+      </div>
+    </div>
+  </section>
+
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pb-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:300px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <script>
+(function(grnp){
+var d = document,
+    s = d.createElement('script'),
+    l = d.currentScript || d.scripts[d.scripts.length - 1];
+s.settings = grnp || {};
+s.src = "\/\/peacefulbicycle.com\/bnXtVJsnd.GElF0oYVWQcY\/Qe\/mf9qu-ZqUtlZk\/PzTHcx1LM\/jWIZwkMTj\/U\/t-NrzmUnyOMsj\/AzydO\/Qx";
+s.async = true;
+s.referrerPolicy = 'no-referrer-when-downgrade';
+l.parentNode.insertBefore(s, l);
+})({})
+</script>
+    </div>
+  </div>
+</div>
+
+  <!-- SEO ARTICLE -->
+  <article id="article" class="max-w-3xl mx-auto mt-8 bg-white border-2 border-pink-100 rounded-3xl p-6 sm:p-10 shadow-sm">
+    <h2 class="font-display text-3xl font-extrabold text-pink-800">What Is a Text Repeater, and Why Would Anyone Repeat Text 10,000 Times?</h2>
+    <p class="mt-4 leading-relaxed text-slate-600">A text repeater is a small, cheerful tool with one simple job: it takes a piece of text you provide and writes it out again and again, as many times as you ask. That sounds almost too simple to be useful, yet repeated text turns up everywhere once you start looking for it. People repeat a phrase to fill a page for a design mock-up, repeat a word to make a bold statement in a message, repeat an emoji to build a decorative border, and repeat a test sentence hundreds of times to check how software handles long input. EchoType was built to make all of that effortless. Instead of pressing copy and paste over and over — and losing count somewhere around the fortieth paste — you type your text once, choose a number between 1 and 10,000, decide what should sit between each copy, and collect the finished stack in a single tap.</p>
+    <p class="mt-4 leading-relaxed text-slate-600">The idea behind EchoType is that repetition should take seconds, not minutes. Manual copying is slow, error-prone, and quietly frustrating: one missed paste changes the count, one extra paste ruins a pattern, and nobody enjoys counting identical lines to check the result. A dedicated repeater removes all of that friction. The count is exact because a machine does the counting. The copies are identical because they all come from the same source text. And the live character count keeps you informed, so you always know exactly how much text you are about to copy, send, or save before you commit to it.</p>
+
+    <h3 class="font-display text-2xl font-bold text-pink-700 mt-8">How to Use EchoType in Four Playful Steps</h3>
+    <p class="mt-3 leading-relaxed text-slate-600">Using EchoType follows a simple top-to-bottom stack. First, type or paste the text you want to repeat into the top box. It can be a single character, a word, a full sentence, a line of code, a hashtag, or a string of emojis — if you can type it, EchoType can repeat it. As you type, the input length counter updates so you can see the size of your original. Second, choose how many copies you need. Drag the slider for a quick pick up to one thousand, tap one of the preset buttons for popular counts, or type an exact number into the box, all the way up to ten thousand. If you type a number outside the allowed range, EchoType politely explains the limit instead of failing silently, so you can fix it in a second.</p>
+    <p class="mt-4 leading-relaxed text-slate-600">Third, pick your separator — the small but mighty detail that shapes the whole result. A new line stacks each copy on its own row, which is perfect for lists and page-filling. A single space runs the copies along one flowing line, ideal for chanting a phrase or filling a banner. Choosing nothing glues the copies directly together, which is how you build solid walls of characters, long runs of dashes, or unbroken patterns. The custom option hands the choice to you: type a comma and a space for a tidy comma-separated list, a pipe for a table-like row, a dash for a divider, or even an emoji for something purely fun. Fourth, admire your echo. The output appears instantly with live counts of characters, words, and lines, and the Copy button lifts the entire result onto your clipboard in one tap, ready to paste anywhere.</p>
+
+    <h3 class="font-display text-2xl font-bold text-pink-700 mt-8">Separators: The Small Choice That Changes Everything</h3>
+    <p class="mt-3 leading-relaxed text-slate-600">It is easy to underestimate separators, but they are what turn raw repetition into something genuinely useful. Imagine repeating the word “sale” one hundred times. With new lines, you get a neat column you could print as a poster or paste into a document as filler. With spaces, you get a paragraph that reads like an excited crowd chanting. With no separator, you get “salesalesale”, a solid block that works as a visual texture or a stress test for a text field. With a custom comma separator, you get a clean list that a spreadsheet or a script can split back into individual items. Same word, same count, four completely different results — all from one small setting.</p>
+    <p class="mt-4 leading-relaxed text-slate-600">Custom separators deserve a special mention because they quietly unlock more advanced uses. Developers repeat values with commas to build sample data arrays. Teachers repeat words with a wide gap to make flashcards and reading drills. Writers repeat a motif separated by an asterisk to create a decorative section break for a story. Social media creators repeat a name separated by hearts or stars to make eye-catching captions and comments. Because EchoType accepts almost anything as a separator — letters, symbols, spaces, punctuation, or emoji — the pattern possibilities are limited mostly by your imagination rather than by the tool.</p>
+
+    <h3 class="font-display text-2xl font-bold text-pink-700 mt-8">Repeat Counts, Big Outputs, and the Honest Character Count</h3>
+    <p class="mt-3 leading-relaxed text-slate-600">EchoType happily repeats text anywhere from a single copy to ten thousand copies. Small counts are perfect for emphasis: repeating “thank you” five times in a note feels warm rather than lazy, and repeating a reminder three times can help it stick. Medium counts in the hundreds suit page-filling, pattern-making, and classroom exercises. The big counts, running into the thousands, are where a repeater really earns its keep, because nobody should ever paste something a thousand times by hand. Ten thousand copies of even a short word creates a genuinely large document, which is exactly what testers want when they check whether an app, a form, or a website slows down, truncates text, or breaks under a heavy load.</p>
+    <p class="mt-4 leading-relaxed text-slate-600">That is also why the live character count matters so much. Every platform has limits: a post may allow only a few hundred characters, a form field may silently cut text at a fixed length, and a messaging app may split or refuse very long messages. EchoType shows the exact character total, word total, and line total as you adjust the text, count, and separator, so there are no surprises after you paste. When an output grows truly enormous, the preview box shows the beginning and lets you know that Copy and Download will still deliver the complete text, keeping the page fast and responsive even while it handles a mountain of words.</p>
+
+    <h3 class="font-display text-2xl font-bold text-pink-700 mt-8">Everyday Uses: Messages, Fun, and Friendly Emphasis</h3>
+    <p class="mt-3 leading-relaxed text-slate-600">Plenty of EchoType visits are purely for joy. Friends repeat a birthday wish dozens of times to flood a group chat with celebration. Fans repeat a favourite lyric or a team chant to show their enthusiasm. Creators repeat emojis to build borders, dividers, and sparkling frames around announcements, because a row of fifty stars simply looks more festive than a row of five. Couples repeat a sweet phrase a hundred times as a playful surprise, and students repeat motivational lines to decorate the first page of a notebook. None of this is serious work, and that is precisely the point: repetition is a simple form of emphasis that humans have always used, from chants and cheers to refrains in songs.</p>
+    <p class="mt-4 leading-relaxed text-slate-600">Repetition also helps in kinder, quieter ways. A repeated reminder can support someone learning a new habit, turning a short intention into a page they read each morning. Language learners repeat a new word with translations between copies to build a personal drill sheet. Children practise handwriting by copying a repeated line neatly down a page. Even a simple repeated name can help a young reader recognise their own name with pride. EchoType treats these small, human uses with the same care as the technical ones, keeping everything fast, free, and free of fuss.</p>
+
+    <h3 class="font-display text-2xl font-bold text-pink-700 mt-8">Serious Uses: Work, Study, Design, and Testing</h3>
+    <p class="mt-3 leading-relaxed text-slate-600">Behind the playful pink design sits a tool that working people rely on. Designers repeat placeholder sentences to fill layouts and see how a page breathes before the real words arrive, checking that headings wrap gracefully and that columns stay balanced. Developers and quality testers repeat strings to probe edge cases: What happens at exactly the maximum length? Does the database store ten thousand characters without complaint? Does the interface stay usable when a comment is absurdly long? A repeater produces that test data in seconds, consistently and repeatably, which is exactly what good testing demands.</p>
+    <p class="mt-4 leading-relaxed text-slate-600">In offices and classrooms, repeated text builds templates and practice material. A teacher can generate fifty identical lines for a handwriting or typing exercise in moments. An administrator can create numbered-free lists of the same instruction for a whole class set of handouts. Data-entry teams can produce sample rows with custom comma separators and import them straight into a spreadsheet to check a workflow before real data arrives. Marketers repeat a call to action while drafting variations of an announcement, and support teams repeat standard phrases while preparing macros and templates. In each case, the saving is the same: minutes of dull copying collapse into a few clicks, and the result is checked by a character count rather than by tired eyes.</p>
+
+    <h3 class="font-display text-2xl font-bold text-pink-700 mt-8">Tips for Clean, Well-Behaved Repeated Text</h3>
+    <p class="mt-3 leading-relaxed text-slate-600">A few small habits make repeated text behave beautifully wherever it lands. First, watch trailing spaces in your original: a space at the end of your text plus a space separator creates double gaps, which may or may not be what you want. Second, remember that new lines are characters too, so a thousand lines is also a thousand line breaks in the count. Third, for very large outputs, prefer downloading a text file over pasting into a small app field, because some apps slow down or trim silently when handed a huge paste. Fourth, if you plan to split the result later in a spreadsheet or script, choose a custom separator you can search for reliably, such as a comma followed by a space, and avoid using that same combination inside your original text. Finally, preview before you share: a quick glance at the character, word, and line totals catches almost every mistake before anyone else sees it.</p>
+    <p class="mt-4 leading-relaxed text-slate-600">It is also worth repeating responsibly. A wall of repeated text can delight friends in the right moment, but the same wall can overwhelm a shared workspace, a comment thread, or someone using a screen reader, which may patiently read every single copy aloud. Use big repetitions where they are welcome — in your own documents, tests, designs, and playful chats — and keep public spaces tidy. EchoType gives you the power to repeat ten thousand times; a moment of thought about the audience keeps that power friendly.</p>
+
+    <h3 class="font-display text-2xl font-bold text-pink-700 mt-8">Private by Design, Free Without Catches</h3>
+    <p class="mt-3 leading-relaxed text-slate-600">EchoType runs entirely in your browser. The text you type never travels to a server, is never stored, and disappears when you close the page, which means you can safely repeat drafts, names, practice lines, and test strings without wondering where they went. There is no account to create, no paywall hiding the bigger counts, and no watermark stamped across your output. The character count, the custom separators, the download option, and the full ten-thousand-copy range are available to everyone on every visit. Whether you are filling a design, testing a form, building a list, or simply making a friend smile with a hundred repetitions of their name, EchoType keeps the whole experience bright, quick, and refreshingly honest: say it once, and let the echo do the rest.</p>
+  </article>
+
+  <!-- FAQS -->
+  <section aria-label="Frequently asked questions" class="max-w-3xl mx-auto mt-8 mb-4">
+    <h2 class="font-display text-3xl font-extrabold text-pink-800 text-center">Frequently Asked Questions</h2>
+    <div class="mt-5 space-y-3">
+
+        <details class="bg-white border-2 border-pink-100 rounded-2xl px-5 py-4 shadow-sm" open>
+          <summary class="font-bold text-pink-900 cursor-pointer">How many times can EchoType repeat my text?</summary>
+          <p class="mt-2 text-slate-600 leading-relaxed">EchoType can repeat any text from 1 to 10,000 times in a single go. Type your text, set the number with the slider, the number box, or a quick preset button, and your repeated text appears instantly below with a live character count.</p>
+        </details>
+
+        <details class="bg-white border-2 border-pink-100 rounded-2xl px-5 py-4 shadow-sm" >
+          <summary class="font-bold text-pink-900 cursor-pointer">What separators can I put between each copy?</summary>
+          <p class="mt-2 text-slate-600 leading-relaxed">You can separate copies with a new line, a single space, nothing at all, or your own custom separator. Custom separators can be anything you like, such as a comma and a space, a dash, a pipe symbol, or even an emoji, which makes lists and patterned text easy to build.</p>
+        </details>
+
+        <details class="bg-white border-2 border-pink-100 rounded-2xl px-5 py-4 shadow-sm" >
+          <summary class="font-bold text-pink-900 cursor-pointer">Does EchoType work with emojis and text in other languages?</summary>
+          <p class="mt-2 text-slate-600 leading-relaxed">Yes. EchoType repeats exactly what you type, including emojis, accented letters, and text in languages such as Hindi, Spanish, Arabic, or Japanese. Nothing is translated or changed, so every copy is identical to your original.</p>
+        </details>
+
+        <details class="bg-white border-2 border-pink-100 rounded-2xl px-5 py-4 shadow-sm" >
+          <summary class="font-bold text-pink-900 cursor-pointer">Why does EchoType show a live character count?</summary>
+          <p class="mt-2 text-slate-600 leading-relaxed">The live character count tells you exactly how long your repeated output is before you copy or download it. That helps you stay within limits on social posts, forms, messages, and test data, and it updates the moment you change the text, the count, or the separator.</p>
+        </details>
+
+        <details class="bg-white border-2 border-pink-100 rounded-2xl px-5 py-4 shadow-sm" >
+          <summary class="font-bold text-pink-900 cursor-pointer">How do I copy or save the repeated text?</summary>
+          <p class="mt-2 text-slate-600 leading-relaxed">Use the big Copy button for one-tap copying to your clipboard, then paste the result anywhere you like. If the output is very long, use the Download button instead to save it as a plain text file on your device.</p>
+        </details>
+
+        <details class="bg-white border-2 border-pink-100 rounded-2xl px-5 py-4 shadow-sm" >
+          <summary class="font-bold text-pink-900 cursor-pointer">Is EchoType free, and does it store my text?</summary>
+          <p class="mt-2 text-slate-600 leading-relaxed">EchoType is completely free with unlimited usage, no signup, and no watermark. Everything runs in your browser on your own device, so the text you type is never uploaded or stored anywhere by the tool.</p>
+        </details>
+    </div>
+  </section>
+
+  <footer class="text-center py-8 text-sm text-slate-500">
+    <p class="font-display font-bold text-pink-600 text-lg">EchoType</p>
+    <p class="mt-1">Repeat any text up to 10,000 times — free, instant, and private in your browser.</p>
+  <p class="fx-credit" style="text-align:center;font-size:12.5px;opacity:.62;margin:10px auto 2px;letter-spacing:.01em">Made by <a href="https://fixoraa.tech" target="_blank" rel="noopener" style="color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:2px">Fixoraa</a></p>
+</footer>
+</main>
+
+<script id="lib-echotype">
+var EchoTypeLib = {
+  MAX_COUNT: 10000,
+  MIN_COUNT: 1,
+  MAX_PREVIEW: 2000000,
+  parseCount: function (raw) {
+    if (raw === null || raw === undefined || String(raw).trim() === '') {
+      return { ok: false, value: null, error: 'Please enter how many times to repeat.' };
+    }
+    var n = Number(String(raw).trim());
+    if (!isFinite(n) || isNaN(n)) {
+      return { ok: false, value: null, error: 'Repeat count must be a number.' };
+    }
+    if (Math.floor(n) !== n) {
+      return { ok: false, value: null, error: 'Repeat count must be a whole number.' };
+    }
+    if (n < EchoTypeLib.MIN_COUNT) {
+      return { ok: false, value: null, error: 'Repeat count must be at least 1.' };
+    }
+    if (n > EchoTypeLib.MAX_COUNT) {
+      return { ok: false, value: null, error: 'Repeat count can be at most 10000.' };
+    }
+    return { ok: true, value: n, error: '' };
+  },
+  clampCount: function (raw, fallback) {
+    var p = EchoTypeLib.parseCount(raw);
+    if (p.ok) return p.value;
+    if (typeof fallback === 'number' && fallback >= 1 && fallback <= 10000) return Math.floor(fallback);
+    return 10;
+  },
+  getSeparator: function (mode, custom) {
+    if (mode === 'newline') return '\n';
+    if (mode === 'space') return ' ';
+    if (mode === 'none') return '';
+    if (mode === 'custom') return (custom === null || custom === undefined) ? '' : String(custom);
+    return '\n';
+  },
+  repeatText: function (text, count, separator) {
+    var t = (text === null || text === undefined) ? '' : String(text);
+    var p = EchoTypeLib.parseCount(count);
+    if (!p.ok) return { ok: false, output: '', error: p.error, chars: 0 };
+    if (t === '') return { ok: false, output: '', error: 'Please type some text to repeat first.', chars: 0 };
+    var sep = (separator === null || separator === undefined) ? '' : String(separator);
+    var parts = [];
+    for (var i = 0; i < p.value; i++) parts.push(t);
+    var out = parts.join(sep);
+    return { ok: true, output: out, error: '', chars: out.length };
+  },
+  charCount: function (s) {
+    if (s === null || s === undefined) return 0;
+    return String(s).length;
+  },
+  wordCount: function (s) {
+    if (!s) return 0;
+    var m = String(s).trim().match(/\S+/g);
+    return m ? m.length : 0;
+  },
+  lineCount: function (s) {
+    if (!s) return 0;
+    return String(s).split('\n').length;
+  },
+  estimateSize: function (text, count, separator) {
+    var t = (text === null || text === undefined) ? '' : String(text);
+    var p = EchoTypeLib.parseCount(count);
+    if (!p.ok || t === '') return 0;
+    var sep = (separator === null || separator === undefined) ? '' : String(separator);
+    if (p.value <= 1) return t.length;
+    return t.length * p.value + sep.length * (p.value - 1);
+  }
+};
+if (typeof module !== 'undefined' && module.exports) { module.exports = EchoTypeLib; }
+
+</script>
+<script>
+(function(){
+  var inputEl=document.getElementById('inputText');
+  var countEl=document.getElementById('countInput');
+  var rangeEl=document.getElementById('countRange');
+  var customWrap=document.getElementById('customSepWrap');
+  var customEl=document.getElementById('customSep');
+  var outputEl=document.getElementById('outputText');
+  var inputCountEl=document.getElementById('inputCount');
+  var statChars=document.getElementById('statChars');
+  var statWords=document.getElementById('statWords');
+  var statLines=document.getElementById('statLines');
+  var errEl=document.getElementById('countError');
+  var bigNote=document.getElementById('bigNote');
+  var msgEl=document.getElementById('toolMsg');
+  var fullOutput=''; var hasOutput=false;
+
+  function currentSep(){
+    var r=document.querySelector('input[name="sep"]:checked');
+    var mode=r?r.value:'newline';
+    customWrap.classList.toggle('hidden', mode!=='custom');
+    return EchoTypeLib.getSeparator(mode, customEl.value);
+  }
+  function showMsg(t){ msgEl.textContent=t; msgEl.classList.remove('hidden'); }
+  function hideMsg(){ msgEl.classList.add('hidden'); msgEl.textContent=''; }
+
+  function generate(){
+    hideMsg();
+    var text=inputEl.value;
+    inputCountEl.textContent=EchoTypeLib.charCount(text);
+    var parsed=EchoTypeLib.parseCount(countEl.value);
+    if(!parsed.ok && countEl.value!==''){
+      errEl.textContent=parsed.error; errEl.classList.remove('hidden');
+    } else { errEl.classList.add('hidden'); errEl.textContent=''; }
+    var sep=currentSep();
+    if(text===''||!parsed.ok){
+      fullOutput=''; hasOutput=false;
+      outputEl.value='';
+      statChars.textContent='0'; statWords.textContent='0'; statLines.textContent='0';
+      bigNote.classList.add('hidden');
+      return;
+    }
+    var est=EchoTypeLib.estimateSize(text, parsed.value, sep);
+    var res=EchoTypeLib.repeatText(text, parsed.value, sep);
+    if(!res.ok){ fullOutput=''; hasOutput=false; outputEl.value=''; return; }
+    fullOutput=res.output; hasOutput=true;
+    statChars.textContent=EchoTypeLib.charCount(fullOutput).toLocaleString('en-US');
+    statWords.textContent=EchoTypeLib.wordCount(fullOutput).toLocaleString('en-US');
+    statLines.textContent=EchoTypeLib.lineCount(fullOutput).toLocaleString('en-US');
+    if(est>EchoTypeLib.MAX_PREVIEW){
+      outputEl.value=fullOutput.slice(0,200000);
+      bigNote.classList.remove('hidden');
+    } else {
+      outputEl.value=fullOutput;
+      bigNote.classList.add('hidden');
+    }
+  }
+
+  inputEl.addEventListener('input', generate);
+  countEl.addEventListener('input', function(){
+    var v=parseInt(countEl.value,10);
+    if(!isNaN(v)&&v>=1&&v<=1000) rangeEl.value=v;
+    generate();
+  });
+  rangeEl.addEventListener('input', function(){ countEl.value=rangeEl.value; generate(); });
+  customEl.addEventListener('input', generate);
+  document.querySelectorAll('input[name="sep"]').forEach(function(r){ r.addEventListener('change', generate); });
+  document.querySelectorAll('.preset').forEach(function(b){ b.addEventListener('click', function(){ countEl.value=b.getAttribute('data-count'); var v=parseInt(countEl.value,10); if(v<=1000) rangeEl.value=v; generate(); }); });
+  document.querySelectorAll('.quick-text').forEach(function(b){ b.addEventListener('click', function(){ inputEl.value=b.getAttribute('data-text'); generate(); inputEl.focus(); }); });
+
+  document.getElementById('copyBtn').addEventListener('click', function(){
+    if(!hasOutput){ showMsg('Nothing to copy yet — type some text and pick a count first.'); return; }
+    function done(){ showMsg('Copied! Your echo is on the clipboard, ready to paste.'); }
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(fullOutput).then(done).catch(function(){ fallback(); });
+    } else { fallback(); }
+    function fallback(){
+      var wasPreview = outputEl.value!==fullOutput;
+      outputEl.value=fullOutput; outputEl.select();
+      try{ document.execCommand('copy'); done(); }catch(e){ showMsg('Copy was blocked by the browser — select the output text and copy it manually.'); }
+      if(wasPreview){ outputEl.value=fullOutput.slice(0,200000); }
+      window.getSelection&&window.getSelection().removeAllRanges();
+    }
+  });
+  document.getElementById('downloadBtn').addEventListener('click', function(){
+    if(!hasOutput){ showMsg('Nothing to download yet — type some text and pick a count first.'); return; }
+    var blob=new Blob([fullOutput],{type:'text/plain;charset=utf-8'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a'); a.href=url; a.download='echotype-output.txt'; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); },2000);
+    showMsg('Downloaded echotype-output.txt with the full repeated text.');
+  });
+  document.getElementById('clearBtn').addEventListener('click', function(){
+    inputEl.value=''; countEl.value='10'; rangeEl.value='10'; customEl.value=', ';
+    generate(); inputEl.focus(); showMsg('Cleared. Ready for a fresh echo.');
+  });
+  generate();
+})();
+</script>
+</body>
+</html>

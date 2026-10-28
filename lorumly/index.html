@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="canonical" href="https://text.fixoraa.tech/lorumly/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lorumly — Free Lorem Ipsum Generator (Paragraphs, Sentences & Words)</title>
+<meta name="description" content="Lorumly is a free lorem ipsum generator on a writer's desk: create classic placeholder text by paragraphs, sentences or words, toggle the famous opening, copy as plain text or HTML, and try coffee and space themed fillers.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root{
+    --parchment:#f3ead8; --parchment-deep:#eadfc6; --paper:#fdf8ec; --paper-edge:#e7dcc0;
+    --espresso:#2b1d16; --espresso-soft:#4a3423; --ink:#3e2c22; --caramel:#a85b2a; --caramel-dark:#8a4517;
+    --gold:#c9a227; --line:#d9cba6;
+  }
+  html{scroll-behavior:smooth}
+  body{background:var(--parchment);color:var(--ink);font-family:"Newsreader",Georgia,serif;}
+  .font-display{font-family:"Fraunces",Georgia,serif;}
+  .desk{
+    background:
+      radial-gradient(1200px 500px at 15% -5%, rgba(201,162,39,.14), transparent 60%),
+      radial-gradient(900px 420px at 95% 0%, rgba(168,91,42,.12), transparent 55%),
+      linear-gradient(180deg,#f6efdd 0%, var(--parchment) 45%, var(--parchment-deep) 100%);
+  }
+  .paper-sheet{
+    background:
+      repeating-linear-gradient(180deg, transparent 0 30px, rgba(168,91,42,.07) 30px 31px),
+      linear-gradient(180deg, var(--paper), #faf2dd);
+    border:1px solid var(--paper-edge);
+    box-shadow:0 1px 0 #fff inset, 0 18px 40px -18px rgba(43,29,22,.45), 0 4px 10px -4px rgba(43,29,22,.25);
+  }
+  .paper-sheet::before{
+    content:""; position:absolute; top:0; bottom:0; left:34px; width:1px;
+    background:rgba(184,84,60,.28);
+  }
+  .control-card{
+    background:linear-gradient(180deg,#3a2718,#2b1d16);
+    color:#f3ead8;
+    box-shadow:0 18px 40px -18px rgba(43,29,22,.65), 0 4px 12px -6px rgba(43,29,22,.5);
+    border:1px solid #1d130d;
+  }
+  .seg-btn{transition:all .15s ease;}
+  .seg-btn[aria-pressed="true"]{background:var(--caramel);color:#fff7ea;border-color:var(--caramel-dark);box-shadow:0 2px 8px -2px rgba(0,0,0,.5);}
+  .seg-btn[aria-pressed="false"]:hover{background:rgba(243,234,216,.12);}
+  .theme-card{transition:all .15s ease; cursor:pointer;}
+  .theme-card[aria-checked="true"]{border-color:var(--gold); background:rgba(201,162,39,.16); box-shadow:0 0 0 1px var(--gold);}
+  .theme-card[aria-checked="false"]:hover{background:rgba(243,234,216,.08);}
+  input[type="range"]{accent-color:var(--caramel);}
+  .switch{width:46px;height:26px;border-radius:999px;background:#5a4230;position:relative;transition:background .2s;flex:none;cursor:pointer;border:1px solid #1d130d;}
+  .switch::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#f3ead8;transition:left .2s;}
+  .switch[aria-checked="true"]{background:var(--caramel);}
+  .switch[aria-checked="true"]::after{left:22px;}
+  .btn-primary{background:var(--caramel);color:#fff7ea;transition:all .15s;}
+  .btn-primary:hover{background:var(--caramel-dark);}
+  .btn-primary:active{transform:translateY(1px);}
+  .btn-ghost{border:1px solid var(--line);background:var(--paper);transition:all .15s;}
+  .btn-ghost:hover{border-color:var(--caramel);color:var(--caramel-dark);}
+  details.faq{border:1px solid var(--line);background:var(--paper);}
+  details.faq summary{cursor:pointer;list-style:none;}
+  details.faq summary::-webkit-details-marker{display:none;}
+  details.faq[open ] summary .faq-arrow{transform:rotate(45deg);}
+  .faq-arrow{transition:transform .2s;}
+  .rule{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);}
+  ::selection{background:rgba(168,91,42,.3);}
+</style>
+<script id="lib-lorumly">
+/* LorumlyLib — pure lorem ipsum generation logic. No DOM, no network. */
+var LorumlyLib = (function () {
+  'use strict';
+
+  var CLASSIC_OPENING = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit';
+
+  var LATIN_WORDS = ('lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ' +
+    'incididunt ut labore et dolore magna aliqua enim ad minim veniam quis nostrud exercitation ' +
+    'ullamco laboris nisi aliquip ex ea commodo consequat duis aute irure in reprehenderit ' +
+    'voluptate velit esse cillum fugiat nulla pariatur excepteur sint occaecat cupidatat non ' +
+    'proident sunt culpa qui officia deserunt mollit anim id est laborum perspiciatis unde omnis ' +
+    'iste natus error voluptatem accusantium doloremque laudantium totam rem aperiam eaque ipsa ' +
+    'quae ab illo inventore veritatis quasi architecto beatae vitae dicta explicabo nemo ipsam ' +
+    'quia voluptas aspernatur odit aut fugit consequuntur magni dolores eos ratione sequi ' +
+    'nesciunt neque porro quisquam dolorem numquam eius modi tempora incidunt magnam quaerat ' +
+    'minima veniam nostrum exercitationem ullam corporis suscipit laboriosam nisi aliquid ex ' +
+    'ea commodi consequatur quis autem vel eum iure reprehenderit qui in ea voluptate velit ' +
+    'esse quam nihil molestiae consequatur illum dolorem eum fugiat quo voluptas nulla pariatur ' +
+    'vero eos accusamus et iusto odio dignissimos ducimus blanditiis praesentium voluptatum ' +
+    'deleniti atque corrupti quos dolores quas molestias excepturi occaecati cupiditate non ' +
+    'provident similique sunt culpa officia deserunt mollitia animi est laborum dolorum fuga ' +
+    'harum quidem rerum facilis distinctio nam libero tempore cum soluta nobis eligendi optio ' +
+    'cumque nihil impedit quo minus quod maxime placeat facere possimus omnis voluptas ' +
+    'assumenda repellendus temporibus autem quibusdam officiis debitis rerum necessitatibus ' +
+    'saepe eveniet voluptates repudiandae sint molestiae non recusandae itaque earum rerum hic ' +
+    'tenetur sapiente delectus ut aut reiciendis voluptatibus maiores alias consequatur ' +
+    'perferendis doloribus asperiores repellat').split(' ');
+
+  var COFFEE_WORDS = ('espresso arabica robusta crema pour over french press cold brew cappuccino latte ' +
+    'macchiato ristretto affogato mocha cortado barista roastery single origin dark roast ' +
+    'medium roast light roast freshly ground beans steamed milk velvety foam cinnamon nutmeg ' +
+    'caramel honey vanilla oat milk almond milk ceramic mug morning ritual slow sunday ' +
+    'caffeine aroma bitter smooth rich bold delicate floral notes chocolate undertones ' +
+    'citrus finish slow drip kettle gooseneck scale timer bloom extraction grind size ' +
+    'water temperature ninety three degrees brewing steeping sipping savouring the corner cafe ' +
+    'wooden table rainy window afternoon pause quiet conversation newspaper croissant steam ' +
+    'rising swirling warming comforting golden crema tiger striping shot pulled eighteen grams ' +
+    'twenty seven seconds perfect balance').split(' ');
+
+  var SPACE_WORDS = ('orbit nebula starlight comet asteroid galaxy milky way supernova black hole ' +
+    'telescope astronaut lunar solar eclipse meteor shower constellation aurora gravity ' +
+    'weightless vacuum cosmos interstellar deep space light year parsec quasar pulsar magnetar ' +
+    'rocket launch mission control satellite space station moon landing crater mare tranquility ' +
+    'red planet gas giant ice rings saturn jupiter venus mercury twilight horizon atmosphere ' +
+    'reentry capsule docking module thrusters burn trajectory apogee perigee zenith nadir ' +
+    'celestial equinox solstice zodiac telescope lens observatory midnight sky shooting star ' +
+    'distant worlds alien oceans frozen moons volcanic plains silent void endless dark bright ' +
+    'burning suns ancient light travelling forever wonder curiosity exploration discovery').split(' ');
+
+  var THEMES = {
+    classic: { words: LATIN_WORDS, opening: CLASSIC_OPENING },
+    coffee: { words: COFFEE_WORDS, opening: 'Fresh from the roastery, the espresso poured slow and golden' },
+    space: { words: SPACE_WORDS, opening: 'Beyond the quiet edge of the map, the starlight travelled on' }
+  };
+
+  /* Deterministic PRNG (mulberry32) so tests are reproducible. */
+  function mulberry32(seed) {
+    var a = seed >>> 0;
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function sanitizeCount(value, fallback, max) {
+    var cap = (typeof max === 'number' && max > 0) ? max : 100;
+    var n = parseInt(value, 10);
+    if (isNaN(n)) return (typeof fallback === 'number') ? fallback : 3;
+    if (n < 1) return 1;
+    if (n > cap) return cap;
+    return n;
+  }
+
+  function normalizeTheme(theme) {
+    return THEMES.hasOwnProperty(theme) ? theme : 'classic';
+  }
+
+  function normalizeMode(mode) {
+    return (mode === 'sentences' || mode === 'words' || mode === 'paragraphs') ? mode : 'paragraphs';
+  }
+
+  function pickWord(words, rng) {
+    return words[Math.floor(rng() * words.length)];
+  }
+
+  function capitalize(s) {
+    return s.length ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+  }
+
+  function makeSentence(words, rng, minWords, maxWords) {
+    var len = minWords + Math.floor(rng() * (maxWords - minWords + 1));
+    var parts = [];
+    for (var i = 0; i < len; i++) parts.push(pickWord(words, rng));
+    /* Occasionally insert a comma mid-sentence for a natural cadence. */
+    if (len >= 8 && rng() < 0.4) {
+      var pos = 3 + Math.floor(rng() * (len - 5));
+      parts[pos] = parts[pos] + ',';
+    }
+    return capitalize(parts.join(' ')) + '.';
+  }
+
+  function openingSentence(themeKey, rng) {
+    var theme = THEMES[themeKey];
+    var extra = [];
+    var n = 3 + Math.floor(rng() * 4);
+    for (var i = 0; i < n; i++) extra.push(pickWord(theme.words, rng));
+    return theme.opening + ' ' + extra.join(' ') + '.';
+  }
+
+  function generateSentence(themeKey, rng, useOpening) {
+    if (useOpening) return openingSentence(themeKey, rng);
+    return makeSentence(THEMES[themeKey].words, rng, 5, 14);
+  }
+
+  function generateParagraph(themeKey, rng, useOpening) {
+    var sentences = 3 + Math.floor(rng() * 5); /* 3–7 sentences */
+    var out = [];
+    for (var i = 0; i < sentences; i++) {
+      out.push(generateSentence(themeKey, rng, useOpening && i === 0));
+    }
+    return out.join(' ');
+  }
+
+  function generateWords(themeKey, rng, count, useOpening) {
+    var words = THEMES[themeKey].words;
+    var out = [];
+    if (useOpening) {
+      var openingWords = THEMES[themeKey].opening.replace(/,/g, '').split(' ');
+      for (var i = 0; i < openingWords.length && out.length < count; i++) out.push(openingWords[i]);
+      /* Classic opening stays lowercase-styled ("Lorem ipsum...") like real lorem text. */
+      if (out.length) out[0] = capitalize(out[0]);
+    }
+    while (out.length < count) out.push(pickWord(words, rng));
+    var text = out.join(' ');
+    return text + '.';
+  }
+
+  /**
+   * generate({ mode, count, theme, classicOpening, seed })
+   * Returns plain text: paragraphs joined by "\n\n", sentences by " ".
+   */
+  function generate(opts) {
+    opts = opts || {};
+    var mode = normalizeMode(opts.mode);
+    var themeKey = normalizeTheme(opts.theme);
+    var count = sanitizeCount(opts.count, 3, mode === 'words' ? 1000 : 100);
+    var useOpening = !!opts.classicOpening;
+    var seed = (typeof opts.seed === 'number' && isFinite(opts.seed)) ? opts.seed : Math.floor(Math.random() * 1e9);
+    var rng = mulberry32(seed);
+    var i, parts = [];
+
+    if (mode === 'words') {
+      return generateWords(themeKey, rng, count, useOpening);
+    }
+    if (mode === 'sentences') {
+      for (i = 0; i < count; i++) parts.push(generateSentence(themeKey, rng, useOpening && i === 0));
+      return parts.join(' ');
+    }
+    for (i = 0; i < count; i++) parts.push(generateParagraph(themeKey, rng, useOpening && i === 0));
+    return parts.join('\n\n');
+  }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  /** formatOutput(text, format, mode) — 'plain' returns text; 'html' wraps paragraphs in <p> tags. */
+  function formatOutput(text, format) {
+    var t = (text == null) ? '' : String(text);
+    if (format !== 'html') return t;
+    if (!t.trim()) return '';
+    return t.split(/\n\s*\n/)
+      .map(function (p) { return '<p>' + escapeHtml(p.trim().replace(/\s*\n\s*/g, ' ')) + '</p>'; })
+      .join('\n');
+  }
+
+  function countWords(text) {
+    var t = (text == null) ? '' : String(text).trim();
+    if (!t) return 0;
+    return t.split(/\s+/).length;
+  }
+
+  function stats(text) {
+    var t = (text == null) ? '' : String(text);
+    var paragraphs = t.trim() ? t.split(/\n\s*\n/).filter(function (p) { return p.trim(); }).length : 0;
+    var sentences = t.trim() ? (t.match(/[.!?]+(?=\s|$)/g) || []).length : 0;
+    return { words: countWords(t), characters: t.length, sentences: sentences, paragraphs: paragraphs };
+  }
+
+  return {
+    CLASSIC_OPENING: CLASSIC_OPENING,
+    THEMES: Object.keys(THEMES),
+    sanitizeCount: sanitizeCount,
+    normalizeTheme: normalizeTheme,
+    normalizeMode: normalizeMode,
+    generate: generate,
+    formatOutput: formatOutput,
+    countWords: countWords,
+    stats: stats,
+    escapeHtml: escapeHtml,
+    _mulberry32: mulberry32
+  };
+})();
+
+if (typeof module !== 'undefined' && module.exports) { module.exports = LorumlyLib; }
+
+</script>
+</head>
+<body id="top" class="desk min-h-screen antialiased">
+
+<!-- ===== Header ===== -->
+<header class="sticky top-0 z-40 border-b border-[#d9cba6]/80 bg-[#f3ead8]/90 backdrop-blur">
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
+    <a href="#top" class="flex items-center gap-2.5">
+      <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-[#2b1d16] text-lg shadow" aria-hidden="true">🖋️</span>
+      <span class="font-display text-2xl font-black tracking-tight text-[#2b1d16]">Lorumly</span>
+    </a>
+    <nav class="flex items-center gap-1 text-[15px] font-medium sm:gap-2">
+      <a href="#top" class="rounded-md px-3 py-1.5 text-[#4a3423] hover:bg-[#eadfc6] hover:text-[#2b1d16]">Home</a>
+      <a href="https://fixoraa.tech" class="rounded-md px-3 py-1.5 text-[#4a3423] hover:bg-[#eadfc6] hover:text-[#2b1d16]">More Tools</a>
+    </nav>
+  </div>
+</header>
+
+<main class="mx-auto max-w-6xl px-4 sm:px-6">
+
+  <!-- ===== Hero ===== -->
+  <section class="pb-2 pt-8 text-center sm:pt-12">
+    <p class="text-[12px] font-semibold uppercase tracking-[0.28em] text-[#a85b2a]">The Writer's Desk · Text Tools</p>
+    <h1 class="font-display mx-auto mt-3 max-w-3xl text-4xl font-black leading-[1.05] text-[#2b1d16] sm:text-6xl">Lorem Ipsum, <span class="italic text-[#a85b2a]">fresh off the desk.</span></h1>
+    <p class="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-[#4a3423]">Generate classic placeholder text by the paragraph, sentence or word — with the famous opening on tap, plain-text or HTML copy, and two themed fillers for when plain Latin feels too plain.</p>
+    <div class="mt-5 flex flex-wrap items-center justify-center gap-3">
+      <span class="inline-flex items-center gap-1.5 rounded-full border border-[#c9a227] bg-[#fdf8ec] px-4 py-1.5 text-sm font-semibold text-[#8a4517] shadow-sm">✦ Unlimited Free Usage</span>
+      <span class="inline-flex items-center gap-1.5 rounded-full border border-[#d9cba6] bg-[#fdf8ec]/70 px-4 py-1.5 text-sm text-[#4a3423]">No signup · No watermark · Runs in your browser</span>
+    </div>
+  </section>
+
+  <!-- ===== TOP AD ===== -->
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pt-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:728px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <div class="origin-top scale-[0.44] sm:scale-100 shrink-0">
+        <script>
+          atOptions = { 'key' : '4e68ac77881c17fe128a46565d9a4e8c', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+        </script>
+        <script src="https://www.highrevenueformat.com/4e68ac77881c17fe128a46565d9a4e8c/invoke.js"></script>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- ===== Tool: the desk ===== -->
+  <section id="tool" class="py-8 sm:py-10" aria-label="Lorem ipsum generator tool">
+    <div class="grid gap-6 lg:grid-cols-[380px_1fr]">
+
+      <!-- Control drawer -->
+      <div class="control-card rounded-2xl p-5 sm:p-6">
+        <h2 class="font-display text-xl font-bold text-[#fdf8ec]">The desk drawer</h2>
+        <p class="mt-1 text-sm text-[#d9cba6]">Set your measure, pick a flavour, and pull a fresh sheet.</p>
+
+        <!-- Mode -->
+        <div class="mt-6">
+          <label class="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#c9a227]">Measure by</label>
+          <div class="mt-2 grid grid-cols-3 gap-1 rounded-xl border border-[#1d130d] bg-[#241811] p-1" role="group" aria-label="Generation mode">
+            <button type="button" class="seg-btn rounded-lg border border-transparent px-2 py-2 text-sm font-semibold" data-mode="paragraphs" aria-pressed="true">Paragraphs</button>
+            <button type="button" class="seg-btn rounded-lg border border-transparent px-2 py-2 text-sm font-semibold" data-mode="sentences" aria-pressed="false">Sentences</button>
+            <button type="button" class="seg-btn rounded-lg border border-transparent px-2 py-2 text-sm font-semibold" data-mode="words" aria-pressed="false">Words</button>
+          </div>
+        </div>
+
+        <!-- Count -->
+        <div class="mt-6">
+          <div class="flex items-end justify-between">
+            <label for="countRange" class="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#c9a227]">How many <span id="countUnit">paragraphs</span></label>
+            <input id="countNum" type="number" min="1" max="100" value="3" class="w-20 rounded-lg border border-[#1d130d] bg-[#241811] px-2 py-1.5 text-center text-base font-semibold text-[#fdf8ec] outline-none focus:border-[#c9a227]" aria-label="Count">
+          </div>
+          <input id="countRange" type="range" min="1" max="20" value="3" class="mt-3 w-full" aria-label="Count slider">
+          <p id="countHint" class="mt-1.5 text-xs text-[#bfae87]">Tip: 3–5 paragraphs fill most layouts nicely.</p>
+        </div>
+
+        <!-- Theme -->
+        <div class="mt-6">
+          <span class="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#c9a227]">Filler flavour</span>
+          <div class="mt-2 space-y-2" role="radiogroup" aria-label="Filler theme">
+            <button type="button" class="theme-card flex w-full items-center gap-3 rounded-xl border border-[#5a4230] px-3 py-2.5 text-left" data-theme="classic" role="radio" aria-checked="true">
+              <span class="text-xl" aria-hidden="true">📜</span>
+              <span><span class="block text-sm font-semibold text-[#fdf8ec]">Classic Latin</span><span class="block text-xs text-[#bfae87]">The timeless Cicero-flavoured original</span></span>
+            </button>
+            <button type="button" class="theme-card flex w-full items-center gap-3 rounded-xl border border-[#5a4230] px-3 py-2.5 text-left" data-theme="coffee" role="radio" aria-checked="false">
+              <span class="text-xl" aria-hidden="true">☕</span>
+              <span><span class="block text-sm font-semibold text-[#fdf8ec]">Coffee Shop</span><span class="block text-xs text-[#bfae87]">Bonus filler: espresso, crema &amp; slow Sundays</span></span>
+            </button>
+            <button type="button" class="theme-card flex w-full items-center gap-3 rounded-xl border border-[#5a4230] px-3 py-2.5 text-left" data-theme="space" role="radio" aria-checked="false">
+              <span class="text-xl" aria-hidden="true">🚀</span>
+              <span><span class="block text-sm font-semibold text-[#fdf8ec]">Outer Space</span><span class="block text-xs text-[#bfae87]">Bonus filler: nebulae, orbits &amp; ancient light</span></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Classic opening toggle -->
+        <div class="mt-6 flex items-center justify-between gap-3 rounded-xl border border-[#5a4230] px-3 py-3">
+          <div>
+            <p class="text-sm font-semibold text-[#fdf8ec]">Signature opening</p>
+            <p class="text-xs text-[#bfae87]">Start with the theme's famous first line — for Classic, the real “Lorem ipsum dolor sit amet…”</p>
+          </div>
+          <button type="button" id="openingToggle" class="switch" role="switch" aria-checked="true" aria-label="Toggle signature opening"></button>
+        </div>
+
+        <!-- Copy format -->
+        <div class="mt-6">
+          <span class="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#c9a227]">Copy as</span>
+          <div class="mt-2 grid grid-cols-2 gap-1 rounded-xl border border-[#1d130d] bg-[#241811] p-1" role="group" aria-label="Copy format">
+            <button type="button" class="seg-btn rounded-lg border border-transparent px-2 py-2 text-sm font-semibold" data-format="plain" aria-pressed="true">Plain text</button>
+            <button type="button" class="seg-btn rounded-lg border border-transparent px-2 py-2 text-sm font-semibold" data-format="html" aria-pressed="false">HTML &lt;p&gt;</button>
+          </div>
+          <p class="mt-1.5 text-xs text-[#bfae87]">HTML mode wraps each paragraph in a &lt;p&gt; tag, ready to paste into a page.</p>
+        </div>
+
+        <button type="button" id="generateBtn" class="btn-primary font-display mt-7 w-full rounded-xl px-4 py-3.5 text-lg font-bold shadow-lg">✒️ Pull a fresh sheet</button>
+        <p id="toolMsg" class="mt-3 min-h-[1.25rem] text-center text-sm text-[#e8c87a]" role="status" aria-live="polite"></p>
+      </div>
+
+      <!-- Paper sheet output -->
+      <div class="flex flex-col">
+        <div class="paper-sheet relative flex-1 rounded-md px-5 py-6 pl-12 sm:px-8 sm:pl-14">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#e7dcc0] pb-3">
+            <h2 class="font-display text-lg font-bold text-[#2b1d16]">Your sheet</h2>
+            <p id="statsLine" class="text-sm italic text-[#8a6d4f]">— words · — characters</p>
+          </div>
+          <div id="output" class="mt-4 whitespace-pre-wrap text-[17px] leading-[31px] text-[#3e2c22]" aria-live="polite"></div>
+          <p id="emptyState" class="mt-4 hidden text-[17px] italic leading-[31px] text-[#8a6d4f]">The page is blank. Choose a measure on the left and pull a fresh sheet.</p>
+        </div>
+        <div class="mt-4 flex flex-wrap gap-3">
+          <button type="button" id="copyBtn" class="btn-primary flex-1 rounded-xl px-4 py-3 text-base font-semibold shadow sm:flex-none sm:px-8">📋 Copy text</button>
+          <button type="button" id="downloadBtn" class="btn-ghost flex-1 rounded-xl px-4 py-3 text-base font-semibold text-[#4a3423] sm:flex-none sm:px-8">⬇ Download .txt</button>
+          <button type="button" id="regenBtn" class="btn-ghost flex-1 rounded-xl px-4 py-3 text-base font-semibold text-[#4a3423] sm:flex-none sm:px-8">🎲 Shuffle wording</button>
+        </div>
+        <p class="mt-3 text-sm italic text-[#8a6d4f]">Everything is generated locally in your browser — nothing is uploaded, tracked or stored.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BOTTOM AD ===== -->
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pb-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:300px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <script>
+(function(grnp){
+var d = document,
+    s = d.createElement('script'),
+    l = d.currentScript || d.scripts[d.scripts.length - 1];
+s.settings = grnp || {};
+s.src = "\/\/peacefulbicycle.com\/bnXtVJsnd.GElF0oYVWQcY\/Qe\/mf9qu-ZqUtlZk\/PzTHcx1LM\/jWIZwkMTj\/U\/t-NrzmUnyOMsj\/AzydO\/Qx";
+s.async = true;
+s.referrerPolicy = 'no-referrer-when-downgrade';
+l.parentNode.insertBefore(s, l);
+})({})
+</script>
+    </div>
+  </div>
+</div>
+
+  <!-- ===== SEO Article ===== -->
+  <section class="py-10 sm:py-14">
+    <div class="rule mb-10"></div>
+    <article id="seo-article" class="mx-auto max-w-3xl">
+      <h2 class="font-display text-3xl font-black leading-tight text-[#2b1d16] sm:text-4xl">Lorem Ipsum Explained: What Placeholder Text Is, Where It Came From, and How to Generate It Well</h2>
+      <p class="mt-3 text-sm uppercase tracking-[0.2em] text-[#a85b2a]">A Lorumly field guide for designers, developers and writers</p>
+
+      <h3 class="font-display mt-10 text-2xl font-bold text-[#2b1d16]">What is lorem ipsum, exactly?</h3>
+      <p class="mt-3 text-[17px] leading-relaxed">Lorem ipsum is the world's most widely used placeholder text: a block of scrambled Latin-looking words that designers, developers and typesetters drop into a layout wherever the real words have not been written yet. Its job is deliberately boring. Because the text carries no meaning a reader can follow, nobody gets distracted by the content, and all attention stays where it belongs during the design stage — on the typography, the spacing, the hierarchy, the colours and the overall shape of the page. When a client reviews a mockup filled with lorem ipsum, they comment on the design. When the same mockup is filled with a half-written draft, they comment on the draft, and the design review quietly derails.</p>
+      <p class="mt-3 text-[17px] leading-relaxed">The passage is not random gibberish, which is a common misconception. It is derived from real Latin prose — sections 1.10.32 and 1.10.33 of Cicero's philosophical work <em>De Finibus Bonorum et Malorum</em> ("On the Ends of Good and Evil"), written in 45 BC. Over centuries of typesetting, the original sentences were shuffled, truncated and corrupted: words lost their endings, new fragments appeared, and the famous opening "Lorem ipsum dolor sit amet" was carved out of Cicero's line "dolorem ipsum" — "pain itself." The result reads like Latin, flows like Latin, but means nothing at all, which is precisely why it has survived for more than five hundred years of print and several decades of web design.</p>
+
+      <h3 class="font-display mt-10 text-2xl font-bold text-[#2b1d16]">A short history of dummy text</h3>
+      <p class="mt-3 text-[17px] leading-relaxed">Printers were using specimen text long before the web existed. In the 1500s, an unknown printer scrambled a galley of type to make a specimen book, and lorem ipsum entered the trade. It became an industry standard in the 1960s when Letraset released dry-transfer sheets of the passage for graphic designers, and it crossed into software in the 1980s when Aldus PageMaker shipped with lorem ipsum templates. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, is credited with tracing the passage back to Cicero after noticing that "consectetur" — one of the passage's words — is rare enough in classical Latin literature to leave a searchable trail. Today the text ships inside design tools, code editors, theme templates and content management systems everywhere, and generators like Lorumly exist so you can produce exactly the amount you need, in the shape you need, without hunting for a block to copy.</p>
+
+      <h3 class="font-display mt-10 text-2xl font-bold text-[#2b1d16]">Why placeholder text beats "text goes here"</h3>
+      <p class="mt-3 text-[17px] leading-relaxed">It is tempting to fill a layout with repeated phrases like "Your headline here" or a row of x's, but those shortcuts distort the design. Real prose has a natural rhythm: words of varied length, sentences of varied shape, paragraphs that breathe. Lorem ipsum reproduces that rhythm faithfully because it is built from real language statistics. A headline repeated twenty times will never wrap the way a genuine sentence wraps, and a column of identical words hides problems — awkward line breaks, orphaned words, cramped line height — that only appear once real copy arrives. Good placeholder text is a stress test for typography. It reveals whether your font size is readable at arm's length, whether your measure (line length) is comfortable, and whether your spacing scale holds together across headings, body copy and captions.</p>
+      <p class="mt-3 text-[17px] leading-relaxed">There is also a workflow benefit. Placeholder text decouples design from copywriting, two jobs that rarely finish at the same speed. With a generator, a developer can build and test a template while the writer is still interviewing subject-matter experts; a designer can show a client three layout directions in an afternoon without waiting for approved text. The copy, when it lands, drops into a structure that has already been proven to work.</p>
+
+      <h3 class="font-display mt-10 text-2xl font-bold text-[#2b1d16]">Paragraphs, sentences or words: choosing your measure</h3>
+      <p class="mt-3 text-[17px] leading-relaxed">Lorumly lets you measure output three ways, and each suits a different job. <strong>Paragraphs</strong> are the workhorse: choose three to five and you can fill an article body, an about page or a product description area with realistic text blocks, complete with natural paragraph breaks. Paragraph mode is what you want when testing how a page scrolls, how headings interrupt body text, and how much vertical space a section really occupies. <strong>Sentences</strong> give finer control — ideal for card descriptions, testimonial placeholders, captions, error messages and list items, where one or two sentences must look right inside a tight component. <strong>Words</strong> are the precision instrument: headlines, navigation labels, button text, table cells and form placeholders all need exact word counts, and word mode also powers quick tests like "does this layout survive a forty-word German-length headline?" Switching measures takes one click, and the count slider adapts — up to twenty paragraphs, fifty sentences, or a thousand words at a time.</p>
+
+      <h3 class="font-display mt-10 text-2xl font-bold text-[#2b1d16]">The classic opening, and when to turn it off</h3>
+      <p class="mt-3 text-[17px] leading-relaxed">The signature opening toggle controls whether your text begins with the famous first line. With it on, output starts "Lorem ipsum dolor sit amet, consectetur adipiscing elit…" — instantly recognisable to any client or stakeholder as placeholder text, which is often exactly the signal you want to send in an early review. There are good reasons to switch it off, though. If you are generating many blocks for the same page, repeating the identical opening in every section looks artificial and can mask repetition problems in the layout. Turning the opening off starts each generation mid-stream, the way real body copy usually reads. It is also the better choice for screenshot-based portfolio work, where a wall of identical openings can look careless even when the design is anything but.</p>
+
+      <h3 class="font-display mt-10 text-2xl font-bold text-[#2b1d16]">Plain text or HTML: copying for your workflow</h3>
+      <p class="mt-3 text-[17px] leading-relaxed">How you copy matters as much as what you generate. Lorumly's plain-text mode gives you clean paragraphs separated by blank lines — perfect for design tools like Figma, for word processors, for email drafts and for pasting into a CMS rich-text editor that will apply its own formatting. The HTML mode wraps every paragraph in a proper &lt;p&gt; tag with special characters safely escaped, so you can paste straight into a template, a static site or a code editor and have valid markup immediately — no manual tagging, no stray characters breaking your page. Choose the format before you copy, and the Copy button always lifts exactly the version you selected. A plain-text download is also available for anyone who prefers to keep a sheet of filler on file for offline work.</p>
+
+      <h3 class="font-display mt-10 text-2xl font-bold text-[#2b1d16]">Themed fillers: coffee and space</h3>
+      <p class="mt-3 text-[17px] leading-relaxed">Classic Latin is neutral by design, but neutrality is not always the goal. When you are mocking up a café website, a coffee subscription box or a roastery's blog, Latin text fights the mood of the photography; our Coffee Shop filler replaces it with espresso, crema, pour-overs and slow Sunday mornings, so the words sit comfortably beside the pictures and clients can feel the brand. The Outer Space filler does the same for science, gaming and technology projects, trading Cicero for nebulae, orbits and ancient light. Themed filler keeps all the structural benefits of lorem ipsum — varied word lengths, natural sentence shapes, zero real meaning to argue about — while matching the emotional register of the project. It is also a gentle in-joke that reviewers tend to enjoy, which never hurts a design presentation.</p>
+
+      <h3 class="font-display mt-10 text-2xl font-bold text-[#2b1d16]">Best practices for working with placeholder text</h3>
+      <p class="mt-3 text-[17px] leading-relaxed">A few habits separate professional placeholder use from the pitfalls that give lorem ipsum a bad name. First, never ship it: placeholder text that reaches production embarrasses brands, confuses search engines and can even be indexed, so add a pre-launch check for the words "lorem ipsum" to every project checklist. Second, match volume to reality — generate roughly the amount of text the final copy is expected to fill, because a design tuned for three paragraphs will strain under twelve. Third, test extremes as well as averages: one very long block and one very short block will expose fragile layouts faster than ten medium ones. Fourth, remember accessibility: placeholder text should never be the only content a screen-reader user encounters in a prototype you are testing with real people; label mockups clearly. Finally, replace filler progressively. As real copy is approved section by section, swap it in and re-check the layout each time, rather than discovering at the deadline that the genuine headline is twice as long as the dummy one.</p>
+      <p class="mt-3 text-[17px] leading-relaxed">Used this way, lorem ipsum is not a crutch but a craft tool — five centuries old, still earning its place on the desk. Lorumly simply puts it within one click: pick a measure, pick a flavour, decide on the opening, choose your copy format, and pull a fresh sheet. The page is yours.</p>
+    </article>
+  </section>
+
+  <!-- ===== FAQs ===== -->
+  <section class="pb-14" aria-label="Frequently asked questions">
+    <div class="mx-auto max-w-3xl">
+      <h2 class="font-display text-3xl font-black text-[#2b1d16]">Frequently asked questions</h2>
+      <div class="mt-6 space-y-3">
+        <details class="faq rounded-xl px-5 py-4">
+          <summary class="flex items-center justify-between gap-3 text-[17px] font-semibold text-[#2b1d16]">What is lorem ipsum and why do designers use it?<span class="faq-arrow text-[#a85b2a]">+</span></summary>
+          <p class="mt-2 leading-relaxed text-[#4a3423]">Lorem ipsum is placeholder text derived from a work by Cicero, scrambled over centuries into Latin-looking prose with no real meaning. Designers use it so reviewers judge the layout, typography and spacing instead of getting distracted by reading draft copy that has not been written or approved yet.</p>
+        </details>
+        <details class="faq rounded-xl px-5 py-4">
+          <summary class="flex items-center justify-between gap-3 text-[17px] font-semibold text-[#2b1d16]">Is Lorumly really free to use without signing up?<span class="faq-arrow text-[#a85b2a]">+</span></summary>
+          <p class="mt-2 leading-relaxed text-[#4a3423]">Yes. Lorumly offers unlimited free usage with no signup, no paywall and no watermark. Everything is generated locally in your browser, so you can generate as many paragraphs, sentences or words as you like, as often as you like.</p>
+        </details>
+        <details class="faq rounded-xl px-5 py-4">
+          <summary class="flex items-center justify-between gap-3 text-[17px] font-semibold text-[#2b1d16]">What is the difference between paragraphs, sentences and words mode?<span class="faq-arrow text-[#a85b2a]">+</span></summary>
+          <p class="mt-2 leading-relaxed text-[#4a3423]">Paragraphs mode creates full text blocks of three to seven sentences each, ideal for article bodies and page sections. Sentences mode gives you an exact number of standalone sentences for cards, captions and short components. Words mode produces an exact word count for headlines, labels, buttons and other tight spaces where precision matters.</p>
+        </details>
+        <details class="faq rounded-xl px-5 py-4">
+          <summary class="flex items-center justify-between gap-3 text-[17px] font-semibold text-[#2b1d16]">What does the classic-opening toggle do?<span class="faq-arrow text-[#a85b2a]">+</span></summary>
+          <p class="mt-2 leading-relaxed text-[#4a3423]">With the signature opening switched on, your text begins with the famous line "Lorem ipsum dolor sit amet, consectetur adipiscing elit," which instantly signals placeholder text to reviewers. Switch it off and the text starts mid-stream instead, which looks more natural when you generate many blocks for one page. The themed fillers have their own signature openings in the same spirit.</p>
+        </details>
+        <details class="faq rounded-xl px-5 py-4">
+          <summary class="flex items-center justify-between gap-3 text-[17px] font-semibold text-[#2b1d16]">How do I copy the text as HTML?<span class="faq-arrow text-[#a85b2a]">+</span></summary>
+          <p class="mt-2 leading-relaxed text-[#4a3423]">Select the "HTML &lt;p&gt;" option under "Copy as" before generating or copying. Each paragraph is then wrapped in a &lt;p&gt; tag with special characters safely escaped, so you can paste it straight into a web page template or code editor as valid markup. Plain-text mode remains available for design tools and documents.</p>
+        </details>
+        <details class="faq rounded-xl px-5 py-4">
+          <summary class="flex items-center justify-between gap-3 text-[17px] font-semibold text-[#2b1d16]">What are the coffee and space themed fillers?<span class="faq-arrow text-[#a85b2a]">+</span></summary>
+          <p class="mt-2 leading-relaxed text-[#4a3423]">They are bonus alternatives to classic Latin that keep the same natural sentence structure but use themed vocabulary. Coffee Shop filler is woven from espresso, roastery and café words for food and lifestyle mockups, while Outer Space filler uses nebulae, orbits and starlight for science and technology projects — placeholder text that matches the mood of your design.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="border-t border-[#d9cba6] bg-[#eadfc6]/60">
+  <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 py-6 text-sm text-[#4a3423] sm:flex-row sm:px-6">
+    <p class="font-display font-bold text-[#2b1d16]">Lorumly — the lorem ipsum generator on a writer's desk.</p>
+    <p>Free forever · No signup · Made for designers, developers &amp; writers</p>
+  </div>
+<p class="fx-credit" style="text-align:center;font-size:12.5px;opacity:.62;margin:10px auto 2px;letter-spacing:.01em">Made by <a href="https://fixoraa.tech" target="_blank" rel="noopener" style="color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:2px">Fixoraa</a></p>
+</footer>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is lorem ipsum and why do designers use it?", "acceptedAnswer": { "@type": "Answer", "text": "Lorem ipsum is placeholder text derived from a work by Cicero, scrambled over centuries into Latin-looking prose with no real meaning. Designers use it so reviewers judge the layout, typography and spacing instead of getting distracted by reading draft copy that has not been written or approved yet." } },
+    { "@type": "Question", "name": "Is Lorumly really free to use without signing up?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Lorumly offers unlimited free usage with no signup, no paywall and no watermark. Everything is generated locally in your browser, so you can generate as many paragraphs, sentences or words as you like, as often as you like." } },
+    { "@type": "Question", "name": "What is the difference between paragraphs, sentences and words mode?", "acceptedAnswer": { "@type": "Answer", "text": "Paragraphs mode creates full text blocks of three to seven sentences each, ideal for article bodies and page sections. Sentences mode gives you an exact number of standalone sentences for cards, captions and short components. Words mode produces an exact word count for headlines, labels, buttons and other tight spaces where precision matters." } },
+    { "@type": "Question", "name": "What does the classic-opening toggle do?", "acceptedAnswer": { "@type": "Answer", "text": "With the signature opening switched on, your text begins with the famous line \"Lorem ipsum dolor sit amet, consectetur adipiscing elit,\" which instantly signals placeholder text to reviewers. Switch it off and the text starts mid-stream instead, which looks more natural when you generate many blocks for one page. The themed fillers have their own signature openings in the same spirit." } },
+    { "@type": "Question", "name": "How do I copy the text as HTML?", "acceptedAnswer": { "@type": "Answer", "text": "Select the \"HTML <p>\" option under \"Copy as\" before generating or copying. Each paragraph is then wrapped in a <p> tag with special characters safely escaped, so you can paste it straight into a web page template or code editor as valid markup. Plain-text mode remains available for design tools and documents." } },
+    { "@type": "Question", "name": "What are the coffee and space themed fillers?", "acceptedAnswer": { "@type": "Answer", "text": "They are bonus alternatives to classic Latin that keep the same natural sentence structure but use themed vocabulary. Coffee Shop filler is woven from espresso, roastery and café words for food and lifestyle mockups, while Outer Space filler uses nebulae, orbits and starlight for science and technology projects — placeholder text that matches the mood of your design." } }
+  ]
+}
+</script>
+
+<script>
+(function () {
+  'use strict';
+  var state = { mode: 'paragraphs', theme: 'classic', format: 'plain', opening: true, count: 3, text: '' };
+
+  var output = document.getElementById('output');
+  var emptyState = document.getElementById('emptyState');
+  var statsLine = document.getElementById('statsLine');
+  var msg = document.getElementById('toolMsg');
+  var countRange = document.getElementById('countRange');
+  var countNum = document.getElementById('countNum');
+  var countUnit = document.getElementById('countUnit');
+  var countHint = document.getElementById('countHint');
+
+  var MODE_CONF = {
+    paragraphs: { max: 20, unit: 'paragraphs', hint: 'Tip: 3–5 paragraphs fill most layouts nicely.' },
+    sentences: { max: 50, unit: 'sentences', hint: 'Tip: sentences suit cards, captions and short components.' },
+    words: { max: 1000, unit: 'words', hint: 'Tip: word mode is exact — great for headlines and labels.' }
+  };
+
+  function say(text) { msg.textContent = text || ''; }
+
+  function render() {
+    if (!state.text) {
+      output.textContent = '';
+      emptyState.classList.remove('hidden');
+      statsLine.textContent = '— words · — characters';
+      return;
+    }
+    emptyState.classList.add('hidden');
+    output.textContent = state.text;
+    var s = LorumlyLib.stats(state.text);
+    statsLine.textContent = s.words + ' words · ' + s.characters + ' characters · ' + s.sentences + ' sentences · ' + s.paragraphs + (s.paragraphs === 1 ? ' paragraph' : ' paragraphs');
+  }
+
+  function generate(announce) {
+    var count = LorumlyLib.sanitizeCount(state.count, 3, state.mode === 'words' ? 1000 : 100);
+    state.text = LorumlyLib.generate({
+      mode: state.mode, count: count, theme: state.theme, classicOpening: state.opening
+    });
+    render();
+    if (announce) say('Fresh sheet pulled — ' + count + ' ' + MODE_CONF[state.mode].unit + ' of ' + state.theme + ' filler.');
+  }
+
+  function setMode(mode) {
+    state.mode = mode;
+    document.querySelectorAll('[data-mode]').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-mode') === mode ? 'true' : 'false');
+    });
+    var conf = MODE_CONF[mode];
+    countRange.max = conf.max;
+    countNum.max = conf.max;
+    countUnit.textContent = conf.unit;
+    countHint.textContent = conf.hint;
+    var def = mode === 'paragraphs' ? 3 : (mode === 'sentences' ? 5 : 50);
+    state.count = def;
+    countRange.value = def;
+    countNum.value = def;
+    generate(false);
+  }
+
+  document.querySelectorAll('[data-mode]').forEach(function (b) {
+    b.addEventListener('click', function () { setMode(b.getAttribute('data-mode')); say(''); });
+  });
+  document.querySelectorAll('[data-theme]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      state.theme = b.getAttribute('data-theme');
+      document.querySelectorAll('[data-theme]').forEach(function (x) {
+        x.setAttribute('aria-checked', x === b ? 'true' : 'false');
+      });
+      generate(false); say('');
+    });
+  });
+  document.querySelectorAll('[data-format]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      state.format = b.getAttribute('data-format');
+      document.querySelectorAll('[data-format]').forEach(function (x) {
+        x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
+      });
+      say(state.format === 'html' ? 'Copy format set to HTML — paragraphs will be wrapped in <p> tags.' : 'Copy format set to plain text.');
+    });
+  });
+
+  var toggle = document.getElementById('openingToggle');
+  toggle.addEventListener('click', function () {
+    state.opening = !state.opening;
+    toggle.setAttribute('aria-checked', state.opening ? 'true' : 'false');
+    generate(false); say('');
+  });
+
+  function syncCount(v) {
+    var conf = MODE_CONF[state.mode];
+    var n = parseInt(v, 10);
+    if (isNaN(n)) { say('Please enter a number between 1 and ' + conf.max + '.'); return; }
+    state.count = LorumlyLib.sanitizeCount(n, 3, conf.max);
+    countRange.value = state.count;
+    countNum.value = state.count;
+    generate(false);
+  }
+  countRange.addEventListener('input', function () { syncCount(countRange.value); });
+  countNum.addEventListener('change', function () { syncCount(countNum.value); });
+  countNum.addEventListener('input', function () {
+    var n = parseInt(countNum.value, 10);
+    if (!isNaN(n)) { state.count = n; generate(false); }
+  });
+
+  document.getElementById('generateBtn').addEventListener('click', function () { generate(true); });
+  document.getElementById('regenBtn').addEventListener('click', function () { generate(true); });
+
+  document.getElementById('copyBtn').addEventListener('click', function () {
+    if (!state.text) { say('Nothing to copy yet — pull a fresh sheet first.'); return; }
+    var payload = LorumlyLib.formatOutput(state.text, state.format);
+    function done() { say(state.format === 'html' ? 'Copied as HTML — ready to paste into your page.' : 'Copied as plain text — ready to paste anywhere.'); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(payload).then(done, function () { fallback(); });
+    } else { fallback(); }
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = payload;
+      ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); done(); }
+      catch (e) { say('Copy failed — select the text on the sheet and copy it manually.'); }
+      document.body.removeChild(ta);
+    }
+  });
+
+  document.getElementById('downloadBtn').addEventListener('click', function () {
+    if (!state.text) { say('Nothing to download yet — pull a fresh sheet first.'); return; }
+    var blob = new Blob([state.text], { type: 'text/plain;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'lorumly-lorem-ipsum.txt';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 500);
+    say('Downloaded a plain-text sheet to your device.');
+  });
+
+  generate(false);
+})();
+</script>
+</body>
+</html>

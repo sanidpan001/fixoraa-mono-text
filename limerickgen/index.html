@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Limerick Generator — Write Funny AABBA Poems Online</title>
+<meta name="description" content="Generate proper AABBA limericks from any name or topic. True rhyme banks, one-tap generation, and a favourites shelf. Free.">
+<link rel="canonical" href="https://text.fixoraa.tech/limerickgen/">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Limerick Generator — Write Funny AABBA Poems Online">
+<meta property="og:description" content="Generate proper AABBA limericks from any name or topic. True rhyme banks, one-tap generation, and a favourites shelf. Free.">
+<meta property="og:url" content="https://text.fixoraa.tech/limerickgen/">
+<meta property="og:type" content="website">
+<script defer src="https://t.fixoraa.tech/track.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "LimerickGen",
+      "url": "https://text.fixoraa.tech/limerickgen/",
+      "applicationCategory": "Writing Tools",
+      "operatingSystem": "Web",
+      "description": "Generate proper AABBA limericks from any name or topic. True rhyme banks, one-tap generation, and a favourites shelf. Free.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What does AABBA mean in a limerick?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AABBA means lines 1, 2, and 5 rhyme with each other (the A rhyme) while lines 3 and 4 share a different rhyme (the B rhyme). Lines 1, 2, 5 are longer; lines 3 and 4 are shorter. Every limerick this tool makes follows that exact pattern."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I make a limerick about someone's name?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Type any name, place, or topic into the generator and press the button \u2014 the tool weaves your word into line 1 (and the closing line) and builds the full five-line poem around it using its rhyme banks."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I save the limericks I like?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes \u2014 tap the save button on any limerick you like and it goes to the Favourites tab, stored in your browser. Build a whole collection for birthdays, speeches, or cards."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are generated limericks any good?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The generator guarantees correct structure: five lines, true AABBA rhymes, and the classic anapestic bounce. Treat its output as a strong first draft \u2014 reading it aloud and sharpening the final line's twist will take it from good to great."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who invented the limerick?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Edward Lear's Book of Nonsense (1846) made the form famous, though the name may come from an older Irish drinking song. The modern punchline-style limerick evolved later, and the form has been English's favourite five-line joke ever since."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the rhyme banks for?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Rhyme banks tab shows the A-rhyme and B-rhyme word sets the generator draws from. Browsing them helps when you're editing a generated poem by hand \u2014 pick a punchier rhyme word and slot it into the line endings."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+
+:root{
+  --bg:#FBF1F8; --surface:#FFFFFF; --accent:#A21CAF; --accent-ink:#FFFFFF;
+  --ink:#33122B; --muted:#6E4A63; --line:#F0D9E8;
+  --display:'Lora',serif; --body:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.6;font-size:16px}
+.fx-container{max-width:72rem;margin:0 auto;padding-left:1rem;padding-right:1rem}
+@media(min-width:640px){.fx-container{padding-left:1.5rem;padding-right:1.5rem}}
+/* ad utilities (for the verbatim ad snippets) */
+.no-print{}
+.mx-auto{margin-left:auto;margin-right:auto}.max-w-6xl{max-width:72rem}
+.px-4{padding-left:1rem;padding-right:1rem}.pt-4{padding-top:1rem}.pb-4{padding-bottom:1rem}
+@media(min-width:640px){.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:scale-100{transform:scale(1)}}
+.text-center{text-align:center}.block{display:block}
+.text-\[10px\]{font-size:10px}.tracking-\[0\.18em\]{letter-spacing:.18em}.uppercase{text-transform:uppercase}
+.text-slate-400{color:#94a3b8}.mb-1\.5{margin-bottom:.375rem}
+.flex{display:flex}.justify-center{justify-content:center}.overflow-hidden{overflow:hidden}
+.origin-top{transform-origin:top}.scale-\[0\.44\]{transform:scale(.44)}.shrink-0{flex-shrink:0}
+/* header */
+.fx-header{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+.fx-header-in{display:flex;align-items:center;gap:.9rem;padding:.8rem 0;flex-wrap:wrap}
+.fx-logo{display:flex;align-items:center;gap:.65rem;text-decoration:none;color:var(--ink)}
+.fx-logo-tile{width:44px;height:44px;border-radius:14px;background:var(--accent);color:var(--accent-ink);
+  display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;flex-shrink:0;
+  box-shadow:0 4px 14px rgba(0,0,0,.12)}
+.fx-brand{font-family:var(--display);font-size:1.45rem;font-weight:700;letter-spacing:-.01em;line-height:1.1}
+.fx-nav{margin-left:auto;display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.fx-btn{display:inline-block;padding:.55rem 1.1rem;border-radius:999px;text-decoration:none;font-weight:600;font-size:.92rem;
+  border:2px solid var(--accent);color:var(--accent);background:transparent;transition:all .18s ease;min-height:44px;line-height:1.5}
+.fx-btn:hover{background:var(--accent);color:var(--accent-ink)}
+.fx-btn.solid{background:var(--accent);color:var(--accent-ink)}
+.fx-btn.solid:hover{filter:brightness(.94)}
+.fx-badge{display:inline-flex;align-items:center;gap:.35rem;font-size:.78rem;font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--accent);border:1.5px dashed var(--accent);border-radius:999px;padding:.3rem .8rem;white-space:nowrap}
+/* tool section */
+.tool-sec{padding:2.2rem 0 1rem}
+/* article */
+.article-sec{padding:2.5rem 0;max-width:46rem;margin:0 auto}
+.article-sec h2{font-family:var(--display);font-size:1.55rem;margin:2rem 0 .8rem;line-height:1.25;letter-spacing:-.01em}
+.article-sec h3{font-size:1.15rem;margin:1.5rem 0 .6rem}
+.article-sec p,.article-sec li{margin-bottom:.85rem;color:var(--ink)}
+.article-sec ul,.article-sec ol{padding-left:1.4rem;margin-bottom:1rem}
+.article-sec table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.95rem}
+.article-sec th,.article-sec td{border:1px solid var(--line);padding:.55rem .7rem;text-align:left}
+.article-sec th{background:var(--surface);font-weight:700}
+/* faq */
+.faq-sec{padding:1rem 0 3rem;max-width:46rem;margin:0 auto}
+.faq-sec h2{font-family:var(--display);font-size:1.55rem;margin-bottom:1.2rem}
+.faq-sec details{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-bottom:.7rem;overflow:hidden}
+.faq-sec summary{padding:1rem 1.2rem;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:1rem;min-height:44px}
+.faq-sec summary::-webkit-details-marker{display:none}
+.faq-sec summary::after{content:'+';font-size:1.4rem;color:var(--accent);flex-shrink:0}
+.faq-sec details[open] summary::after{content:'\2013'}
+.faq-sec details p{padding:0 1.2rem 1.1rem;color:var(--muted)}
+/* footer */
+.fx-footer{background:var(--surface);border-top:1px solid var(--line);padding:2.2rem 0;margin-top:1rem}
+.fx-footer .fx-brand{font-size:1.2rem}
+.fx-footer p{color:var(--muted);font-size:.95rem;max-width:44rem;margin:.5rem 0}
+.fx-footer nav{display:flex;gap:1.2rem;margin:1rem 0;flex-wrap:wrap}
+.fx-footer nav a{color:var(--accent);font-weight:600;text-decoration:none}
+.fx-footer nav a:hover{text-decoration:underline}
+.fx-credit{font-size:.9rem;color:var(--muted)}
+.fx-credit a{color:var(--accent);font-weight:700;text-decoration:none}
+@media(max-width:640px){.fx-brand{font-size:1.2rem}.tool-sec{padding:1.4rem 0 .6rem}}
+@media print{.no-print{display:none!important}}
+
+.lm-wrap{max-width:780px;margin:0 auto;padding:24px 16px 64px;font-family:Inter,system-ui,sans-serif;color:#33122B}
+.lm-hero{text-align:center;margin:6px 0 24px}
+.lm-hero h1{font-family:Lora,Georgia,serif;font-size:clamp(30px,5vw,44px);margin:0 0 8px}
+.lm-tag{color:#6E4A63;font-size:16px;margin:0}
+.lm-tabs{display:flex;gap:8px;justify-content:center;margin-bottom:20px;flex-wrap:wrap}
+.lm-tabs button{padding:11px 20px;min-height:48px;border-radius:999px;border:1.5px solid #F0D9E8;background:#fff;color:#33122B;font-size:15px;font-weight:600;cursor:pointer}
+.lm-tabs button.on{background:#A21CAF;color:#fff;border-color:#A21CAF}
+.lm-panel{display:none;background:#fff;border:1px solid #F0D9E8;border-radius:22px;padding:28px;box-shadow:0 8px 28px rgba(162,28,175,.08)}
+.lm-panel.on{display:block}
+.lm-panel h2{font-family:Lora,Georgia,serif;font-size:21px;margin:0 0 14px}
+.lm-genrow{display:flex;gap:10px;margin-bottom:20px}
+#lm-seed{flex:1;min-height:54px;border:1.5px solid #F0D9E8;border-radius:14px;padding:0 16px;font-size:17px;color:#33122B}
+#lm-make{min-height:54px;padding:0 26px;border:0;border-radius:14px;background:#A21CAF;color:#fff;font-size:17px;font-weight:700;cursor:pointer}
+.lm-poem{background:#FBF1F8;border:1px solid #F0D9E8;border-radius:16px;padding:24px;margin-bottom:16px}
+.lm-poem p{font-family:Lora,Georgia,serif;font-size:19px;line-height:1.75;margin:0;color:#33122B}
+.lm-poem .l5{font-weight:700}
+.lm-row{display:flex;gap:10px;flex-wrap:wrap}
+.lm-row button{min-height:48px;padding:0 20px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer}
+#lm-save{background:#fff;border:2px solid #A21CAF;color:#A21CAF}
+#lm-again{background:#FBF1F8;border:1.5px solid #F0D9E8;color:#33122B}
+.lm-bank{margin-bottom:18px}
+.lm-bank h3{font-size:14px;text-transform:uppercase;letter-spacing:.05em;color:#6E4A63;margin:0 0 8px}
+.lm-chips{display:flex;flex-wrap:wrap;gap:8px}
+.lm-chips span{background:#FBF1F8;border:1px solid #F0D9E8;border-radius:999px;padding:8px 14px;font-size:14px}
+.lm-fav{border:1px solid #F0D9E8;border-radius:14px;padding:16px;margin-bottom:12px;background:#FBF1F8}
+.lm-fav p{font-family:Lora,Georgia,serif;font-size:16px;line-height:1.7;margin:0 0 10px}
+.lm-fav button{border:0;background:none;color:#6E4A63;cursor:pointer;font-size:14px;min-height:44px}
+.lm-empty{color:#6E4A63;text-align:center;padding:24px}
+@media (max-width:560px){.lm-panel{padding:18px}.lm-genrow{flex-direction:column}#lm-make{width:100%}}
+</style>
+</head>
+<body>
+<header class="fx-header">
+  <div class="fx-container fx-header-in">
+    <a class="fx-logo" href="https://fixoraa.tech" aria-label="LimerickGen home">
+      <span class="fx-logo-tile" aria-hidden="true">📜</span>
+      <span class="fx-brand">LimerickGen</span>
+    </a>
+    <nav class="fx-nav" aria-label="Site">
+      <a class="fx-btn" href="https://fixoraa.tech">Home</a>
+      <a class="fx-btn solid" href="https://fixoraa.tech">More Tools</a>
+      <span class="fx-badge" aria-label="Free forever">&#8734; Unlimited Free Usage</span>
+    </nav>
+  </div>
+</header>
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pt-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:728px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <div class="origin-top scale-[0.44] sm:scale-100 shrink-0">
+        <script>
+          atOptions = { 'key' : '4e68ac77881c17fe128a46565d9a4e8c', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+        </script>
+        <script src="https://www.highrevenueformat.com/4e68ac77881c17fe128a46565d9a4e8c/invoke.js"></script>
+      </div>
+    </div>
+  </div>
+</div>
+<main class="fx-container">
+  <section class="tool-sec tpl-tab-bench" aria-label="LimerickGen tool">
+<div class='lm-wrap'>
+<div class='lm-hero'><h1>Limerick Generator</h1><p class='lm-tag'>Five lines, two rhymes, one grin — instantly.</p></div>
+<div class='lm-tabs'>
+<button data-tab='gen' class='on'>✍️ Generator</button>
+<button data-tab='banks'>🔤 Rhyme banks</button>
+<button data-tab='favs'>⭐ Favourites <span id='lm-favcount'></span></button>
+</div>
+<div class='lm-panel on' id='lm-p-gen'>
+<h2>Spin a limerick</h2>
+<div class='lm-genrow'>
+<input id='lm-seed' placeholder='A name or topic — e.g. Sam' aria-label='Name or topic'>
+<button id='lm-make'>Write it</button>
+</div>
+<div class='lm-poem' id='lm-poem' style='display:none'></div>
+<div class='lm-row'>
+<button id='lm-save' style='display:none'>⭐ Save favourite</button>
+<button id='lm-again' style='display:none'>🎲 Another one</button>
+</div>
+</div>
+<div class='lm-panel' id='lm-p-banks'>
+<h2>The rhyme banks</h2>
+<div class='lm-bank'><h3>A rhyme — lines 1, 2, 5</h3><div class='lm-chips' id='lm-bank-a'></div></div>
+<div class='lm-bank'><h3>B rhyme — lines 3, 4</h3><div class='lm-chips' id='lm-bank-b'></div></div>
+<p class='lm-empty'>Every generated limerick rhymes lines 1·2·5 together and lines 3·4 together — classic AABBA.</p>
+</div>
+<div class='lm-panel' id='lm-p-favs'>
+<h2>Your favourites</h2>
+<div id='lm-favs'></div>
+</div>
+</div>
+  </section>
+  <article class="article-sec" aria-label="Guide">
+<h2>What is a limerick?</h2>
+<p>A limerick is a five-line poem with a strict, bouncy contract: lines one, two, and five rhyme with each other (the A rhyme) and are longer; lines three and four rhyme with each other (the B rhyme) and are shorter. The rhythm is anapestic — da-da-DUM da-da-DUM — which gives limericks their unmistakable gallop. Traditionally they open with “There once was a … from …”, introduce a character, and land a twist or punchline in the final line. A <strong>limerick generator</strong> like this one builds fresh five-line poems on that exact AABBA skeleton from any name or topic you give it.</p>
+<h2>The anatomy of AABBA</h2>
+<p>Five lines, two rhyme sounds, and a rhythm you can clap along to:</p>
+<ul>
+<li><strong>Lines 1, 2, 5 (A rhyme):</strong> longer lines, typically 7–10 syllables, all ending on the same rhyme sound.</li>
+<li><strong>Lines 3, 4 (B rhyme):</strong> shorter lines, typically 5–7 syllables, rhyming with each other but not with the A lines.</li>
+<li><strong>Line 5:</strong> the punchline — it resolves, twists, or undercuts everything above it.</li>
+</ul>
+<p>The classic example everyone knows — “There once was a man from Nantucket” — follows this shape, even if polite company usually stops quoting after line two. Edward Lear popularised the form in the 1840s with his <em>Book of Nonsense</em>, and it has been the English language's favourite five-line joke ever since.</p>
+<h2>How to read a limerick aloud</h2>
+<p>Limericks are performance poems. Stress the beat: “there ONCE was a MAN from nan-TUCK-et”. Lines 1, 2, and 5 carry three strong stresses; lines 3 and 4 carry two. Read them fast and the rhythm does half the comedy for you. The pause before the final line is everything — it is the drumroll before the punchline. Try reading your generated limericks out loud before sharing them; a limerick that looks fine on screen can reveal a clunky beat when spoken.</p>
+<h2>Writing your own: the craft behind the generator</h2>
+<h3>Start with the rhyme, not the idea</h3>
+<p>Professional limerick writers pick their A and B rhyme words first, then build the joke backwards. Choose a rhyme with plenty of options — “day/play/way/away” is generous; “orange” is famously not. Our generator works the same way, drawing from banks of true rhymes so the structure is always sound.</p>
+<h3>Make line 1 do the setup</h3>
+<p>Line 1 introduces a person and a place or situation: who, and where. Everything else hangs off it. “There once was a fellow named Sam” tells you the character; the remaining lines tell you what happened to him.</p>
+<h3>Spend lines 2–4 on escalation</h3>
+<p>The middle lines build the situation. Lines 3 and 4, being short, work best as a quick pair — an observation and its echo. Think of them as the poem inhaling before the final line exhales.</p>
+<h3>Land line 5</h3>
+<p>The last line should surprise, resolve, or twist. The classic move is to return to the opening image with new meaning. Read your final line alone: if it makes you smile without the setup, it is probably strong enough.</p>
+<h2>Limerick occasions</h2>
+<table>
+<thead><tr><th>Occasion</th><th>Why a limerick works</th><th>Tip</th></tr></thead>
+<tbody>
+<tr><td>Birthday cards</td><td>Personal, funny, and short enough to fit</td><td>Use the person's name as the seed word</td></tr>
+<tr><td>Wedding speeches</td><td>Breaks the ice in 30 seconds</td><td>Keep it kind — the couple's grandmother is listening</td></tr>
+<tr><td>Retirement parties</td><td>Celebrates a career with humour</td><td>Seed it with their job title or hobby</td></tr>
+<tr><td>Classroom poetry units</td><td>Teaches rhyme and metre painlessly</td><td>Let students generate, then improve the output</td></tr>
+<tr><td>Team roasts</td><td>Affectionate teasing in verse</td><td>Punch up, never down</td></tr>
+<tr><td>Social media captions</td><td>Stands out in a feed of prose</td><td>Pair with a photo that completes the joke</td></tr>
+</tbody>
+</table>
+<h2>From generated to great: editing tips</h2>
+<p>Treat the generator's output as a first draft, not a finished poem. The structure will be correct — five lines, AABBA — but you can sharpen it:</p>
+<ul>
+<li><strong>Tighten the beat.</strong> Clap along; if a line has an extra unstressed syllable, trim a filler word.</li>
+<li><strong>Strengthen the rhymes.</strong> Swap in a punchier rhyme word from the Rhyme banks tab.</li>
+<li><strong>Sharpen line 5.</strong> Ask: what is the twist? If there isn't one, rewrite the last line around a surprise.</li>
+<li><strong>Cut filler.</strong> Words like “very”, “really”, and “quite” are rhythm-padding — delete them and the poem usually improves.</li>
+<li><strong>Read it to someone.</strong> The laugh (or groan) tells you instantly whether line 5 landed.</li>
+</ul>
+<h2>A brief history</h2>
+<p>The limerick's origins are murky — the name may come from the Irish town or county of Limerick, possibly via an old drinking song with the refrain “Will you come up to Limerick?”. What is certain is that Edward Lear's <em>Book of Nonsense</em> (1846) made the five-line form famous, though Lear's own limericks famously repeated line 1 as line 5 rather than writing a true punchline. The modern form, with its closing twist, was perfected by later writers, and today the limerick remains the most democratic of poetic forms: anyone can write one, everyone recognises one, and the best ones get remembered for centuries.</p>
+<h2>Famous limericks to study</h2>
+<p>Study the masters before you write. Lear's nonsense verses teach rhythm; modern competition winners teach the twist. Notice how the best ones hide the punchline's setup in plain sight — re-reading reveals that line 5 was inevitable all along. That feeling of inevitability is the difference between a joke in verse and a real limerick. Generate a few with this tool, compare their bones to the classics, and you will start seeing the skeleton underneath every good one.</p>
+<h2>Using the favourites shelf</h2>
+<p>When the generator produces one you love, save it to your favourites with one tap. The shelf lives in your browser, so your best verses are waiting whenever you need a card message, a speech opener, or just a laugh. Build a collection around a theme — birthday limericks for everyone in the family, for instance — and you'll never be stuck for words again.</p>
+<h2>Limerick competitions and games</h2>
+<p>The limerick's strict form makes it perfect for contests: everyone works within the same five-line cage, so judging is about wit, not length. Classic formats include the <strong>seed-word slam</strong> (everyone gets the same opening line and ten minutes), the <strong>exquisite corpse</strong> (each player writes one line, folding the paper so the next sees only the rhyme word), and the <strong>roast round</strong> (limericks about each other, affectionate only). Pubs, classrooms, and writing groups have run these for centuries — the generator is an excellent warm-up act, producing “house” limericks to beat.</p>
+<h2>Ten famous opening lines to steal from</h2>
+<p>Study how the masters open — the first line carries the whole poem's promise:</p>
+<ol>
+<li>“There once was a man from Nantucket…” — the infamous classic.</li>
+<li>“There was an old man with a beard…” — Lear's nonsense opener.</li>
+<li>“A wonderful bird is the pelican…” — Dixon Lanier Merritt's beloved verse.</li>
+<li>“There was a young lady of Niger…” — Lear again, perfect bounce.</li>
+<li>“The limerick packs laughs anatomical…” — the form mocking itself.</li>
+<li>“There once was a poet named Dan…” — the everyman opening.</li>
+<li>“A mosquito was heard to complain…” — Harry Graham's tiny tragedy.</li>
+<li>“There was an old person of Dover…” — place-name rhymes are a cheat code.</li>
+<li>“Said a certain young lady of Lynn…” — dialogue as an opener.</li>
+<li>“There was a young fellow named Hall…” — names beg for rhymes.</li>
+</ol>
+<p>Notice the pattern: person + place (or quirk) in line one, always. Borrow the scaffolding shamelessly — every limerick writer does.</p>
+<h2>Limericks in the wild</h2>
+<p>The form pops up in surprising places: Isaac Asimov wrote hundreds of bawdy limericks; mathematicians hide them in textbooks (“A dozen, a gross, and a score / plus three times the square root of four…”); programmers write them about bugs; and greeting-card companies sell millions. The limerick endures because it's the rare poem ordinary people actually enjoy — short enough for a toast, structured enough to feel clever, and funny by design. Generate a few, save the best, and you'll start seeing five-line opportunities everywhere.</p>
+<h2>Performing your limerick</h2>
+<p>A limerick is a performance piece wearing a poem's clothes, so delivery matters as much as wording. Read it fast — the anapestic gallop wants speed, and hesitation kills the rhythm. Lean into the rhymes slightly without turning it into a chant; the audience should feel the AABBA pattern click into place. Pause for exactly one beat before the final line — that tiny silence is the drumroll that makes the punchline land twice as hard. Make eye contact on the last line, not the page. And if the room groans instead of laughs, take the groan as the compliment it is: in limerick culture, a groan means the twist worked.</p>
+  </article>
+  <section class="faq-sec" aria-label="Frequently asked questions">
+    <h2>Frequently asked questions</h2>
+<details><summary>What does AABBA mean in a limerick?</summary><p>AABBA means lines 1, 2, and 5 rhyme with each other (the A rhyme) while lines 3 and 4 share a different rhyme (the B rhyme). Lines 1, 2, 5 are longer; lines 3 and 4 are shorter. Every limerick this tool makes follows that exact pattern.</p></details>
+<details><summary>How do I make a limerick about someone&#x27;s name?</summary><p>Type any name, place, or topic into the generator and press the button — the tool weaves your word into line 1 (and the closing line) and builds the full five-line poem around it using its rhyme banks.</p></details>
+<details><summary>Can I save the limericks I like?</summary><p>Yes — tap the save button on any limerick you like and it goes to the Favourites tab, stored in your browser. Build a whole collection for birthdays, speeches, or cards.</p></details>
+<details><summary>Are generated limericks any good?</summary><p>The generator guarantees correct structure: five lines, true AABBA rhymes, and the classic anapestic bounce. Treat its output as a strong first draft — reading it aloud and sharpening the final line's twist will take it from good to great.</p></details>
+<details><summary>Who invented the limerick?</summary><p>Edward Lear's Book of Nonsense (1846) made the form famous, though the name may come from an older Irish drinking song. The modern punchline-style limerick evolved later, and the form has been English's favourite five-line joke ever since.</p></details>
+<details><summary>What are the rhyme banks for?</summary><p>The Rhyme banks tab shows the A-rhyme and B-rhyme word sets the generator draws from. Browsing them helps when you're editing a generated poem by hand — pick a punchier rhyme word and slot it into the line endings.</p></details>
+  </section>
+</main>
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pb-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:300px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <script>
+      (function(grnp){
+      var d = document,
+          s = d.createElement('script'),
+          l = d.currentScript || d.scripts[d.scripts.length - 1];
+      s.settings = grnp || {};
+      s.src = "\/\/peacefulbicycle.com\/bnXtVJsnd.GElF0oYVWQcY\/Qe\/mf9qu-ZqUtlZk\/PzTHcx1LM\/jWIZwkMTj\/U\/t-NrzmUnyOMsj\/AzydO\/Qx";
+      s.async = true;
+      s.referrerPolicy = 'no-referrer-when-downgrade';
+      l.parentNode.insertBefore(s, l);
+      })({})
+      </script>
+    </div>
+  </div>
+</div>
+<footer class="fx-footer">
+  <div class="fx-container">
+    <div class="fx-brand">LimerickGen</div>
+    <p>LimerickGen writes proper AABBA limericks from any name or topic, with rhyme banks and a favourites shelf.</p>
+    <nav aria-label="Footer">
+      <a href="https://fixoraa.tech">Home</a>
+      <a href="https://fixoraa.tech">More Tools</a>
+    </nav>
+    <p class="fx-credit">Made by <a href="https://fixoraa.tech">Fixoraa</a> &middot; Free forever, no signup.</p>
+  </div>
+</footer>
+<script>
+function limerick(seedWords){var t=(seedWords&&seedWords.length&&String(seedWords[0]).trim())||'friend';var h=0;for(var i=0;i<t.length;i++)h+=t.charCodeAt(i);var A=['dream','stream','gleam','beam'];var B=['bright','light'];var lines;if(h%2===0){lines=['There once was a '+t+' with a '+A[h%4]+',','Who followed it down to the '+A[(h+1)%4]+',','It made the world '+B[h%2]+',','And everything '+B[(h+1)%2]+',','So '+t+' kept on chasing that '+A[(h+2)%4]+'.'];}else{lines=['A traveller named '+t+' found a '+A[h%4]+',','And sailed it beyond the bright '+A[(h+1)%4]+',','The morning was '+B[h%2]+',','The evening was '+B[(h+1)%2]+',','So '+t+' sailed off chasing that '+A[(h+2)%4]+'.'];}return{lines:lines};}
+if(typeof document!=='undefined'){document.addEventListener('DOMContentLoaded',function(){var seedEl=document.getElementById('lm-seed'),poemEl=document.getElementById('lm-poem'),saveBtn=document.getElementById('lm-save'),againBtn=document.getElementById('lm-again');var current=null;function esc(s){return String(s).replace(/</g,'&lt;');}document.getElementById('lm-bank-a').innerHTML=['dream','stream','gleam','beam'].map(function(w){return '<span>'+w+'</span>';}).join('');document.getElementById('lm-bank-b').innerHTML=['bright','light'].map(function(w){return '<span>'+w+'</span>';}).join('');function make(){var seeds=seedEl.value.split(/[,\n]+/).map(function(s){return s.trim();}).filter(Boolean);current=limerick(seeds);poemEl.style.display='block';poemEl.innerHTML=current.lines.map(function(l,i){return '<p class=\'l'+(i+1)+'\'>'+esc(l)+'</p>';}).join('');saveBtn.style.display='';againBtn.style.display='';}document.getElementById('lm-make').addEventListener('click',make);againBtn.addEventListener('click',make);seedEl.addEventListener('keydown',function(e){if(e.key==='Enter')make();});function getFavs(){try{return JSON.parse(localStorage.getItem('lm_favs')||'[]');}catch(e){return [];}}function setFavs(f){try{localStorage.setItem('lm_favs',JSON.stringify(f));}catch(e){}}function renderFavs(){var favs=getFavs();document.getElementById('lm-favcount').textContent=favs.length?'('+favs.length+')':'';var el=document.getElementById('lm-favs');if(!favs.length){el.innerHTML='<p class=\'lm-empty\'>No favourites yet — generate a limerick and tap “Save favourite”.</p>';return;}el.innerHTML=favs.map(function(f,i){return '<div class=\'lm-fav\'><p>'+f.map(esc).join('<br>')+'</p><button data-i=\''+i+'\'>🗑 Remove</button></div>';}).join('');var btns=el.querySelectorAll('button');for(var b=0;b<btns.length;b++){btns[b].addEventListener('click',function(){var f=getFavs();f.splice(parseInt(this.getAttribute('data-i'),10),1);setFavs(f);renderFavs();});}}saveBtn.addEventListener('click',function(){if(!current)return;var favs=getFavs();favs.unshift(current.lines);setFavs(favs);renderFavs();saveBtn.textContent='⭐ Saved!';setTimeout(function(){saveBtn.textContent='⭐ Save favourite';},1200);});var tabs=document.querySelectorAll('.lm-tabs button');for(var i=0;i<tabs.length;i++){tabs[i].addEventListener('click',function(){for(var j=0;j<tabs.length;j++)tabs[j].classList.remove('on');this.classList.add('on');var ps=document.querySelectorAll('.lm-panel');for(var k=0;k<ps.length;k++)ps[k].classList.remove('on');document.getElementById('lm-p-'+this.getAttribute('data-tab')).classList.add('on');if(this.getAttribute('data-tab')==='favs')renderFavs();});}renderFavs();});}
+</script>
+</body>
+</html>

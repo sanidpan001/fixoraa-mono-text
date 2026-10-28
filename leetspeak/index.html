@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leetspeak Translator: Text to 1337 &amp; Decoder - LeetSpeak</title>
+<meta name="description" content="Free leetspeak translator: convert text to 1337 with adjustable intensity, decode leet back to plain text, and copy gamer-ready styles instantly.">
+<link rel="canonical" href="https://text.fixoraa.tech/leetspeak/">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Leetspeak Translator: Text to 1337 &amp; Decoder - LeetSpeak">
+<meta property="og:description" content="Free leetspeak translator: convert text to 1337 with adjustable intensity, decode leet back to plain text, and copy gamer-ready styles instantly.">
+<meta property="og:url" content="https://text.fixoraa.tech/leetspeak/">
+<meta property="og:type" content="website">
+<script defer src="https://t.fixoraa.tech/track.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "LeetSpeak",
+      "url": "https://text.fixoraa.tech/leetspeak/",
+      "applicationCategory": "Fun Tools",
+      "operatingSystem": "Web",
+      "description": "Free leetspeak translator: convert text to 1337 with adjustable intensity, decode leet back to plain text, and copy gamer-ready styles instantly.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is leetspeak?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Leetspeak (from elite) replaces letters with lookalike numbers and symbols: A\u21924, E\u21923, S\u21925, O\u21920, T\u21927. It originated in 1980s hacker BBS culture and early online games."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I convert text to leetspeak?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Type your text, set the intensity slider (light/medium/full), and copy the output. Light swaps only A and E; full maps nearly every letter to a symbol."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I decode leetspeak back to normal text?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes \u2014 switch to decode mode and paste leet text. Each symbol maps back through the fixed table, so #3\u00a3\u00a30 decodes to hello. Ambiguous symbols resolve per the documented mapping."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does leetspeak make passwords stronger?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Slightly, against naive dictionary attacks \u2014 but modern cracking tools know leet mangling rules. Use leet for memorability of long passphrases, and rely on length plus a password manager for real security."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the most common leet substitutions?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The classic mappings: A=4, B=8, E=3, G=6, I=1, O=0, S=5, T=7, Z=2. This translator's full level extends the set with symbol forms like H=# and M=/\\/."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is leetspeak still used today?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes \u2014 in gamer tags, usernames, memes and password mnemonics. Its filter-dodging origins matter less now, but the aesthetic and in-group signalling keep it alive across gaming and internet culture."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+
+:root{
+  --bg:#0B0B0D; --surface:#141417; --accent:#BFFF3C; --accent-ink:#0B0B0D;
+  --ink:#F4F7EE; --muted:#B9C0AC; --line:#232329;
+  --display:'Rubik Mono One',serif; --body:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.6;font-size:16px}
+.fx-container{max-width:72rem;margin:0 auto;padding-left:1rem;padding-right:1rem}
+@media(min-width:640px){.fx-container{padding-left:1.5rem;padding-right:1.5rem}}
+/* ad utilities (for the verbatim ad snippets) */
+.no-print{}
+.mx-auto{margin-left:auto;margin-right:auto}.max-w-6xl{max-width:72rem}
+.px-4{padding-left:1rem;padding-right:1rem}.pt-4{padding-top:1rem}.pb-4{padding-bottom:1rem}
+@media(min-width:640px){.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:scale-100{transform:scale(1)}}
+.text-center{text-align:center}.block{display:block}
+.text-\[10px\]{font-size:10px}.tracking-\[0\.18em\]{letter-spacing:.18em}.uppercase{text-transform:uppercase}
+.text-slate-400{color:#94a3b8}.mb-1\.5{margin-bottom:.375rem}
+.flex{display:flex}.justify-center{justify-content:center}.overflow-hidden{overflow:hidden}
+.origin-top{transform-origin:top}.scale-\[0\.44\]{transform:scale(.44)}.shrink-0{flex-shrink:0}
+/* header */
+.fx-header{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+.fx-header-in{display:flex;align-items:center;gap:.9rem;padding:.8rem 0;flex-wrap:wrap}
+.fx-logo{display:flex;align-items:center;gap:.65rem;text-decoration:none;color:var(--ink)}
+.fx-logo-tile{width:44px;height:44px;border-radius:14px;background:var(--accent);color:var(--accent-ink);
+  display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;flex-shrink:0;
+  box-shadow:0 4px 14px rgba(0,0,0,.12)}
+.fx-brand{font-family:var(--display);font-size:1.45rem;font-weight:700;letter-spacing:-.01em;line-height:1.1}
+.fx-nav{margin-left:auto;display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.fx-btn{display:inline-block;padding:.55rem 1.1rem;border-radius:999px;text-decoration:none;font-weight:600;font-size:.92rem;
+  border:2px solid var(--accent);color:var(--accent);background:transparent;transition:all .18s ease;min-height:44px;line-height:1.5}
+.fx-btn:hover{background:var(--accent);color:var(--accent-ink)}
+.fx-btn.solid{background:var(--accent);color:var(--accent-ink)}
+.fx-btn.solid:hover{filter:brightness(.94)}
+.fx-badge{display:inline-flex;align-items:center;gap:.35rem;font-size:.78rem;font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--accent);border:1.5px dashed var(--accent);border-radius:999px;padding:.3rem .8rem;white-space:nowrap}
+/* tool section */
+.tool-sec{padding:2.2rem 0 1rem}
+/* article */
+.article-sec{padding:2.5rem 0;max-width:46rem;margin:0 auto}
+.article-sec h2{font-family:var(--display);font-size:1.55rem;margin:2rem 0 .8rem;line-height:1.25;letter-spacing:-.01em}
+.article-sec h3{font-size:1.15rem;margin:1.5rem 0 .6rem}
+.article-sec p,.article-sec li{margin-bottom:.85rem;color:var(--ink)}
+.article-sec ul,.article-sec ol{padding-left:1.4rem;margin-bottom:1rem}
+.article-sec table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.95rem}
+.article-sec th,.article-sec td{border:1px solid var(--line);padding:.55rem .7rem;text-align:left}
+.article-sec th{background:var(--surface);font-weight:700}
+/* faq */
+.faq-sec{padding:1rem 0 3rem;max-width:46rem;margin:0 auto}
+.faq-sec h2{font-family:var(--display);font-size:1.55rem;margin-bottom:1.2rem}
+.faq-sec details{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-bottom:.7rem;overflow:hidden}
+.faq-sec summary{padding:1rem 1.2rem;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:1rem;min-height:44px}
+.faq-sec summary::-webkit-details-marker{display:none}
+.faq-sec summary::after{content:'+';font-size:1.4rem;color:var(--accent);flex-shrink:0}
+.faq-sec details[open] summary::after{content:'\2013'}
+.faq-sec details p{padding:0 1.2rem 1.1rem;color:var(--muted)}
+/* footer */
+.fx-footer{background:var(--surface);border-top:1px solid var(--line);padding:2.2rem 0;margin-top:1rem}
+.fx-footer .fx-brand{font-size:1.2rem}
+.fx-footer p{color:var(--muted);font-size:.95rem;max-width:44rem;margin:.5rem 0}
+.fx-footer nav{display:flex;gap:1.2rem;margin:1rem 0;flex-wrap:wrap}
+.fx-footer nav a{color:var(--accent);font-weight:600;text-decoration:none}
+.fx-footer nav a:hover{text-decoration:underline}
+.fx-credit{font-size:.9rem;color:var(--muted)}
+.fx-credit a{color:var(--accent);font-weight:700;text-decoration:none}
+@media(max-width:640px){.fx-brand{font-size:1.2rem}.tool-sec{padding:1.4rem 0 .6rem}}
+@media print{.no-print{display:none!important}}
+
+.ls-wrap{max-width:1020px;margin:0 auto;padding:8px 4px;font-family:Inter,system-ui,sans-serif;color:#F4F7EE}.ls-head{text-align:center;padding:32px 14px 18px}.ls-logo{font-size:40px;font-family:'Rubik Mono One',monospace;color:#BFFF3C}.ls-h1{font-family:'Rubik Mono One',monospace;font-size:clamp(1.5rem,4vw,2.3rem);margin:12px 0 8px;color:#BFFF3C;font-weight:400}.ls-tag{color:#B9C0AC;font-size:1rem;max-width:540px;margin:0 auto}.ls-bento{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:10px}.ls-card{background:#141417;border:1px solid #232329;border-radius:18px;padding:22px}.ls-card.wide{grid-column:span 2}.ls-h2{font-family:'Rubik Mono One',monospace;font-size:.95rem;margin:0 0 16px;color:#BFFF3C;font-weight:400}.ls-area{width:100%;box-sizing:border-box;background:#0B0B0D;border:1.5px solid #232329;border-radius:12px;color:#F4F7EE;padding:14px 16px;font-size:1.05rem;min-height:120px;resize:vertical;font-family:Inter,system-ui,sans-serif}.ls-area:focus{outline:2px solid #BFFF3C;border-color:#BFFF3C}.ls-out{background:#0B0B0D;border:1px solid #232329;border-radius:12px;padding:18px;font-family:'Rubik Mono One',monospace;font-size:1.25rem;color:#BFFF3C;min-height:90px;word-break:break-word;line-height:1.7}.ls-slider{width:100%;accent-color:#BFFF3C;min-height:48px}.ls-levels{display:flex;justify-content:space-between;font-size:.8rem;color:#B9C0AC;font-weight:600;margin-top:2px}.ls-levels b{color:#BFFF3C}.ls-presets{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.ls-preset{background:#0B0B0D;border:1.5px solid #232329;border-radius:12px;padding:14px;color:#F4F7EE;cursor:pointer;min-height:64px;text-align:left}.ls-preset:hover{border-color:#BFFF3C}.ls-preset .pn{font-size:.78rem;font-weight:700;color:#B9C0AC}.ls-preset .pv{font-family:'Rubik Mono One',monospace;color:#BFFF3C;font-size:.9rem;margin-top:6px}.ls-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}.ls-btn{background:#BFFF3C;color:#0B0B0D;border:0;border-radius:10px;padding:12px 22px;font-weight:800;cursor:pointer;min-height:48px;font-family:'Rubik Mono One',monospace;font-size:.85rem}.ls-btn:hover{background:#d4ff70}.ls-btn2{background:transparent;color:#BFFF3C;border:1.5px solid #BFFF3C;border-radius:10px;padding:12px 22px;font-weight:700;cursor:pointer;min-height:48px}.ls-toggle{display:flex;gap:8px;margin-bottom:14px}.ls-mode{background:transparent;border:1.5px solid #232329;color:#B9C0AC;border-radius:10px;padding:10px 18px;font-weight:700;cursor:pointer;min-height:44px}.ls-mode.active{background:#BFFF3C;color:#0B0B0D;border-color:#BFFF3C}.ls-count{font-size:.78rem;color:#B9C0AC;margin-top:8px;font-family:'Rubik Mono One',monospace}@media(max-width:760px){.ls-bento{grid-template-columns:1fr}.ls-card.wide{grid-column:span 1}.ls-presets{grid-template-columns:1fr}.ls-card{padding:18px 14px}}
+</style>
+</head>
+<body>
+<header class="fx-header">
+  <div class="fx-container fx-header-in">
+    <a class="fx-logo" href="https://fixoraa.tech" aria-label="LeetSpeak home">
+      <span class="fx-logo-tile" aria-hidden="true">#_</span>
+      <span class="fx-brand">LeetSpeak</span>
+    </a>
+    <nav class="fx-nav" aria-label="Site">
+      <a class="fx-btn" href="https://fixoraa.tech">Home</a>
+      <a class="fx-btn solid" href="https://fixoraa.tech">More Tools</a>
+      <span class="fx-badge" aria-label="Free forever">&#8734; Unlimited Free Usage</span>
+    </nav>
+  </div>
+</header>
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pt-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:728px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <div class="origin-top scale-[0.44] sm:scale-100 shrink-0">
+        <script>
+          atOptions = { 'key' : '4e68ac77881c17fe128a46565d9a4e8c', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+        </script>
+        <script src="https://www.highrevenueformat.com/4e68ac77881c17fe128a46565d9a4e8c/invoke.js"></script>
+      </div>
+    </div>
+  </div>
+</div>
+<main class="fx-container">
+  <section class="tool-sec tpl-play-cards" aria-label="LeetSpeak tool">
+<div class='ls-wrap'>
+  <div class='ls-head'><div class='ls-logo'>#_</div><h1 class='ls-h1'>Leetspeak Translator</h1><p class='ls-tag'>From plain text to 1337 — and back again.</p></div>
+  <div class='ls-bento'>
+    <div class='ls-card'>
+      <h2 class='ls-h2'>Input</h2>
+      <div class='ls-toggle'><button class='ls-mode active' data-dir='enc' type='button'>Encode</button><button class='ls-mode' data-dir='dec' type='button'>Decode</button></div>
+      <textarea class='ls-area' id='ls-in' placeholder='Type something... try: elite hacker'>elite hacker</textarea>
+      <div class='ls-count' id='ls-count'></div>
+    </div>
+    <div class='ls-card'>
+      <h2 class='ls-h2'>Intensity</h2>
+      <input type='range' class='ls-slider' id='ls-level' min='0' max='2' step='1' value='1'>
+      <div class='ls-levels'><span><b>0</b> Light</span><span><b>1</b> Medium</span><span><b>2</b> Full</span></div>
+      <h2 class='ls-h2' style='margin-top:20px'>Preset styles</h2>
+      <div class='ls-presets'>
+        <button class='ls-preset' data-preset='0' type='button'><div class='pn'>Subtle</div><div class='pv' id='ls-p0'></div></button>
+        <button class='ls-preset' data-preset='1' type='button'><div class='pn'>Classic 1337</div><div class='pv' id='ls-p1'></div></button>
+        <button class='ls-preset' data-preset='2' type='button'><div class='pn'>Full h4x0r</div><div class='pv' id='ls-p2'></div></button>
+      </div>
+    </div>
+    <div class='ls-card wide'>
+      <h2 class='ls-h2'>Output</h2>
+      <div class='ls-out' id='ls-out'></div>
+      <div class='ls-actions'><button class='ls-btn' id='ls-copy' type='button'>COPY</button><button class='ls-btn2' id='ls-swap' type='button'>Swap direction</button></div>
+    </div>
+  </div>
+</div>
+  </section>
+  <article class="article-sec" aria-label="Guide">
+<h2>What Leetspeak Is</h2>
+<p>Leetspeak (from elite) is a stylised way of writing that replaces letters with numbers and symbols that resemble them: E becomes 3, A becomes 4, S becomes 5. It was born in 1980s bulletin board systems and early online games, where hackers used it as a playful in-group code — and, practically, to dodge naive keyword filters. Today it survives as internet culture: gamer tags, passwords people can actually remember, and aesthetic text.</p>
+<p>The substitutions are visual puns. 3 looks like a reversed E, 4 like an A with its crossbar, 5 like an S, 0 like an O, 7 like a T, 1 like an I or L. Deeper levels get more creative: H becomes #, M becomes /\/\, W becomes \//. There is no single official mapping — which is exactly why a translator with defined intensity levels is useful: it makes the output deterministic instead of a matter of taste.</p>
+<h2>The Three Intensity Levels</h2>
+<p>This translator defines three levels so results are reproducible. <strong>Light (level 0)</strong> substitutes only A→4 and E→3 — the two most recognisable swaps. Hello becomes h3llo: readable by anyone, with just a flavour of leet. <strong>Medium (level 1)</strong> adds I→1, O→0, S→5 and T→7. Hello becomes h3ll0; leet speak becomes l337 5p34k — the classic look most people picture. <strong>Full (level 2)</strong> maps nearly every letter to a symbol: hello becomes #3££0. At full intensity, text is genuinely cryptic to outsiders, which was the original point.</p>
+<h3>Why determinism matters</h3>
+<p>Hand-written leet is inconsistent — is L a 1, a £, or a |_? A fixed mapping means the same input always produces the same output, which is what makes the reverse decoder possible. The decoder reads level-2 output and maps each symbol back to its letter, so #3££0 becomes hello again. Ambiguous cases resolve by the fixed table (1 always decodes to I), which is documented rather than guessed.</p>
+<h2>Leetspeak and Passwords</h2>
+<p>The most practical modern use of leet is memorable passwords. Tr4v3l!2024 is far easier to recall than a random string, and the substitutions do add entropy against dictionary attacks — password crackers long ago learned leet-speak mangling rules, so treat it as a memory aid, not as real security. The honest formula is: leet for memorability, plus length and a password manager for actual security. A 20-character leet phrase beats an 8-character random string on both counts.</p>
+<h3>Do leet substitutions make passwords stronger?</h3>
+<p>Marginally. Against a naive dictionary attack, yes — password is not in the dictionary as p455w0rd. Against modern cracking tools with leet mangling rules (which every serious tool has), barely. Length dominates: each extra character multiplies cracking time far more than any substitution. Use leet to remember long passphrases, not to rescue short ones.</p>
+<h2>Gamer Tags and Usernames</h2>
+<p>The second great use is identity: xX_Sh4d0w_Xx is available when Shadow is taken on every platform. Leet transforms common words into unique handles while keeping them pronounceable to those in the know. The preset styles in the translator — from subtle to extreme — map to exactly this use case: pick how cryptic you want to look.</p>
+<h2>The Culture: From BBS to Meme</h2>
+<p>Leet grew up alongside early internet culture: 31337 (elite) itself, pwned (owned, from a typo), n00b (newbie), w00t (excitement). It was simultaneously a shibboleth and a joke — taking itself exactly as seriously as it needed to. That dual nature is why it endures while other fads died: it is useful (filter-dodging, passwords, handles) and funny at the same time. Modern meme text like the mocking SpOnGeBoB case is its direct descendant.</p>
+<h3>A brief glossary</h3>
+<ul>
+<li><strong>31337 / 1337:</strong> elite — the word that named the dialect.</li>
+<li><strong>pwn:</strong> to dominate or compromise, from a typo of own.</li>
+<li><strong>n00b:</strong> newcomer, often teasing.</li>
+<li><strong>w00t:</strong> exclamation of joy, origin debated.</li>
+<li><strong>h4x0r:</strong> hacker, self-applied with irony.</li>
+</ul>
+<h2>How This Translator Helps</h2>
+<p>LeetSpeak gives you a live workbench: type normally, drag the intensity slider from subtle to full, try the preset styles, and copy the result for your tag, password base or meme. Flip to decode mode to translate cryptic leet back to plain text. Deterministic, instant, and oddly satisfying.</p>
+<h2>Leet-Speak vs Content Filters</h2>
+<p>One of leet's original practical uses was slipping past naive keyword filters — disguised spellings that dodged spam and profanity blockers doing literal string matching. It worked because early filters matched plain words exactly. Modern filters normalise leet (and lookalike characters) before matching, so the trick is mostly dead — but the arms race it started shaped how filters are built today. The lesson generalises: any purely textual disguise eventually gets normalised away, which is why the translator's deterministic mapping is presented as fun and utility, not as a way to evade moderation.</p>
+<h2>Building Your Own Mapping</h2>
+<p>The translator's three levels are opinionated defaults, but leet is personal — many people have house styles. A good custom mapping follows three principles: keep the most iconic swaps (3, 4, 5, 0, 7) since they carry the aesthetic; stay consistent (if L is always the same symbol, your text stays decodable); and match intensity to audience — light for readability, full for style. If you extend the table, prefer symbols available on a standard keyboard for handles and passwords, and test-decode your output to make sure a reader can still sound it out. The preset buttons demonstrate the approach: same word, three personalities.</p>
+<h2>Leet Beyond English</h2>
+<p>Leet grew from English, but the visual-pun idea ports to other scripts. Greek, Cyrillic and Arabic each have their own lookalike substitutions in gaming and messaging subcultures — though cross-script lookalikes cross from leet into spoofing territory with real phishing implications. Within English, regional flavours exist too: some communities prefer different symbols for the same letter. The translator sticks to the widely recognised core set precisely because shared recognition is what makes leet readable. When in doubt, the medium level is the most universally understood.</p>
+<h2>Leet in Pop Culture</h2>
+<p>Leet escaped the BBS and colonised pop culture. Films played with green-on-black terminal aesthetics that leet embodied; games from Counter-Strike to World of Warcraft made 1337-speak the lingua franca of lobbies; musicians and brands adopted stylised spellings for edge. The word pwned crossed into mainstream journalism to describe data breaches. Each wave diluted the in-group secrecy and amplified the playfulness — leet today is less a code and more a costume, worn for fun rather than concealment. That is why the translator's preset styles matter: they are different costumes for different occasions.</p>
+<h3>Common mistakes</h3>
+<ul>
+<li>Over-substituting until text is unreadable — if nobody can decode it, it is noise, not leet.</li>
+<li>Using leet for real security — crackers know every mangling rule; length beats cleverness.</li>
+<li>Mixing mappings mid-text — inconsistency breaks the visual rhythm and the decodability.</li>
+<li>Forgetting your audience — full intensity delights gamers and confuses grandparents.</li>
+</ul>
+<p>The deepest irony of leet is that a dialect invented to exclude outsiders became one of the internet's most recognisable aesthetics. Its visual logic — letters as pictures, not just symbols — resurfaces everywhere from captcha design to glitch art. Learning to read and write it fluently is a small but genuine piece of internet literacy: you start seeing the letterforms inside the numbers, and plain text never looks quite the same again.</p>
+<h2>Leet in Brand and Product Names</h2>
+<p>Startups have long borrowed leet for distinctive branding — stylised spellings stand out in app stores and are easier to trademark than dictionary words. The trick is restraint: one substitution in an otherwise readable name is memorable, while full-intensity styling is unreadable on a billboard. Test the name by saying it aloud — if listeners cannot spell it back, customers cannot search for it. The translator's light and medium levels map neatly onto this use: light for logos, medium for social handles, full for the in-group merchandise that fans love.</p>
+  </article>
+  <section class="faq-sec" aria-label="Frequently asked questions">
+    <h2>Frequently asked questions</h2>
+<details><summary>What is leetspeak?</summary><p>Leetspeak (from elite) replaces letters with lookalike numbers and symbols: A→4, E→3, S→5, O→0, T→7. It originated in 1980s hacker BBS culture and early online games.</p></details>
+<details><summary>How do I convert text to leetspeak?</summary><p>Type your text, set the intensity slider (light/medium/full), and copy the output. Light swaps only A and E; full maps nearly every letter to a symbol.</p></details>
+<details><summary>Can I decode leetspeak back to normal text?</summary><p>Yes — switch to decode mode and paste leet text. Each symbol maps back through the fixed table, so #3££0 decodes to hello. Ambiguous symbols resolve per the documented mapping.</p></details>
+<details><summary>Does leetspeak make passwords stronger?</summary><p>Slightly, against naive dictionary attacks — but modern cracking tools know leet mangling rules. Use leet for memorability of long passphrases, and rely on length plus a password manager for real security.</p></details>
+<details><summary>What are the most common leet substitutions?</summary><p>The classic mappings: A=4, B=8, E=3, G=6, I=1, O=0, S=5, T=7, Z=2. This translator's full level extends the set with symbol forms like H=# and M=/\/.</p></details>
+<details><summary>Is leetspeak still used today?</summary><p>Yes — in gamer tags, usernames, memes and password mnemonics. Its filter-dodging origins matter less now, but the aesthetic and in-group signalling keep it alive across gaming and internet culture.</p></details>
+  </section>
+</main>
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pb-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:300px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <script>
+      (function(grnp){
+      var d = document,
+          s = d.createElement('script'),
+          l = d.currentScript || d.scripts[d.scripts.length - 1];
+      s.settings = grnp || {};
+      s.src = "\/\/peacefulbicycle.com\/bnXtVJsnd.GElF0oYVWQcY\/Qe\/mf9qu-ZqUtlZk\/PzTHcx1LM\/jWIZwkMTj\/U\/t-NrzmUnyOMsj\/AzydO\/Qx";
+      s.async = true;
+      s.referrerPolicy = 'no-referrer-when-downgrade';
+      l.parentNode.insertBefore(s, l);
+      })({})
+      </script>
+    </div>
+  </div>
+</div>
+<footer class="fx-footer">
+  <div class="fx-container">
+    <div class="fx-brand">LeetSpeak</div>
+    <p>LeetSpeak translates text to leetspeak and back, with intensity levels and presets.</p>
+    <nav aria-label="Footer">
+      <a href="https://fixoraa.tech">Home</a>
+      <a href="https://fixoraa.tech">More Tools</a>
+    </nav>
+    <p class="fx-credit">Made by <a href="https://fixoraa.tech">Fixoraa</a> &middot; Free forever, no signup.</p>
+  </div>
+</footer>
+<script>
+function leet(text,level){var maps=[{a:'4',e:'3'},{a:'4',e:'3',i:'1',o:'0',s:'5',t:'7'},{a:'4',b:'8',c:'(',d:'|)',e:'3',f:'ph',g:'6',h:'#',i:'1',j:'_|',k:'|<',l:'\u00a3',m:'\\/\\/',n:'\\/',o:'0',p:'|*',q:'9',r:'2',s:'5',t:'7',u:'|_|',v:'\\/',w:'\\//',x:'><',y:'`/',z:'~/_'}];var lv=Math.max(0,Math.min(2,level|0));var map=maps[lv];var out=String(text).split('').map(function(ch){var lo=ch.toLowerCase();return map[lo]!==undefined?map[lo]:ch;}).join('');return{out:out};}
+function unleet(text){var inv={'4':'a','8':'b','(':'c','|)':'d','3':'e','ph':'f','6':'g','#':'h','1':'i','_|':'j','|<':'k','\u00a3':'l','\\/\\/':'m','\\/':'n','0':'o','|*':'p','9':'q','2':'r','5':'s','7':'t','|_|':'u','\\/':'v','\\//':'w','><':'x','`/':'y','~/_':'z'};var keys=Object.keys(inv).sort(function(a,b){return b.length-a.length;});var s=String(text);var out='';var i=0;while(i<s.length){var matched=false;for(var k=0;k<keys.length;k++){var key=keys[k];if(s.substr(i,key.length)===key){out+=inv[key];i+=key.length;matched=true;break;}}if(!matched){out+=s[i];i++;}}return out;}
+if(typeof document!=='undefined'){document.addEventListener('DOMContentLoaded',function(){var dir='enc';function render(){var inp=document.getElementById('ls-in').value;var lv=parseInt(document.getElementById('ls-level').value,10);var res=dir==='enc'?leet(inp,lv).out:unleet(inp);document.getElementById('ls-out').textContent=res;document.getElementById('ls-count').textContent=inp.length+' chars';document.getElementById('ls-p0').textContent=leet('elite',0).out;document.getElementById('ls-p1').textContent=leet('elite',1).out;document.getElementById('ls-p2').textContent=leet('elite',2).out;}document.querySelectorAll('.ls-mode').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('.ls-mode').forEach(function(x){x.classList.remove('active');});b.classList.add('active');dir=b.getAttribute('data-dir');render();});});document.getElementById('ls-in').addEventListener('input',render);document.getElementById('ls-level').addEventListener('input',render);document.querySelectorAll('.ls-preset').forEach(function(p){p.addEventListener('click',function(){document.getElementById('ls-level').value=p.getAttribute('data-preset');dir='enc';document.querySelectorAll('.ls-mode').forEach(function(x){x.classList.toggle('active',x.getAttribute('data-dir')==='enc');});render();var t=document.getElementById('ls-out').textContent;if(navigator.clipboard)navigator.clipboard.writeText(t);});});document.getElementById('ls-copy').addEventListener('click',function(){var t=document.getElementById('ls-out').textContent;if(navigator.clipboard)navigator.clipboard.writeText(t);var b=document.getElementById('ls-copy');b.textContent='COPIED!';setTimeout(function(){b.textContent='COPY';},1200);});document.getElementById('ls-swap').addEventListener('click',function(){var cur=document.getElementById('ls-out').textContent;document.getElementById('ls-in').value=cur;dir=dir==='enc'?'dec':'enc';document.querySelectorAll('.ls-mode').forEach(function(x){x.classList.toggle('active',x.getAttribute('data-dir')===dir);});render();});render();});}
+</script>
+</body>
+</html>

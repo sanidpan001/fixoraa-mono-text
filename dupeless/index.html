@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="canonical" href="https://text.fixoraa.tech/dupeless/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dupeless — Remove Duplicate Lines Online | Free Dedupe List Tool</title>
+<meta name="description" content="Dupeless is a free online tool to remove duplicate lines from any list. Paste text or drop a .txt/.csv file, dedupe by column or normalize emails, and download the cleaned result — no signup needed.">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root { --sky: #0284C7; --slate: #334155; }
+  html { scroll-behavior: smooth; }
+  body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  .tab-active { background: #0284C7; color: #fff; border-color: #0284C7; }
+  .tab-idle { background: #fff; color: #334155; border-color: #e2e8f0; }
+  .tab-idle:hover { border-color: #0284C7; color: #0284C7; }
+  textarea:focus, input:focus, select:focus { outline: 2px solid #0284C7; outline-offset: -1px; }
+  .dragging { border-color: #0284C7 !important; background: #f0f9ff !important; }
+  .freq-row:hover { background: #f8fafc; }
+</style>
+<script id="dupeless-lib" type="text/javascript">
+/* Dupeless core logic — pure functions, no DOM.
+   Inlined verbatim into dupeless.html <script id="dupeless-lib"> at build time.
+   Tests eval this file (extracted from the built HTML) in Node. */
+
+var EMAIL_RE = /^[a-z0-9._%+-]+@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/;
+
+/**
+ * Split raw text into line records. Preserves original text for output.
+ * opts: { ignoreBlank: bool } (default true)
+ * returns: array of raw line strings (no trailing \r), blank lines removed when ignoreBlank
+ */
+function dupelessParseLines(text, opts) {
+  opts = opts || {};
+  var ignoreBlank = opts.ignoreBlank !== false;
+  if (typeof text !== 'string' || text.length === 0) return [];
+  var raw = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+  if (ignoreBlank) {
+    return raw.filter(function (l) { return l.trim().length > 0; });
+  }
+  return raw;
+}
+
+/**
+ * Extract the dedupe key value from a CSV line for a chosen column (0-based).
+ * Handles quoted fields (double quotes escaped as "").
+ * opts: { delimiter: string, column: number }
+ */
+function dupelessCsvCell(line, opts) {
+  opts = opts || {};
+  var delim = typeof opts.delimiter === 'string' ? opts.delimiter : ',';
+  var col = typeof opts.column === 'number' ? opts.column : 0;
+  var cells = [];
+  var cur = '';
+  var inQ = false;
+  for (var i = 0; i < line.length; i++) {
+    var ch = line[i];
+    if (inQ) {
+      if (ch === '"') {
+        if (line[i + 1] === '"') { cur += '"'; i++; }
+        else inQ = false;
+      } else cur += ch;
+    } else {
+      if (ch === '"') inQ = true;
+      else if (ch === delim) { cells.push(cur); cur = ''; }
+      else cur += ch;
+    }
+  }
+  cells.push(cur);
+  var idx = Math.max(0, Math.min(col, cells.length - 1));
+  return cells[idx];
+}
+
+/**
+ * Normalize an email address: trim + lowercase.
+ * Returns { value, valid }.
+ */
+function dupelessNormalizeEmail(line) {
+  var v = String(line == null ? '' : line).trim().toLowerCase();
+  return { value: v, valid: EMAIL_RE.test(v) };
+}
+
+/**
+ * Build the dedupe key for one line.
+ * opts: { caseSensitive, trim, mode: 'text'|'csv'|'email', delimiter, column, dropInvalidEmail }
+ * Returns null when the line must be excluded (e.g. invalid email with dropInvalidEmail).
+ */
+function dupelessKeyOf(line, opts) {
+  opts = opts || {};
+  var key = String(line);
+  if (opts.mode === 'csv') key = dupelessCsvCell(key, opts);
+  if (opts.mode === 'email') {
+    var e = dupelessNormalizeEmail(key);
+    if (!e.valid && opts.dropInvalidEmail) return null;
+    key = e.value;
+  }
+  if (opts.trim !== false) key = key.trim();
+  if (!opts.caseSensitive) key = key.toLowerCase();
+  return key;
+}
+
+/**
+ * Main dedupe engine. Pure.
+ * lines: array of strings (already parsed).
+ * opts: {
+ *   caseSensitive: bool (default true),
+ *   trim: bool (default true),
+ *   keep: 'first'|'last' (default 'first'),
+ *   mode: 'unique'|'duplicates'|'once' (default 'unique'),
+ *   sort: 'none'|'az'|'za' (default 'none'),
+ *   inputMode: 'text'|'csv'|'email' (default 'text'),
+ *   delimiter: string, column: number, dropInvalidEmail: bool
+ * }
+ * Returns:
+ * {
+ *   rows: [ { line, key, count, firstIndex, lastIndex } ],  // final output rows
+ *   frequency: [ { line, key, count } ] sorted by count desc (only count>1),
+ *   invalidEmails: [string],
+ *   stats: { total, kept, duplicatesRemoved, uniqueCount, duplicateLineCount }
+ * }
+ * `line` is the representative original line (first or last occurrence per `keep`).
+ */
+function dupelessProcess(lines, opts) {
+  opts = opts || {};
+  var keep = opts.keep === 'last' ? 'last' : 'first';
+  var mode = opts.mode === 'duplicates' ? 'duplicates' : (opts.mode === 'once' ? 'once' : 'unique');
+  var sort = opts.sort === 'az' ? 'az' : (opts.sort === 'za' ? 'za' : 'none');
+  var keyOpts = {
+    caseSensitive: !!opts.caseSensitive,
+    trim: opts.trim !== false,
+    mode: opts.inputMode === 'csv' ? 'csv' : (opts.inputMode === 'email' ? 'email' : 'text'),
+    delimiter: opts.delimiter, column: opts.column,
+    dropInvalidEmail: !!opts.dropInvalidEmail
+  };
+
+  var groups = Object.create(null);   // key -> entry
+  var order = [];                     // keys in first-seen order
+  var total = 0;
+  var invalidEmails = [];
+
+  for (var i = 0; i < lines.length; i++) {
+    var line = String(lines[i]);
+    var k = dupelessKeyOf(line, keyOpts);
+    if (k === null) { invalidEmails.push(line); continue; }
+    total++;
+    var g = groups[k];
+    if (!g) {
+      g = { key: k, line: line, count: 0, firstIndex: i, lastIndex: i };
+      groups[k] = g;
+      order.push(k);
+    }
+    g.count++;
+    g.lastIndex = i;
+    if (keep === 'last') g.line = line;
+  }
+
+  var rows = [];
+  for (var j = 0; j < order.length; j++) {
+    var e = groups[order[j]];
+    var include = (mode === 'unique') ||
+                  (mode === 'duplicates' && e.count > 1) ||
+                  (mode === 'once' && e.count === 1);
+    if (include) rows.push({ line: e.line, key: e.key, count: e.count, firstIndex: e.firstIndex, lastIndex: e.lastIndex });
+  }
+
+  if (sort !== 'none') {
+    rows.sort(function (a, b) {
+      var x = a.key, y = b.key;
+      if (x < y) return sort === 'az' ? -1 : 1;
+      if (x > y) return sort === 'az' ? 1 : -1;
+      return 0;
+    });
+  } else if (keep === 'last') {
+    rows.sort(function (a, b) { return a.lastIndex - b.lastIndex; });
+  }
+
+  var frequency = [];
+  for (var m = 0; m < order.length; m++) {
+    var f = groups[order[m]];
+    if (f.count > 1) frequency.push({ line: f.line, key: f.key, count: f.count });
+  }
+  frequency.sort(function (a, b) { return b.count - a.count || (a.key < b.key ? -1 : a.key > b.key ? 1 : 0); });
+
+  var uniqueCount = order.length;
+  var dupLines = frequency.length;
+  var duplicatesRemoved = total - uniqueCount;
+
+  return {
+    rows: rows,
+    frequency: frequency,
+    invalidEmails: invalidEmails,
+    stats: {
+      total: total,
+      kept: rows.length,
+      duplicatesRemoved: duplicatesRemoved,
+      uniqueCount: uniqueCount,
+      duplicateLineCount: dupLines
+    }
+  };
+}
+
+</script>
+</head>
+<body class="bg-white text-slate-700" id="top">
+
+<!-- Sticky header -->
+<header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 h-14 flex items-center justify-between">
+    <a href="#top" class="flex items-center gap-2">
+      <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-sky-600 text-white font-bold text-lg">D</span>
+      <span class="text-xl font-extrabold tracking-tight text-slate-800">Dupeless</span>
+    </a>
+    <nav class="text-sm font-medium">
+      <a href="#top" class="text-slate-600 hover:text-sky-700 mr-5">Home</a>
+      <a href="https://fixoraa.tech" class="text-slate-600 hover:text-sky-700">More Tools</a>
+    </nav>
+  </div>
+</header>
+
+<!-- TOP AD (verbatim) -->
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pt-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:728px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <div class="origin-top scale-[0.44] sm:scale-100 shrink-0">
+        <script>
+          atOptions = { 'key' : '4e68ac77881c17fe128a46565d9a4e8c', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+        </script>
+        <script src="https://www.highrevenueformat.com/4e68ac77881c17fe128a46565d9a4e8c/invoke.js"></script>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOOL -->
+<main class="mx-auto max-w-6xl px-4 sm:px-6 py-6">
+  <div class="text-center mb-6">
+    <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight">Remove Duplicate Lines in Seconds</h1>
+    <p class="mt-2 text-slate-500 text-sm sm:text-base">Paste your list, drop a file, and get a clean deduplicated result — with frequency reports, CSV column mode, and email normalization.</p>
+    <span class="inline-flex items-center gap-1.5 mt-3 px-3 py-1 rounded-full bg-sky-50 border border-sky-200 text-sky-700 text-xs font-semibold">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      Unlimited Free Usage &middot; No signup, no paywall
+    </span>
+  </div>
+
+  <div class="grid lg:grid-cols-2 gap-5">
+    <!-- LEFT: input panel -->
+    <section class="bg-white border border-slate-200 rounded-2xl shadow-sm p-4 sm:p-5 flex flex-col">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="font-bold text-slate-800">Input</h2>
+        <div class="flex gap-1.5 text-xs font-semibold" role="tablist" aria-label="Input type">
+          <button data-imode="text" class="imode-tab tab-active border rounded-lg px-3 py-1.5">Text</button>
+          <button data-imode="csv" class="imode-tab tab-idle border rounded-lg px-3 py-1.5">CSV</button>
+          <button data-imode="email" class="imode-tab tab-idle border rounded-lg px-3 py-1.5">Email</button>
+        </div>
+      </div>
+
+      <div id="dropzone" class="border-2 border-dashed border-slate-200 rounded-xl p-3 mb-3 text-center text-xs text-slate-400 transition-colors">
+        <label for="fileInput" class="cursor-pointer hover:text-sky-700">
+          <span class="font-semibold text-slate-500">Drag &amp; drop a .txt / .csv file here</span> or
+          <span class="underline text-sky-700 font-medium">browse</span>
+          <input id="fileInput" type="file" accept=".txt,.csv,text/plain,text/csv" class="hidden">
+        </label>
+        <span id="fileName" class="block mt-1 text-slate-400"></span>
+      </div>
+
+      <textarea id="inputText" rows="12" placeholder="Paste your list here — one item per line…&#10;&#10;apple&#10;banana&#10;Apple&#10;banana&#10;cherry"
+        class="w-full border border-slate-200 rounded-xl p-3 text-sm font-mono text-slate-700 bg-slate-50 resize-y min-h-[220px]"></textarea>
+
+      <div class="flex items-center justify-between mt-2 text-xs text-slate-400">
+        <span id="inputCount">0 lines</span>
+        <button id="sampleBtn" class="text-sky-700 hover:underline font-medium">Load sample data</button>
+      </div>
+
+      <!-- CSV options -->
+      <div id="csvOpts" class="hidden mt-3 bg-sky-50/60 border border-sky-100 rounded-xl p-3 text-sm">
+        <div class="font-semibold text-slate-700 mb-2">CSV dedupe options</div>
+        <div class="flex flex-wrap gap-3 items-center">
+          <label class="text-xs text-slate-500">Delimiter
+            <select id="csvDelim" class="ml-1 border border-slate-200 rounded-lg px-2 py-1 bg-white text-slate-700">
+              <option value=",">Comma (,)</option>
+              <option value=";">Semicolon (;)</option>
+              <option value="\t">Tab</option>
+              <option value="|">Pipe (|)</option>
+            </select>
+          </label>
+          <label class="text-xs text-slate-500">Dedupe by column #
+            <input id="csvCol" type="number" min="1" value="1" class="ml-1 w-16 border border-slate-200 rounded-lg px-2 py-1 bg-white text-slate-700">
+          </label>
+        </div>
+        <p class="text-xs text-slate-400 mt-2">Full rows are kept — duplicates are decided by the chosen column only.</p>
+      </div>
+
+      <!-- Email options -->
+      <div id="emailOpts" class="hidden mt-3 bg-sky-50/60 border border-sky-100 rounded-xl p-3 text-sm">
+        <div class="font-semibold text-slate-700 mb-2">Email mode options</div>
+        <label class="flex items-center gap-2 text-xs text-slate-600">
+          <input id="dropInvalid" type="checkbox" checked class="accent-sky-600 w-4 h-4">
+          Remove invalid email addresses
+        </label>
+        <p class="text-xs text-slate-400 mt-2">Addresses are lowercased and trimmed before comparison. Invalid ones are listed under the results.</p>
+      </div>
+
+      <!-- General options -->
+      <div class="mt-3 bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm">
+        <div class="font-semibold text-slate-700 mb-2">Options</div>
+        <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-slate-600">
+          <label class="flex items-center gap-2"><input id="optCase" type="checkbox" class="accent-sky-600 w-4 h-4"> Case sensitive</label>
+          <label class="flex items-center gap-2"><input id="optTrim" type="checkbox" checked class="accent-sky-600 w-4 h-4"> Trim whitespace</label>
+          <label class="flex items-center gap-2"><input id="optBlank" type="checkbox" checked class="accent-sky-600 w-4 h-4"> Ignore blank lines</label>
+          <label class="flex items-center gap-2">Keep
+            <select id="optKeep" class="border border-slate-200 rounded-lg px-2 py-1 bg-white text-slate-700">
+              <option value="first">first occurrence</option>
+              <option value="last">last occurrence</option>
+            </select>
+          </label>
+          <label class="flex items-center gap-2">Sort output
+            <select id="optSort" class="border border-slate-200 rounded-lg px-2 py-1 bg-white text-slate-700">
+              <option value="none">None (keep order)</option>
+              <option value="az">A → Z</option>
+              <option value="za">Z → A</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="flex gap-2 mt-4">
+        <button id="runBtn" class="flex-1 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl px-4 py-2.5 text-sm transition-colors">Dedupe Now</button>
+        <button id="clearBtn" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-sm font-semibold hover:border-sky-600 hover:text-sky-700">Clear</button>
+      </div>
+    </section>
+
+    <!-- RIGHT: output panel -->
+    <section class="bg-white border border-slate-200 rounded-2xl shadow-sm p-4 sm:p-5 flex flex-col">
+      <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+        <h2 class="font-bold text-slate-800">Result</h2>
+        <div class="flex gap-1.5 text-xs font-semibold" role="tablist" aria-label="Output mode">
+          <button data-omode="unique" class="omode-tab tab-active border rounded-lg px-3 py-1.5" title="One row per distinct line">Unique only</button>
+          <button data-omode="duplicates" class="omode-tab tab-idle border rounded-lg px-3 py-1.5" title="Only lines that appear more than once">Duplicates only</button>
+          <button data-omode="once" class="omode-tab tab-idle border rounded-lg px-3 py-1.5" title="Only lines that appear exactly once">Occurring once</button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-4 gap-2 mb-3 text-center">
+        <div class="bg-slate-50 border border-slate-200 rounded-xl py-2 px-1">
+          <div id="statTotal" class="text-lg font-extrabold text-slate-800">0</div>
+          <div class="text-[10px] uppercase tracking-wide text-slate-400">Input lines</div>
+        </div>
+        <div class="bg-slate-50 border border-slate-200 rounded-xl py-2 px-1">
+          <div id="statKept" class="text-lg font-extrabold text-sky-700">0</div>
+          <div class="text-[10px] uppercase tracking-wide text-slate-400">Result lines</div>
+        </div>
+        <div class="bg-slate-50 border border-slate-200 rounded-xl py-2 px-1">
+          <div id="statRemoved" class="text-lg font-extrabold text-emerald-600">0</div>
+          <div class="text-[10px] uppercase tracking-wide text-slate-400">Removed</div>
+        </div>
+        <div class="bg-slate-50 border border-slate-200 rounded-xl py-2 px-1">
+          <div id="statDupLines" class="text-lg font-extrabold text-amber-600">0</div>
+          <div class="text-[10px] uppercase tracking-wide text-slate-400">Dup. values</div>
+        </div>
+      </div>
+
+      <textarea id="outputText" rows="12" readonly placeholder="Your deduplicated list will appear here…"
+        class="w-full border border-slate-200 rounded-xl p-3 text-sm font-mono text-slate-700 bg-slate-50 resize-y min-h-[180px]"></textarea>
+
+      <div class="flex gap-2 mt-3 flex-wrap">
+        <button id="copyBtn" class="flex-1 min-w-[120px] bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-xl px-4 py-2 text-sm transition-colors">Copy Result</button>
+        <button id="downloadBtn" class="flex-1 min-w-[120px] bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-xl px-4 py-2 text-sm transition-colors">Download Result</button>
+      </div>
+      <div id="statusMsg" class="text-xs text-slate-400 mt-2 h-4"></div>
+
+      <!-- Frequency report -->
+      <div class="mt-3">
+        <button id="freqToggle" class="w-full flex items-center justify-between bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 hover:border-sky-600">
+          <span>Duplicate frequency report <span id="freqCount" class="ml-1 text-xs font-normal text-slate-400"></span></span>
+          <span id="freqChevron" class="text-slate-400">▾</span>
+        </button>
+        <div id="freqWrap" class="hidden mt-2 max-h-56 overflow-y-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-sm">
+            <thead class="sticky top-0 bg-slate-100 text-slate-500 text-xs uppercase tracking-wide">
+              <tr><th class="text-left px-3 py-2 font-semibold">Line</th><th class="text-right px-3 py-2 font-semibold">Count</th></tr>
+            </thead>
+            <tbody id="freqBody">
+              <tr><td colspan="2" class="px-3 py-4 text-center text-slate-400 text-xs">Run the tool to see duplicated lines and their counts.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Invalid emails -->
+      <div id="invalidWrap" class="hidden mt-3">
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3">
+          <div class="text-sm font-semibold text-amber-800 mb-1">Invalid emails removed <span id="invalidCount" class="font-normal text-amber-600"></span></div>
+          <div id="invalidList" class="text-xs font-mono text-amber-700 max-h-24 overflow-y-auto whitespace-pre-wrap"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- BOTTOM AD (verbatim) -->
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pb-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:300px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <script>
+(function(grnp){
+var d = document,
+    s = d.createElement('script'),
+    l = d.currentScript || d.scripts[d.scripts.length - 1];
+s.settings = grnp || {};
+s.src = "\/\/peacefulbicycle.com\/bnXtVJsnd.GElF0oYVWQcY\/Qe\/mf9qu-ZqUtlZk\/PzTHcx1LM\/jWIZwkMTj\/U\/t-NrzmUnyOMsj\/AzydO\/Qx";
+s.async = true;
+s.referrerPolicy = 'no-referrer-when-downgrade';
+l.parentNode.insertBefore(s, l);
+})({})
+</script>
+    </div>
+  </div>
+</div>
+
+<!-- SEO ARTICLE + FAQ -->
+<article class="mx-auto max-w-3xl px-4 sm:px-6 pb-4 text-slate-600 leading-relaxed text-[15px]">
+  <h2 class="text-2xl font-extrabold text-slate-800 mb-4">The Complete Guide to Removing Duplicate Lines Online</h2>
+
+  <p class="mb-4">Duplicate lines are one of the most common — and most annoying — data-quality problems in the world. A marketer exporting a subscriber list finds the same email address three times. A developer grepping log files sees the same error repeated ten thousand times. A teacher merging student rosters from two classes ends up with overlapping names. A data analyst importing a CSV discovers the same row pasted in twice. In every one of these situations, the fix is the same: remove the duplicate lines and keep a clean, deduplicated list. That is exactly what Dupeless does — paste your list, choose how duplicates should be handled, and get a cleaned result in seconds, entirely in your browser.</p>
+
+  <h3 class="text-xl font-bold text-slate-800 mt-6 mb-3">Why duplicates appear in the first place</h3>
+  <p class="mb-4">Duplicates rarely appear out of malice; they are usually the side effect of how data is collected and combined. Merging two spreadsheets often reintroduces rows that exist in both. Copy-paste workflows double up content when a selection overlaps. Web forms accept the same submission twice when a user clicks "submit" repeatedly or refreshes the page. Logs record the same event once per retry. Even OCR scans and manual data entry produce near-identical lines that differ only by an extra space or a capital letter. Understanding the source of your duplicates helps you choose the right cleanup settings: invisible whitespace calls for the trim option, inconsistent capitalization calls for case-insensitive matching, and repeated imports call for the "keep first" or "keep last" choice depending on which record is freshest.</p>
+
+  <h3 class="text-xl font-bold text-slate-800 mt-6 mb-3">Three output modes: unique-only, duplicates-only, and occurring-once</h3>
+  <p class="mb-4">Most simple dedupe tools give you one button: strip the duplicates and show what remains. That is useful, but it only answers one question. Dupeless gives you three complementary views of your data. <strong>Unique-only</strong> is the classic: one row per distinct value, duplicates collapsed away. <strong>Duplicates-only</strong> flips the perspective and shows only the lines that appear more than once — perfect when you need to audit which values were repeated, for example before sending a marketing email to a list where duplicates could mean double-sending and annoyed recipients. <strong>Occurring-once</strong> shows only lines that appear exactly once, which answers questions like "which entries are truly one-off?" or "which SKUs exist in only one warehouse list?" Being able to switch between these three views without re-pasting your data turns a one-trick cleanup into a genuine data-inspection workflow.</p>
+
+  <h3 class="text-xl font-bold text-slate-800 mt-6 mb-3">Keep first vs. keep last: order matters</h3>
+  <p class="mb-4">When duplicates are removed, one copy has to survive — and which copy survives can matter a great deal. "Keep first" preserves the earliest occurrence of each value, which is the right default when the first record is the original and later ones are the copies. "Keep last" preserves the latest occurrence, which is what you want when records are appended over time and the newest version of each line carries updated information. Dupeless lets you choose, and when combined with CSV column mode, the choice applies to whole rows: you can dedupe a customer table by email address and keep either the oldest or the newest full row for each customer. That is a capability that usually requires a spreadsheet formula or a small script, and here it is one dropdown away.</p>
+
+  <h3 class="text-xl font-bold text-slate-800 mt-6 mb-3">Case sensitivity and whitespace trimming</h3>
+  <p class="mb-4">Two lines that look identical to a human may differ to a computer. "Apple" and "apple" are different strings under case-sensitive comparison but the same when case is ignored. A line with a trailing space — "banana " — is not the same string as "banana" unless you trim first. Dupeless exposes both controls separately because they solve different problems. Trimming whitespace is almost always safe and catches the invisible differences that plague copy-pasted content, OCR output, and spreadsheet exports. Case-insensitive matching is ideal for names, titles, and categories where capitalization is inconsistent but meaning is not. Turning both on gives you the most aggressive, human-like definition of "duplicate"; turning them off gives you a byte-exact comparison for situations like code or passwords where every character genuinely counts.</p>
+
+  <h3 class="text-xl font-bold text-slate-800 mt-6 mb-3">The duplicate frequency report</h3>
+  <p class="mb-4">Knowing which lines were duplicated is often more valuable than the cleaned list itself. The frequency report in Dupeless lists every duplicated value together with its occurrence count, sorted from most to least frequent. For a support team, this instantly reveals the most-reported issue in a pile of tickets. For a seller, it shows which products appear on the most invoices. For a researcher, it shows which survey answers dominate. Because the report is generated alongside the deduplication — not as a separate step — you can diagnose your data and clean it in a single pass, then copy or download the report alongside the result if you need to share findings with colleagues.</p>
+
+  <h3 class="text-xl font-bold text-slate-800 mt-6 mb-3">CSV mode: dedupe by a chosen column</h3>
+  <p class="mb-4">Real-world lists are rarely single words. They are rows: name, email, city; product, SKU, price; timestamp, level, message. In a CSV, "duplicate" usually means "the same value in one particular column" — the same email address in different rows, the same order ID with different line items. Dupeless handles this with a dedicated CSV mode: pick your delimiter (comma, semicolon, tab, or pipe), tell it which column to dedupe by, and it evaluates uniqueness on that column alone while keeping the full, intact rows in the output. It even parses quoted fields correctly, so values that contain the delimiter inside quotes are not split apart. Combined with keep-first/keep-last, this becomes a legitimate one-step data cleanup for order exports, contact lists, and inventory files.</p>
+
+  <h3 class="text-xl font-bold text-slate-800 mt-6 mb-3">Email mode: normalize and validate</h3>
+  <p class="mb-4">Email lists are the single most common thing people deduplicate, and they come with their own quirks: the same address typed as "John.Doe@Example.com" and "john.doe@example.com", addresses padded with spaces from form fields, and plain invalid entries that slipped past a weak form validator. Email mode normalizes every address — lowercased and trimmed — before comparing, so case and whitespace variants collapse into one record. It also validates each address against a standard email pattern and, if you enable it, removes the invalid ones while showing you exactly which entries were dropped so nothing disappears silently. The result is a mailing list you can import into your newsletter tool with confidence: unique, normalized, and valid.</p>
+
+  <h3 class="text-xl font-bold text-slate-800 mt-6 mb-3">Working with files: drag, drop, download</h3>
+  <p class="mb-4">Pasting works for quick jobs, but larger lists deserve a file workflow. Dupeless accepts drag-and-drop of .txt and .csv files — the file's contents are read directly into the input pane, entirely on your device — and after processing you can download the result as a file with one click. The downloaded file keeps the format sensible for your input mode: plain text for text and email mode, and CSV rows for CSV mode. Because everything runs locally in JavaScript, your data never leaves your computer: no uploads, no servers, no waiting, and no privacy concerns for sensitive customer lists or internal data. It also means the tool works offline once the page has loaded, and that there are genuinely no usage limits — hence the "Unlimited Free Usage" badge you see above the tool.</p>
+
+  <h3 class="text-xl font-bold text-slate-800 mt-6 mb-3">Practical examples across jobs and hobbies</h3>
+  <p class="mb-4">SEO specialists dedupe keyword lists before mapping them to pages. Recruiters dedupe candidate emails collected from multiple job boards. Gamers dedupe server lists and mod lists. Developers dedupe IP addresses from access logs or test data before seeding a database. Students dedupe bibliography entries. Event organizers dedupe attendee registrations. In each case the workflow is identical: get the lines into Dupeless, pick the matching strictness, choose the output view, and export. The duplicates-only view is especially popular for before-and-after documentation — run it first to show stakeholders exactly how messy the data was, then switch to unique-only for the cleaned deliverable.</p>
+
+  <h3 class="text-xl font-bold text-slate-800 mt-6 mb-3">How Dupeless compares to spreadsheet and command-line approaches</h3>
+  <p class="mb-4">You can remove duplicates in a spreadsheet with "Remove Duplicates" or in a terminal with <code>sort -u</code>, and both are legitimate tools. But spreadsheets force your lines into a grid, struggle with the "show me only the duplicates" view, and make email normalization a formula-writing exercise. Command-line tools are powerful but unforgiving: a wrong flag silently destroys data, and piping CSV column logic through <code>awk</code> is not most people's idea of fun. Dupeless sits in the sweet spot: as approachable as a web form, as capable as a small script, with live statistics, a frequency report, and file import/export that neither the spreadsheet dialog nor the terminal one-liner offers in a single view. For one-off cleanups it is simply faster; for recurring cleanups it is consistent, because your settings are remembered in the browser.</p>
+
+  <h3 class="text-xl font-bold text-slate-800 mt-6 mb-3">Tips for the cleanest results</h3>
+  <p class="mb-4">Start with a quick duplicates-only run to understand what you are dealing with before committing to a cleanup. Keep "trim whitespace" enabled unless you have a specific reason to treat trailing spaces as meaningful. Use case-insensitive mode for natural-language content and case-sensitive mode for codes, hashes, and identifiers. In CSV mode, double-check the delimiter — a semicolon-delimited file parsed as comma-delimited will produce one giant column and confusing results. In email mode, review the invalid-email list before discarding it; some "invalid" entries are just typos you can fix and re-run. And whenever order matters for downstream processing, sort the output A–Z as the final step so the result is deterministic and easy to diff against previous versions.</p>
+
+  <section class="mt-8">
+    <h2 class="text-2xl font-extrabold text-slate-800 mb-4">Frequently Asked Questions</h2>
+    <div class="space-y-4">
+      <div>
+        <h3 class="font-bold text-slate-800">How do I remove duplicate lines from a list online?</h3>
+        <p>Paste your list into Dupeless (one item per line), choose your options — case sensitivity, trimming, keep-first or keep-last — and click "Dedupe Now". The cleaned list appears instantly in the result panel, where you can copy it or download it as a file. No account or signup is required.</p>
+      </div>
+      <div>
+        <h3 class="font-bold text-slate-800">What is the difference between unique-only, duplicates-only, and occurring-once?</h3>
+        <p>Unique-only returns one row per distinct value, which is the classic deduplication. Duplicates-only returns only the lines that appear more than once, which is ideal for auditing which values were repeated. Occurring-once returns only lines that appear exactly once, which is useful for finding one-off entries or values missing from another list.</p>
+      </div>
+      <div>
+        <h3 class="font-bold text-slate-800">Can I remove duplicate rows from a CSV by one column?</h3>
+        <p>Yes. Switch to CSV mode, select your delimiter (comma, semicolon, tab, or pipe), and enter the column number to dedupe by. Dupeless compares only that column's value while keeping the complete original rows in the output, and it correctly handles quoted fields that contain the delimiter.</p>
+      </div>
+      <div>
+        <h3 class="font-bold text-slate-800">Does Dupeless handle case differences and extra spaces?</h3>
+        <p>Yes. The "Trim whitespace" option removes leading and trailing spaces before comparison, and turning off "Case sensitive" treats "Apple" and "apple" as the same line. Email mode additionally lowercases and validates every address, so case and spacing variants of the same email always collapse into one record.</p>
+      </div>
+      <div>
+        <h3 class="font-bold text-slate-800">Is my data uploaded anywhere? Is there a size limit?</h3>
+        <p>Your data never leaves your browser — all deduplication runs locally in JavaScript, so there is no upload and no server-side storage. Usage is unlimited and free with no signup. Very large lists (hundreds of thousands of lines) are processed fine, though extremely large files may take a moment depending on your device.</p>
+      </div>
+      <div>
+        <h3 class="font-bold text-slate-800">Can I see which lines were duplicated and how many times?</h3>
+        <p>Yes. Every run generates a duplicate frequency report listing each duplicated line alongside its occurrence count, sorted from most to least frequent. Expand the "Duplicate frequency report" panel under the results to inspect it, and use the duplicates-only output mode if you want those repeated lines as a copyable list.</p>
+      </div>
+    </div>
+  </section>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I remove duplicate lines from a list online?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Paste your list into Dupeless (one item per line), choose your options — case sensitivity, trimming, keep-first or keep-last — and click \"Dedupe Now\". The cleaned list appears instantly in the result panel, where you can copy it or download it as a file. No account or signup is required." }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between unique-only, duplicates-only, and occurring-once?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Unique-only returns one row per distinct value, which is the classic deduplication. Duplicates-only returns only the lines that appear more than once, which is ideal for auditing which values were repeated. Occurring-once returns only lines that appear exactly once, which is useful for finding one-off entries or values missing from another list." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I remove duplicate rows from a CSV by one column?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Switch to CSV mode, select your delimiter (comma, semicolon, tab, or pipe), and enter the column number to dedupe by. Dupeless compares only that column's value while keeping the complete original rows in the output, and it correctly handles quoted fields that contain the delimiter." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Dupeless handle case differences and extra spaces?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. The \"Trim whitespace\" option removes leading and trailing spaces before comparison, and turning off \"Case sensitive\" treats \"Apple\" and \"apple\" as the same line. Email mode additionally lowercases and validates every address, so case and spacing variants of the same email always collapse into one record." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my data uploaded anywhere? Is there a size limit?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Your data never leaves your browser — all deduplication runs locally in JavaScript, so there is no upload and no server-side storage. Usage is unlimited and free with no signup. Very large lists (hundreds of thousands of lines) are processed fine, though extremely large files may take a moment depending on your device." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I see which lines were duplicated and how many times?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Every run generates a duplicate frequency report listing each duplicated line alongside its occurrence count, sorted from most to least frequent. Expand the \"Duplicate frequency report\" panel under the results to inspect it, and use the duplicates-only output mode if you want those repeated lines as a copyable list." }
+    }
+  ]
+}
+</script>
+
+<footer class="border-t border-slate-200 mt-8">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 py-5 text-xs text-slate-400 flex flex-wrap gap-3 items-center justify-between">
+    <span>&copy; 2026 Dupeless — free online duplicate line remover.</span>
+    <a href="https://fixoraa.tech" class="hover:text-sky-700">More Tools</a>
+  </div>
+<p class="fx-credit" style="text-align:center;font-size:12.5px;opacity:.62;margin:10px auto 2px;letter-spacing:.01em">Made by <a href="https://fixoraa.tech" target="_blank" rel="noopener" style="color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:2px">Fixoraa</a></p>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+
+  var state = {
+    inputMode: 'text',   // text | csv | email
+    outputMode: 'unique' // unique | duplicates | once
+  };
+
+  var LS_KEY = 'dupeless-settings-v1';
+
+  function saveSettings() {
+    try {
+      localStorage.setItem(LS_KEY, JSON.stringify({
+        caseSensitive: $('optCase').checked,
+        trim: $('optTrim').checked,
+        ignoreBlank: $('optBlank').checked,
+        keep: $('optKeep').value,
+        sort: $('optSort').value,
+        delimiter: $('csvDelim').value,
+        column: $('csvCol').value,
+        dropInvalid: $('dropInvalid').checked,
+        inputMode: state.inputMode,
+        outputMode: state.outputMode
+      }));
+    } catch (e) {}
+  }
+
+  function loadSettings() {
+    try {
+      var s = JSON.parse(localStorage.getItem(LS_KEY) || 'null');
+      if (!s) return;
+      $('optCase').checked = !!s.caseSensitive;
+      $('optTrim').checked = s.trim !== false;
+      $('optBlank').checked = s.ignoreBlank !== false;
+      $('optKeep').value = s.keep === 'last' ? 'last' : 'first';
+      $('optSort').value = ['az', 'za'].indexOf(s.sort) >= 0 ? s.sort : 'none';
+      $('csvDelim').value = s.delimiter || ',';
+      $('csvCol').value = s.column || 1;
+      $('dropInvalid').checked = s.dropInvalid !== false;
+      if (['text', 'csv', 'email'].indexOf(s.inputMode) >= 0) state.inputMode = s.inputMode;
+      if (['unique', 'duplicates', 'once'].indexOf(s.outputMode) >= 0) state.outputMode = s.outputMode;
+    } catch (e) {}
+  }
+
+  function setTab(selector, activeVal, attr) {
+    var tabs = document.querySelectorAll(selector);
+    tabs.forEach(function (t) {
+      var on = t.getAttribute(attr) === activeVal;
+      t.classList.toggle('tab-active', on);
+      t.classList.toggle('tab-idle', !on);
+    });
+  }
+
+  function refreshModeUI() {
+    setTab('.imode-tab', state.inputMode, 'data-imode');
+    setTab('.omode-tab', state.outputMode, 'data-omode');
+    $('csvOpts').classList.toggle('hidden', state.inputMode !== 'csv');
+    $('emailOpts').classList.toggle('hidden', state.inputMode !== 'email');
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function setStatus(msg, ok) {
+    var el = $('statusMsg');
+    el.textContent = msg || '';
+    el.className = 'text-xs mt-2 h-4 ' + (ok === false ? 'text-red-500' : 'text-emerald-600');
+  }
+
+  function updateInputCount() {
+    var n = dupelessParseLines($('inputText').value, { ignoreBlank: $('optBlank').checked }).length;
+    $('inputCount').textContent = n + (n === 1 ? ' line' : ' lines');
+  }
+
+  function collectOpts() {
+    var col = parseInt($('csvCol').value, 10);
+    if (isNaN(col) || col < 1) col = 1;
+    return {
+      caseSensitive: $('optCase').checked,
+      trim: $('optTrim').checked,
+      keep: $('optKeep').value,
+      mode: state.outputMode,
+      sort: $('optSort').value,
+      inputMode: state.inputMode,
+      delimiter: $('csvDelim').value,
+      column: col - 1,
+      dropInvalidEmail: $('dropInvalid').checked
+    };
+  }
+
+  function renderFreq(freq) {
+    var body = $('freqBody');
+    if (!freq.length) {
+      body.innerHTML = '<tr><td colspan="2" class="px-3 py-4 text-center text-slate-400 text-xs">No duplicates found — every line is unique.</td></tr>';
+    } else {
+      body.innerHTML = freq.map(function (f) {
+        return '<tr class="freq-row border-t border-slate-100"><td class="px-3 py-1.5 font-mono text-xs text-slate-700 break-all">' +
+          esc(f.line) + '</td><td class="px-3 py-1.5 text-right font-bold text-slate-800 text-sm">' + f.count + '×</td></tr>';
+      }).join('');
+    }
+    $('freqCount').textContent = freq.length ? '(' + freq.length + ' duplicated values)' : '';
+  }
+
+  function run() {
+    var opts = collectOpts();
+    var lines = dupelessParseLines($('inputText').value, { ignoreBlank: $('optBlank').checked });
+    if (!lines.length) {
+      setStatus('Nothing to process — paste a list or drop a file first.', false);
+      return;
+    }
+    var res = dupelessProcess(lines, opts);
+    if (res.stats.total === 0) {
+      setStatus('All lines were blank or invalid — nothing to show.', false);
+      return;
+    }
+    $('outputText').value = res.rows.map(function (r) { return r.line; }).join('\n');
+    $('statTotal').textContent = res.stats.total;
+    $('statKept').textContent = res.stats.kept;
+    $('statRemoved').textContent = res.stats.duplicatesRemoved;
+    $('statDupLines').textContent = res.stats.duplicateLineCount;
+    renderFreq(res.frequency);
+
+    var iw = $('invalidWrap');
+    if (opts.inputMode === 'email' && res.invalidEmails.length) {
+      iw.classList.remove('hidden');
+      $('invalidCount').textContent = '(' + res.invalidEmails.length + '):';
+      $('invalidList').textContent = res.invalidEmails.join('\n');
+    } else {
+      iw.classList.add('hidden');
+    }
+
+    setStatus('Done — ' + res.stats.kept + ' result lines from ' + res.stats.total + ' input lines.', true);
+    saveSettings();
+  }
+
+  function loadFile(file) {
+    if (!file) return;
+    if (!/\.(txt|csv)$/i.test(file.name) && file.type.indexOf('text') !== 0 && file.type.indexOf('csv') < 0) {
+      setStatus('Please drop a .txt or .csv file.', false);
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function () {
+      $('inputText').value = String(reader.result || '');
+      $('fileName').textContent = 'Loaded: ' + file.name;
+      updateInputCount();
+      setStatus('File loaded — click "Dedupe Now".', true);
+    };
+    reader.onerror = function () { setStatus('Could not read that file.', false); };
+    reader.readAsText(file);
+  }
+
+  // events
+  document.querySelectorAll('.imode-tab').forEach(function (t) {
+    t.addEventListener('click', function () { state.inputMode = t.getAttribute('data-imode'); refreshModeUI(); saveSettings(); });
+  });
+  document.querySelectorAll('.omode-tab').forEach(function (t) {
+    t.addEventListener('click', function () { state.outputMode = t.getAttribute('data-omode'); refreshModeUI(); saveSettings(); run(); });
+  });
+  $('runBtn').addEventListener('click', run);
+  $('clearBtn').addEventListener('click', function () {
+    $('inputText').value = '';
+    $('outputText').value = '';
+    $('fileName').textContent = '';
+    $('invalidWrap').classList.add('hidden');
+    $('freqBody').innerHTML = '<tr><td colspan="2" class="px-3 py-4 text-center text-slate-400 text-xs">Run the tool to see duplicated lines and their counts.</td></tr>';
+    $('freqCount').textContent = '';
+    ['statTotal', 'statKept', 'statRemoved', 'statDupLines'].forEach(function (id) { $(id).textContent = '0'; });
+    updateInputCount();
+    setStatus('');
+  });
+  $('inputText').addEventListener('input', updateInputCount);
+  $('optBlank').addEventListener('change', updateInputCount);
+  $('sampleBtn').addEventListener('click', function () {
+    $('inputText').value = [
+      '  apple', 'Banana', 'apple', 'cherry', 'BANANA', 'date',
+      'apple', '', '  Cherry  ', 'banana', 'elderberry', 'fig', 'Fig', 'grape', 'apple'
+    ].join('\n');
+    updateInputCount();
+    setStatus('Sample loaded — click "Dedupe Now".', true);
+  });
+  $('copyBtn').addEventListener('click', function () {
+    var v = $('outputText').value;
+    if (!v) { setStatus('Nothing to copy yet.', false); return; }
+    function done() { setStatus('Result copied to clipboard.', true); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(v).then(done, function () { fallback(); });
+    } else fallback();
+    function fallback() {
+      $('outputText').select();
+      try { document.execCommand('copy'); done(); } catch (e) { setStatus('Copy failed — select the text manually.', false); }
+    }
+  });
+  $('downloadBtn').addEventListener('click', function () {
+    var v = $('outputText').value;
+    if (!v) { setStatus('Nothing to download yet.', false); return; }
+    var ext = state.inputMode === 'csv' ? 'csv' : 'txt';
+    var blob = new Blob([v], { type: ext === 'csv' ? 'text/csv;charset=utf-8' : 'text/plain;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'dupeless-result.' + ext;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 100);
+    setStatus('Download started: dupeless-result.' + ext, true);
+  });
+  $('freqToggle').addEventListener('click', function () {
+    $('freqWrap').classList.toggle('hidden');
+    $('freqChevron').textContent = $('freqWrap').classList.contains('hidden') ? '▾' : '▴';
+  });
+  $('fileInput').addEventListener('change', function (e) { loadFile(e.target.files[0]); });
+  var dz = $('dropzone');
+  ['dragenter', 'dragover'].forEach(function (ev) { dz.addEventListener(ev, function (e) { e.preventDefault(); dz.classList.add('dragging'); }); });
+  ['dragleave', 'drop'].forEach(function (ev) { dz.addEventListener(ev, function (e) { e.preventDefault(); dz.classList.remove('dragging'); }); });
+  dz.addEventListener('drop', function (e) {
+    var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    loadFile(f);
+  });
+
+  loadSettings();
+  refreshModeUI();
+  updateInputCount();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="canonical" href="https://text.fixoraa.tech/basecraft/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BaseCraft — Free Base64 Encoder, Decoder & JWT Inspector</title>
+<meta name="description" content="BaseCraft is a free online Base64 encoder and decoder with URL-safe mode, file to Base64 drag & drop, a live JWT token inspector, and a hex converter. 100% client-side, unlimited free usage.">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  html{scroll-behavior:smooth}
+  body{background:#050505;color:#4ADE80;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  ::selection{background:#4ADE80;color:#050505}
+  .scan{background-image:repeating-linear-gradient(0deg,rgba(74,222,128,.035) 0 1px,transparent 1px 3px)}
+  .blink{animation:blink 1.1s steps(2,start) infinite}
+  @keyframes blink{to{visibility:hidden}}
+  textarea,input,select{caret-color:#4ADE80}
+  textarea:focus,input:focus,select:focus{outline:none;border-color:#4ADE80 !important;box-shadow:0 0 0 1px #4ADE80}
+  .tabbtn{border:1px solid #14532d;color:#86efac;background:#050505;transition:all .15s}
+  .tabbtn:hover{border-color:#4ADE80;color:#4ADE80}
+  .tabbtn.active{background:#4ADE80;color:#050505;border-color:#4ADE80;font-weight:700}
+  .segbtn{border:1px solid #14532d;color:#86efac;background:#050505;transition:all .15s}
+  .segbtn.active{background:#166534;color:#ecfdf5;border-color:#4ADE80}
+  .btn-p{background:#4ADE80;color:#050505;font-weight:700;transition:all .15s}
+  .btn-p:hover{background:#86efac}
+  .btn-s{border:1px solid #4ADE80;color:#4ADE80;background:transparent;transition:all .15s}
+  .btn-s:hover{background:rgba(74,222,128,.12)}
+  .btn-d{border:1px solid #7f1d1d;color:#fca5a5;background:transparent;transition:all .15s}
+  .btn-d:hover{background:rgba(127,29,29,.25)}
+  .card{border:1px solid #14532d;background:#070907}
+  .lbl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#4d7c5f}
+  .dropzone{border:2px dashed #166534;transition:all .15s}
+  .dropzone.over{border-color:#4ADE80;background:rgba(74,222,128,.06)}
+  details.faq{border:1px solid #14532d}
+  details.faq summary{cursor:pointer;list-style:none}
+  details.faq summary::-webkit-details-marker{display:none}
+  details.faq summary:hover{color:#86efac}
+  .badge-live{box-shadow:0 0 12px rgba(74,222,128,.55)}
+  pre{white-space:pre-wrap;word-break:break-word}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is Base64 a form of encryption?","acceptedAnswer":{"@type":"Answer","text":"No. Base64 is an encoding scheme, not encryption. It converts binary data into printable ASCII characters using a 64-character alphabet so the data survives text-based transports. Anyone can decode a Base64 string instantly, so it provides zero confidentiality. Never use Base64 to protect passwords, tokens, or secrets — use real encryption or hashing instead."}},
+{"@type":"Question","name":"Why does Base64 make my data about 33% bigger?","acceptedAnswer":{"@type":"Answer","text":"Base64 represents every 3 bytes of input as 4 ASCII characters. That is a fixed 4/3 ratio, which means the output is roughly 33% larger than the input, plus up to 2 padding characters. This overhead is the price of making binary data safe to embed in JSON, HTML, URLs, and email."}},
+{"@type":"Question","name":"What is the difference between Base64 and Base64URL?","acceptedAnswer":{"@type":"Answer","text":"Standard Base64 uses +, /, and = characters, which have special meanings inside URLs and filenames. Base64URL (RFC 4648 §5) replaces + with - and / with _, and usually drops the = padding, making the output safe to place directly in URLs, query strings, and filenames. JWT tokens use Base64URL for exactly this reason."}},
+{"@type":"Question","name":"Can I decode a JWT token with BaseCraft?","acceptedAnswer":{"@type":"Answer","text":"Yes. Paste any JWT into the JWT tab and BaseCraft splits it into header, payload, and signature, decodes the first two as JSON, and shows time claims like exp, iat, and nbf as human-readable dates with a live expiry countdown. Decoding a JWT never verifies its signature, and everything happens locally in your browser."}},
+{"@type":"Question","name":"Why do I see strange characters when I decode Base64?","acceptedAnswer":{"@type":"Answer","text":"That usually means the Base64 string did not encode text in the first place — it may be an image, a compressed file, or some other binary blob. Decoded bytes are only readable text if the original data was text (typically UTF-8). If you expected a file, use the File tab to decode the string back into a downloadable file instead."}},
+{"@type":"Question","name":"Is it safe to paste sensitive data into an online Base64 tool?","acceptedAnswer":{"@type":"Answer","text":"It depends on the tool. BaseCraft runs 100% in your browser — your text, files, and tokens are never uploaded to any server, so nothing leaves your device. Many generic converters upload your data, so prefer client-side tools for anything sensitive. Remember that Base64 itself is not encryption: decoding is trivial for anyone who gets the string."}}
+]}
+</script>
+</head>
+<body class="scan min-h-screen" id="top">
+
+<!-- ============ HEADER ============ -->
+<header class="sticky top-0 z-40 bg-[#050505]/95 backdrop-blur border-b border-[#14532d]">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 h-14 flex items-center justify-between">
+    <a href="#top" class="flex items-center gap-2 text-[#4ADE80] font-bold text-lg tracking-tight">
+      <span class="inline-flex items-center justify-center w-8 h-8 border border-[#4ADE80] text-[#4ADE80] text-sm font-bold">>_</span>
+      <span>BaseCraft<span class="blink">_</span></span>
+    </a>
+    <nav class="flex items-center gap-5 text-sm">
+      <a href="#top" class="text-[#86efac] hover:text-[#4ADE80]">Home</a>
+      <a href="https://fixoraa.tech" class="text-[#86efac] hover:text-[#4ADE80]">More Tools</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ TOP AD (verbatim) ============ -->
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pt-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:728px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <div class="origin-top scale-[0.44] sm:scale-100 shrink-0">
+        <script>
+          atOptions = { 'key' : '4e68ac77881c17fe128a46565d9a4e8c', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+        </script>
+        <script src="https://www.highrevenueformat.com/4e68ac77881c17fe128a46565d9a4e8c/invoke.js"></script>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TOOL ============ -->
+<main class="mx-auto max-w-6xl px-4 sm:px-6 py-8">
+
+  <div class="mb-6">
+    <p class="text-[#4d7c5f] text-sm mb-1">$ basecraft --init</p>
+    <h1 class="text-2xl sm:text-3xl font-bold text-[#4ADE80] tracking-tight">Base64 Encoder / Decoder <span class="blink">▊</span></h1>
+    <p class="text-[#86efac]/80 text-sm mt-2 max-w-2xl">Encode text, decode strings, drop files, inspect JWT tokens, and convert hex — all in one minimal console. Nothing ever leaves your browser.</p>
+    <div class="mt-3 flex flex-wrap items-center gap-2">
+      <span class="badge-live inline-flex items-center gap-1.5 text-xs font-bold bg-[#4ADE80] text-[#050505] px-3 py-1 rounded-full">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#050505] blink"></span>Unlimited Free Usage
+      </span>
+      <span class="text-xs text-[#4d7c5f] border border-[#14532d] px-3 py-1 rounded-full">no signup · no paywall · 100% client-side</span>
+    </div>
+  </div>
+
+  <!-- tabs -->
+  <div class="flex gap-2 mb-0 overflow-x-auto pb-2" role="tablist" aria-label="Tool modes">
+    <button class="tabbtn active px-4 py-2 text-sm whitespace-nowrap" data-tab="text" role="tab">$ text</button>
+    <button class="tabbtn px-4 py-2 text-sm whitespace-nowrap" data-tab="file" role="tab">$ file</button>
+    <button class="tabbtn px-4 py-2 text-sm whitespace-nowrap" data-tab="jwt" role="tab">$ jwt</button>
+    <button class="tabbtn px-4 py-2 text-sm whitespace-nowrap" data-tab="hex" role="tab">$ hex</button>
+  </div>
+
+  <section class="card border-t-0">
+    <div class="flex items-center justify-between px-4 py-2 border-b border-[#14532d] text-[11px] text-[#4d7c5f]">
+      <span>basecraft v1.0 — local session</span>
+      <span id="statusbar" class="text-[#86efac]">ready_</span>
+    </div>
+
+    <!-- ===== TEXT PANE ===== -->
+    <div data-pane="text" class="p-4 sm:p-6">
+      <div class="flex flex-wrap items-center gap-2 mb-4">
+        <div class="inline-flex rounded overflow-hidden" role="group" aria-label="Direction">
+          <button id="mode-encode" class="segbtn active px-4 py-1.5 text-sm">encode →</button>
+          <button id="mode-decode" class="segbtn px-4 py-1.5 text-sm">← decode</button>
+          <button id="mode-auto" class="segbtn px-4 py-1.5 text-sm">auto-detect</button>
+        </div>
+        <label class="flex items-center gap-2 text-xs text-[#86efac] ml-1 cursor-pointer">
+          <input type="checkbox" id="opt-urlsafe" class="accent-[#4ADE80] w-4 h-4"> URL-safe output <span class="text-[#4d7c5f]">(base64url: -_ , no padding)</span>
+        </label>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <p class="lbl mb-1.5">input</p>
+          <textarea id="io-input" rows="8" spellcheck="false" placeholder="Type or paste text (encode) or a Base64 string (decode)…" class="w-full bg-black border border-[#14532d] text-[#bbf7d0] text-sm p-3 rounded-none"></textarea>
+        </div>
+        <div>
+          <p class="lbl mb-1.5">output</p>
+          <textarea id="io-output" rows="8" spellcheck="false" readonly placeholder="Result appears here…" class="w-full bg-black border border-[#14532d] text-[#4ADE80] text-sm p-3 rounded-none"></textarea>
+        </div>
+      </div>
+
+      <div id="io-error" class="hidden mt-3 border border-red-900 bg-red-950/40 text-red-300 text-sm px-3 py-2"></div>
+
+      <div class="flex flex-wrap gap-2 mt-4">
+        <button id="io-run" class="btn-p px-5 py-2 text-sm">[ run ]</button>
+        <button id="io-swap" class="btn-s px-4 py-2 text-sm">⇅ swap</button>
+        <button id="io-copy" class="btn-s px-4 py-2 text-sm">⧉ copy</button>
+        <button id="io-download" class="btn-s px-4 py-2 text-sm">⇩ download .txt</button>
+        <button id="io-clear" class="btn-d px-4 py-2 text-sm">✕ clear</button>
+      </div>
+
+      <p id="io-stats" class="text-[11px] text-[#4d7c5f] mt-3">in: 0 chars · out: 0 chars</p>
+    </div>
+
+    <!-- ===== FILE PANE ===== -->
+    <div data-pane="file" class="p-4 sm:p-6 hidden">
+      <div class="grid lg:grid-cols-2 gap-6">
+        <div>
+          <p class="lbl mb-1.5">file → base64</p>
+          <div id="dropzone" class="dropzone p-8 text-center cursor-pointer select-none">
+            <p class="text-[#4ADE80] text-lg mb-1">⇪ drop file here</p>
+            <p class="text-[#4d7c5f] text-xs">or click to browse — any file type, processed locally</p>
+            <input type="file" id="file-input" class="hidden">
+          </div>
+          <p id="file-info" class="text-xs text-[#86efac] mt-2 h-4"></p>
+          <div class="flex flex-wrap items-center gap-2 mt-2">
+            <span class="lbl mr-1">copy as:</span>
+            <button class="btn-s px-3 py-1.5 text-xs" data-preset="raw">raw</button>
+            <button class="btn-s px-3 py-1.5 text-xs" data-preset="dataurl">data URL</button>
+            <button class="btn-s px-3 py-1.5 text-xs" data-preset="html">HTML &lt;img&gt;</button>
+            <button class="btn-s px-3 py-1.5 text-xs" data-preset="css">CSS background</button>
+          </div>
+          <textarea id="file-b64" rows="5" readonly spellcheck="false" placeholder="Base64 of your file appears here…" class="w-full bg-black border border-[#14532d] text-[#bbf7d0] text-xs p-3 mt-3 break-all"></textarea>
+          <div class="flex flex-wrap gap-2 mt-2">
+            <button id="file-copy" class="btn-s px-4 py-2 text-sm">⧉ copy base64</button>
+            <button id="file-dl-b64" class="btn-s px-4 py-2 text-sm">⇩ download .b64.txt</button>
+          </div>
+        </div>
+        <div>
+          <p class="lbl mb-1.5">base64 → file</p>
+          <textarea id="file-decode-input" rows="5" spellcheck="false" placeholder="Paste a Base64 string or data: URL…" class="w-full bg-black border border-[#14532d] text-[#bbf7d0] text-xs p-3"></textarea>
+          <div class="flex flex-wrap gap-2 mt-2 items-center">
+            <input id="file-decode-name" type="text" value="decoded.bin" spellcheck="false" class="bg-black border border-[#14532d] text-[#bbf7d0] text-sm px-3 py-2 w-44" aria-label="Output filename">
+            <button id="file-decode-btn" class="btn-p px-5 py-2 text-sm">[ decode → download ]</button>
+          </div>
+          <p class="text-[11px] text-[#4d7c5f] mt-2">MIME type is auto-detected from data: URLs; otherwise the file downloads with the name you set.</p>
+          <div id="file-error" class="hidden mt-3 border border-red-900 bg-red-950/40 text-red-300 text-sm px-3 py-2"></div>
+          <div class="mt-4 border border-[#14532d] p-3 text-xs text-[#86efac]">
+            <p class="text-[#4ADE80] font-bold mb-1">// privacy</p>
+            Files are read with FileReader and never uploaded. Close the tab and everything is gone.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== JWT PANE ===== -->
+    <div data-pane="jwt" class="p-4 sm:p-6 hidden">
+      <div class="flex flex-wrap items-center gap-2 mb-3">
+        <p class="lbl">paste jwt token</p>
+        <button id="jwt-sample" class="btn-s px-3 py-1 text-xs ml-auto">load sample token</button>
+      </div>
+      <textarea id="jwt-input" rows="3" spellcheck="false" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.…" class="w-full bg-black border border-[#14532d] text-[#bbf7d0] text-xs p-3 break-all"></textarea>
+      <div id="jwt-error" class="hidden mt-3 border border-red-900 bg-red-950/40 text-red-300 text-sm px-3 py-2"></div>
+
+      <div id="jwt-result" class="hidden mt-4">
+        <div class="flex flex-wrap items-center gap-2 mb-3">
+          <span id="jwt-badge" class="text-xs font-bold px-3 py-1 border"></span>
+          <span id="jwt-alg" class="text-xs text-[#4d7c5f] border border-[#14532d] px-3 py-1"></span>
+          <span id="jwt-countdown" class="text-xs text-[#86efac]"></span>
+        </div>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <p class="lbl">header</p>
+              <button id="jwt-copy-header" class="btn-s px-2 py-0.5 text-xs">copy</button>
+            </div>
+            <pre id="jwt-header" class="bg-black border border-[#14532d] text-[#bbf7d0] text-xs p-3 max-h-56 overflow-auto"></pre>
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <p class="lbl">payload</p>
+              <button id="jwt-copy-payload" class="btn-s px-2 py-0.5 text-xs">copy</button>
+            </div>
+            <pre id="jwt-payload" class="bg-black border border-[#14532d] text-[#bbf7d0] text-xs p-3 max-h-56 overflow-auto"></pre>
+          </div>
+        </div>
+        <div class="mt-4">
+          <p class="lbl mb-1.5">signature <span class="normal-case tracking-normal">(raw — verification needs the secret/key, not done here)</span></p>
+          <p id="jwt-sig" class="bg-black border border-[#14532d] text-[#4d7c5f] text-xs p-3 break-all"></p>
+        </div>
+        <div class="mt-4">
+          <p class="lbl mb-1.5">time claims</p>
+          <div id="jwt-claims" class="text-xs"></div>
+        </div>
+      </div>
+      <p class="text-[11px] text-[#4d7c5f] mt-4">Decoding a JWT never verifies it. Tokens are credentials — BaseCraft decodes them only in your browser and never sends them anywhere.</p>
+    </div>
+
+    <!-- ===== HEX PANE ===== -->
+    <div data-pane="hex" class="p-4 sm:p-6 hidden">
+      <div class="flex flex-wrap items-center gap-3 mb-4">
+        <select id="hex-dir" class="bg-black border border-[#14532d] text-[#4ADE80] text-sm px-3 py-2" aria-label="Conversion direction">
+          <option value="t2h">text → hex</option>
+          <option value="h2t">hex → text</option>
+          <option value="b2h">base64 → hex</option>
+          <option value="h2b">hex → base64</option>
+        </select>
+        <label class="flex items-center gap-2 text-xs text-[#86efac] cursor-pointer">
+          <input type="checkbox" id="hex-upper" class="accent-[#4ADE80] w-4 h-4"> UPPERCASE hex
+        </label>
+        <label class="flex items-center gap-2 text-xs text-[#86efac] cursor-pointer">
+          <input type="checkbox" id="hex-urlsafe" class="accent-[#4ADE80] w-4 h-4"> URL-safe base64
+        </label>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <p class="lbl mb-1.5">input</p>
+          <textarea id="hex-input" rows="6" spellcheck="false" placeholder="Type text, hex (e.g. 48656c6c6f) or base64…" class="w-full bg-black border border-[#14532d] text-[#bbf7d0] text-sm p-3"></textarea>
+        </div>
+        <div>
+          <p class="lbl mb-1.5">output</p>
+          <textarea id="hex-output" rows="6" spellcheck="false" readonly placeholder="Result…" class="w-full bg-black border border-[#14532d] text-[#4ADE80] text-sm p-3"></textarea>
+        </div>
+      </div>
+      <div id="hex-error" class="hidden mt-3 border border-red-900 bg-red-950/40 text-red-300 text-sm px-3 py-2"></div>
+      <div class="flex flex-wrap gap-2 mt-4">
+        <button id="hex-run" class="btn-p px-5 py-2 text-sm">[ convert ]</button>
+        <button id="hex-copy" class="btn-s px-4 py-2 text-sm">⧉ copy</button>
+        <button id="hex-clear" class="btn-d px-4 py-2 text-sm">✕ clear</button>
+      </div>
+      <p class="text-[11px] text-[#4d7c5f] mt-3">Hex accepts 0x prefixes, spaces, colons and dashes — e.g. <span class="text-[#86efac]">0x48 65:6c-6c 6f</span>.</p>
+    </div>
+  </section>
+</main>
+
+<!-- ============ BOTTOM AD (verbatim) ============ -->
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pb-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:300px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <script>
+(function(grnp){
+var d = document,
+    s = d.createElement('script'),
+    l = d.currentScript || d.scripts[d.scripts.length - 1];
+s.settings = grnp || {};
+s.src = "\/\/peacefulbicycle.com\/bnXtVJsnd.GElF0oYVWQcY\/Qe\/mf9qu-ZqUtlZk\/PzTHcx1LM\/jWIZwkMTj\/U\/t-NrzmUnyOMsj\/AzydO\/Qx";
+s.async = true;
+s.referrerPolicy = 'no-referrer-when-downgrade';
+l.parentNode.insertBefore(s, l);
+})({})
+</script>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SEO ARTICLE ============ -->
+<article id="seo-article" class="mx-auto max-w-6xl px-4 sm:px-6 pb-10 text-[#bbf7d0]">
+  <div class="card p-6 sm:p-10">
+    <h2 class="text-xl sm:text-2xl font-bold text-[#4ADE80] mb-6">Base64 Encoding Explained: The Complete Developer's Guide</h2>
+
+    <h3 class="text-[#4ADE80] font-bold mt-8 mb-3 text-lg">What is Base64?</h3>
+    <p class="text-sm leading-7 mb-4 text-[#bbf7d0]/90">Base64 is a binary-to-text encoding scheme that converts arbitrary bytes into a string of printable ASCII characters. The name comes from the size of its alphabet: exactly 64 characters, consisting of the uppercase letters A–Z, the lowercase letters a–z, the digits 0–9, and two extra symbols, plus the equals sign used as padding. It was first popularized for email attachments through the MIME standard in the early 1990s, when mail servers could only be trusted to deliver 7-bit text. Any byte value outside that safe range — images, executables, compressed archives — had to be translated into plain text first, and Base64 became the universal translator.</p>
+    <p class="text-sm leading-7 mb-4 text-[#bbf7d0]/90">The encoding is formally defined in RFC 4648, which also specifies the URL-safe variant used by JSON Web Tokens and many web APIs. Base64 shows up constantly in modern development: data URIs that embed images directly in HTML and CSS, HTTP Basic authentication headers, PEM-encoded certificates and keys, email attachments, binary blobs stored inside JSON documents, and environment variables that carry credentials. Understanding how it works takes only a few minutes and pays off every time you debug an API response or inspect a token.</p>
+
+    <h3 class="text-[#4ADE80] font-bold mt-8 mb-3 text-lg">How Base64 encoding actually works</h3>
+    <p class="text-sm leading-7 mb-4 text-[#bbf7d0]/90">The mechanism is beautifully simple. Base64 processes input three bytes at a time. Three bytes equal 24 bits, and 24 divides neatly into four groups of 6 bits. Each 6-bit group is a number between 0 and 63, which maps directly to one character of the 64-symbol alphabet. So every 3 input bytes become exactly 4 output characters, no matter what the bytes contain. Text, images, and machine code all flow through the same pipeline.</p>
+    <p class="text-sm leading-7 mb-4 text-[#bbf7d0]/90">When the input length is not a multiple of three, padding fills the gap. One leftover byte produces two encoded characters followed by two equals signs, and two leftover bytes produce three characters followed by one equals sign. That is why Base64 strings so often end with one or two <span class="text-[#4ADE80]">=</span> characters. Decoding reverses the process: each quartet of characters is translated back into three bytes, and the padding tells the decoder how many of the final bytes are real. Because the alphabet contains only safe ASCII, the encoded output survives email gateways, JSON parsers, HTML attributes, and copy-paste through chat applications without corruption.</p>
+
+    <h3 class="text-[#4ADE80] font-bold mt-8 mb-3 text-lg">Why encoded data is about 33 percent larger</h3>
+    <p class="text-sm leading-7 mb-4 text-[#bbf7d0]/90">The 3-bytes-to-4-characters ratio is fixed, which means Base64 output is always roughly one third larger than the input — a 300 KB image becomes about a 400 KB string. This overhead is the fundamental trade-off of the format: you pay in size to gain transport safety. For small assets like icons and logos, the cost is negligible and is often outweighed by eliminating an extra HTTP request. For large files, the bloat becomes significant, which is why experienced developers avoid Base64 for multi-megabyte payloads and reserve it for small, self-contained data.</p>
+    <p class="text-sm leading-7 mb-4 text-[#bbf7d0]/90">Compression interacts with this in an interesting way. Encoding already-compressed data such as PNG, JPEG, or ZIP files still adds the full 33 percent, because compression has already squeezed out the redundancy. Encoding uncompressed data like BMP images or raw text is even less efficient than compressing first and then encoding. The practical rule is simple: if size matters, compress before you encode, and if the data is already compressed, expect the encoded form to be a third bigger than the file on disk.</p>
+
+    <h3 class="text-[#4ADE80] font-bold mt-8 mb-3 text-lg">Standard Base64 vs URL-safe Base64</h3>
+    <p class="text-sm leading-7 mb-4 text-[#bbf7d0]/90">Standard Base64 uses the characters <span class="text-[#4ADE80]">+</span> and <span class="text-[#4ADE80]">/</span>, which are legal in the alphabet but dangerous in URLs: a plus sign becomes a space in query strings, and a forward slash breaks path segments. The URL-safe variant defined in RFC 4648 section 5 swaps <span class="text-[#4ADE80]">+</span> for <span class="text-[#4ADE80]">-</span> and <span class="text-[#4ADE80]">/</span> for <span class="text-[#4ADE80]">_</span>, and typically drops the <span class="text-[#4ADE80]">=</span> padding entirely, since the length of the data makes the padding redundant. This variant is what JSON Web Tokens use — every JWT you have ever seen, with its three dot-separated segments, is Base64URL-encoded.</p>
+    <p class="text-sm leading-7 mb-4 text-[#bbf7d0]/90">Converting between the two forms is trivial character substitution, which is why BaseCraft offers a one-click URL-safe toggle. Use standard Base64 for MIME email, data URIs, and PEM files; use Base64URL for tokens, URL parameters, and filenames. Mixing them up is one of the most common decoding errors: a decoder expecting standard Base64 will reject the dashes and underscores of a URL-safe string, so knowing which flavor you hold is half the debugging battle.</p>
+
+    <h3 class="text-[#4ADE80] font-bold mt-8 mb-3 text-lg">Base64 in the wild: where developers meet it daily</h3>
+    <p class="text-sm leading-7 mb-4 text-[#bbf7d0]/90">Data URIs are the most visible use case. An <span class="text-[#4ADE80]">img</span> tag whose source starts with <span class="text-[#4ADE80]">data:image/png;base64,</span> carries the entire image inline, which is perfect for small icons in HTML emails where external attachments are unreliable. CSS uses the same trick for background images. HTTP Basic authentication joins a username and password with a colon and Base64-encodes the pair into the Authorization header — a format you will recognize instantly once you have seen it. Email clients encode attachments as Base64 inside multipart MIME messages, which is why a 5 MB attachment becomes roughly 6.6 MB in transit.</p>
+    <p class="text-sm leading-7 mb-4 text-[#bbf7d0]/90">Cryptography leans on Base64 heavily. PEM files — the <span class="text-[#4ADE80]">-----BEGIN CERTIFICATE-----</span> blocks familiar to anyone who has configured TLS — are simply DER-encoded binary wrapped in Base64 with line breaks every 64 characters. API keys, webhook secrets, and encrypted values in configuration files are routinely Base64-encoded so they can live in environment variables and JSON without escaping issues. And JSON Web Tokens, the backbone of modern stateless authentication, are three Base64URL segments joined by dots: a header describing the algorithm, a payload of claims like user identity and expiry, and a signature. Decoding the first two segments reveals everything the token asserts, which is exactly what BaseCraft's JWT inspector does locally in your browser.</p>
+
+    <h3 class="text-[#4ADE80] font-bold mt-8 mb-3 text-lg">Hex vs Base64: two dialects of the same idea</h3>
+    <p class="text-sm leading-7 mb-4 text-[#bbf7d0]/90">Hexadecimal is Base64's simpler cousin. Where Base64 packs 6 bits per character, hex uses 4 bits per character, so every byte becomes exactly two hex digits and the output is twice the size of the input — a 100 percent overhead versus Base64's 33 percent. Hex wins on readability: developers can eyeball byte boundaries, spot ASCII strings, and compare hashes at a glance, which is why SHA-256 digests and MAC addresses are displayed in hex. Base64 wins on compactness, which is why it carries payloads. BaseCraft's hex converter bridges the two worlds, letting you move text, hex dumps, and Base64 strings between formats — handy when an API returns a hash in hex but your code expects Base64, or when you are reading a packet capture and need the bytes as text.</p>
+
+    <h3 class="text-[#4ADE80] font-bold mt-8 mb-3 text-lg">Base64 is not encryption</h3>
+    <p class="text-sm leading-7 mb-4 text-[#bbf7d0]/90">This deserves its own section because the confusion causes real security incidents. Base64 provides zero confidentiality. There is no key, no secret, and no computation an attacker must perform — any Base64 string can be decoded by anyone, instantly, with tools as common as a browser console. Encoding a password in Base64 before storing it is barely better than storing it in plain text, and emailing Base64-encoded credentials is equivalent to emailing the credentials themselves.</p>
+    <p class="text-sm leading-7 mb-4 text-[#bbf7d0]/90">What Base64 is genuinely good for is integrity of transport, not secrecy of content. It guarantees that binary data arrives intact through systems designed for text. When you need secrecy, encrypt first with a real algorithm like AES or ChaCha20, and then Base64-encode the ciphertext if your transport requires text. When you need to prove data has not been tampered with, use HMAC signatures — which, fittingly, are usually delivered Base64-encoded inside JWTs.</p>
+
+    <h3 class="text-[#4ADE80] font-bold mt-8 mb-3 text-lg">Common Base64 errors and how to fix them</h3>
+    <p class="text-sm leading-7 mb-4 text-[#bbf7d0]/90">The classic failure is <span class="text-[#4ADE80]">InvalidCharacterError</span>: the decoder hit a character outside the alphabet. The usual culprits are line breaks copied from PEM files or email (harmless — strip whitespace first), URL-safe characters fed to a standard decoder (convert <span class="text-[#4ADE80]">-_</span> back to <span class="text-[#4ADE80]">+/</span> and restore padding), or a truncated string missing its final characters. Another frequent surprise is mojibake — decoding succeeds but the text looks like random symbols. That means the original bytes were not UTF-8 text at all; you are looking at an image or binary file rendered as characters, and the correct move is to save the bytes as a file instead of reading them as text.</p>
+    <p class="text-sm leading-7 mb-4 text-[#bbf7d0]/90">JavaScript developers meet a special gotcha with the built-in <span class="text-[#4ADE80]">btoa()</span> function: it only handles Latin-1 characters and throws on emoji or non-English text. The fix is to UTF-8-encode the string first with <span class="text-[#4ADE80]">TextEncoder</span> and then Base64 the resulting bytes — exactly what BaseCraft does under the hood. Similarly, decoding to text requires interpreting the bytes as UTF-8, not Latin-1, or characters outside ASCII will corrupt. Padding errors are the last common trap: some encoders strip the trailing equals signs while strict decoders demand them, so a tolerant decoder re-adds padding based on the string length before attempting to decode.</p>
+
+    <h3 class="text-[#4ADE80] font-bold mt-8 mb-3 text-lg">Practical tips for working with Base64</h3>
+    <p class="text-sm leading-7 mb-4 text-[#bbf7d0]/90">In Node.js, prefer <span class="text-[#4ADE80]">Buffer.from(str, 'base64')</span> over manual <span class="text-[#4ADE80]">atob</span> shims — it handles padding and whitespace gracefully. In Python, the <span class="text-[#4ADE80]">base64</span> module's <span class="text-[#4ADE80]">urlsafe_b64encode</span> and <span class="text-[#4ADE80]">urlsafe_b64decode</span> cover the URL variant, and <span class="text-[#4ADE80]">validate=True</span> turns the decoder strict when you want it to reject malformed input loudly. On the command line, the <span class="text-[#4ADE80]">base64</span> utility encodes and decodes files, and <span class="text-[#4ADE80]">openssl enc -base64</span> does the same with more options. When embedding images as data URIs, keep them under a few kilobytes; anything larger belongs in a real file with caching headers.</p>
+    <p class="text-sm leading-7 mb-4 text-[#bbf7d0]/90">For JWT debugging, always check the <span class="text-[#4ADE80]">exp</span> claim first — most mysterious 401 errors are simply expired tokens — then verify <span class="text-[#4ADE80]">iss</span> and <span class="text-[#4ADE80]">aud</span> match your expectations, and confirm the <span class="text-[#4ADE80]">alg</span> in the header is one your server actually supports. Never paste a production token into a tool that processes it on a server; client-side decoders like BaseCraft keep the token on your machine. Finally, remember that decoding a JWT tells you what the token claims, not whether the claims are true — only signature verification with the correct key establishes trust, and that verification must happen on your server, never in the browser.</p>
+
+    <h3 class="text-[#4ADE80] font-bold mt-8 mb-6 text-lg">Frequently asked questions</h3>
+    <div class="space-y-3">
+      <details class="faq p-4">
+        <summary class="text-[#4ADE80] font-bold text-sm">Is Base64 a form of encryption? <span class="float-right text-[#4d7c5f]">+</span></summary>
+        <p class="text-sm text-[#bbf7d0]/80 leading-6 mt-2">No. Base64 is an encoding scheme, not encryption. It converts binary data into printable ASCII so it survives text-based transports. Anyone can decode a Base64 string instantly, so it provides zero confidentiality. Never use Base64 to protect passwords or secrets — use real encryption or hashing instead.</p>
+      </details>
+      <details class="faq p-4">
+        <summary class="text-[#4ADE80] font-bold text-sm">Why does Base64 make my data about 33% bigger? <span class="float-right text-[#4d7c5f]">+</span></summary>
+        <p class="text-sm text-[#bbf7d0]/80 leading-6 mt-2">Every 3 input bytes become 4 output characters — a fixed 4:3 ratio. That overhead is the price of making binary data safe for JSON, HTML, URLs, and email. Compress data before encoding if size matters, and avoid Base64 for multi-megabyte files.</p>
+      </details>
+      <details class="faq p-4">
+        <summary class="text-[#4ADE80] font-bold text-sm">What is the difference between Base64 and Base64URL? <span class="float-right text-[#4d7c5f]">+</span></summary>
+        <p class="text-sm text-[#bbf7d0]/80 leading-6 mt-2">Standard Base64 uses + and /, which break URLs. Base64URL replaces them with - and _ and usually drops the = padding, making output safe for URLs and filenames. JWT tokens use Base64URL. BaseCraft's URL-safe toggle converts between the two instantly.</p>
+      </details>
+      <details class="faq p-4">
+        <summary class="text-[#4ADE80] font-bold text-sm">Can I decode a JWT token with BaseCraft? <span class="float-right text-[#4d7c5f]">+</span></summary>
+        <p class="text-sm text-[#bbf7d0]/80 leading-6 mt-2">Yes. Paste any JWT into the JWT tab to see the header and payload as pretty-printed JSON, the raw signature, and time claims like exp, iat, and nbf as readable dates with a live expiry countdown. Decoding never verifies the signature, and everything runs locally in your browser.</p>
+      </details>
+      <details class="faq p-4">
+        <summary class="text-[#4ADE80] font-bold text-sm">Why do I see strange characters when I decode Base64? <span class="float-right text-[#4d7c5f]">+</span></summary>
+        <p class="text-sm text-[#bbf7d0]/80 leading-6 mt-2">The string probably encodes binary data — an image or compressed file — not text. Decoded bytes are only readable when the original was text. If you expected a file, use the File tab to decode the string into a downloadable file instead of reading it as text.</p>
+      </details>
+      <details class="faq p-4">
+        <summary class="text-[#4ADE80] font-bold text-sm">Is it safe to paste sensitive data into an online Base64 tool? <span class="float-right text-[#4d7c5f]">+</span></summary>
+        <p class="text-sm text-[#bbf7d0]/80 leading-6 mt-2">BaseCraft runs 100% in your browser — your text, files, and tokens are never uploaded anywhere. Many generic converters do upload your data, so prefer client-side tools for sensitive content. And remember: Base64 itself is not encryption, so treat encoded secrets as plainly visible.</p>
+      </details>
+    </div>
+  </div>
+</article>
+
+<!-- ============ FOOTER ============ -->
+<footer class="border-t border-[#14532d] mt-4">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div>
+      <p class="text-[#4ADE80] font-bold">BaseCraft<span class="blink">_</span></p>
+      <p class="text-xs text-[#4d7c5f] mt-1">Free Base64 encoder, decoder, JWT inspector & hex converter. 100% client-side — your data never leaves this tab.</p>
+    </div>
+    <nav class="flex items-center gap-5 text-sm">
+      <a href="#top" class="text-[#86efac] hover:text-[#4ADE80]">Home</a>
+      <a href="https://fixoraa.tech" class="text-[#86efac] hover:text-[#4ADE80]">More Tools</a>
+    </nav>
+  </div>
+<p class="fx-credit" style="text-align:center;font-size:12.5px;opacity:.62;margin:10px auto 2px;letter-spacing:.01em">Made by <a href="https://fixoraa.tech" target="_blank" rel="noopener" style="color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:2px">Fixoraa</a></p>
+</footer>
+
+<script>
+/* ==== BASECRAFT-LOGIC-START ==== */
+'use strict';
+/* Pure, DOM-free logic. Mirrored by node tests via marker extraction. */
+
+function cleanB64(s){ return String(s == null ? '' : s).replace(/\s+/g, ''); }
+
+function isValidB64(s){
+  s = cleanB64(s);
+  if (s === '') return true;
+  if (s.length % 4 === 1) return false;
+  return /^[A-Za-z0-9+/]*={0,2}$/.test(s);
+}
+
+function isValidB64Url(s){
+  s = cleanB64(s);
+  if (s === '') return true;
+  return /^[A-Za-z0-9\-_]*$/.test(s);
+}
+
+function toB64Url(s){ return cleanB64(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+
+function fromB64Url(s){
+  s = cleanB64(s).replace(/-/g, '+').replace(/_/g, '/');
+  var pad = s.length % 4;
+  if (pad === 1) throw new Error('Invalid base64url: bad length.');
+  if (pad > 0) s += '===='.slice(pad);
+  return s;
+}
+
+function looksLikeB64(s){
+  s = cleanB64(s);
+  if (s.length < 4 || s.length % 4 === 1) return false;
+  if (!/^[A-Za-z0-9+/\-_]*={0,2}$/.test(s)) return false;
+  // plain single-case words are indistinguishable from base64; don't auto-decode those
+  if (/^[a-z]+$/.test(s) || /^[A-Z]+$/.test(s)) return false;
+  return true;
+}
+
+function utf8ToB64(str){
+  var bytes = new TextEncoder().encode(String(str));
+  var bin = '';
+  for (var i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin);
+}
+
+function b64ToUtf8(b64){
+  var s = cleanB64(b64);
+  if (!isValidB64(s)) throw new Error('Invalid Base64: bad characters or padding.');
+  var bin;
+  try { bin = atob(s); }
+  catch (e) { throw new Error('Invalid Base64: decoding failed.'); }
+  var bytes = new Uint8Array(bin.length);
+  for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  try { return new TextDecoder('utf-8', { fatal: true }).decode(bytes); }
+  catch (e) { throw new Error('Decoded bytes are not valid UTF-8 text — this looks like binary data, not text. Try the File tab to save it as a file.'); }
+}
+
+function encodeText(str, urlSafe){
+  if (str === '') return '';
+  var out = utf8ToB64(str);
+  return urlSafe ? toB64Url(out) : out;
+}
+
+function decodeText(s, urlSafe){
+  s = cleanB64(s);
+  if (s === '') return '';
+  if (urlSafe || /[-_]/.test(s)) {
+    if (!isValidB64Url(s)) throw new Error('Invalid base64url: only A–Z, a–z, 0–9, - and _ allowed.');
+    s = fromB64Url(s);
+  }
+  return b64ToUtf8(s);
+}
+
+function parseJwt(token){
+  if (typeof token !== 'string') throw new Error('Token must be text.');
+  var t = token.trim();
+  if (!t) throw new Error('Paste a JWT token first.');
+  var parts = t.split('.');
+  if (parts.length !== 3) throw new Error('A JWT has 3 dot-separated parts (header.payload.signature); found ' + parts.length + '.');
+  var header, payload;
+  try { header = JSON.parse(b64ToUtf8(fromB64Url(parts[0]))); }
+  catch (e) { throw new Error('Header is not valid base64url JSON: ' + e.message); }
+  if (header === null || typeof header !== 'object' || Array.isArray(header)) throw new Error('Header decoded but is not a JSON object.');
+  try { payload = JSON.parse(b64ToUtf8(fromB64Url(parts[1]))); }
+  catch (e) { throw new Error('Payload is not valid base64url JSON: ' + e.message); }
+  if (payload === null || typeof payload !== 'object' || Array.isArray(payload)) throw new Error('Payload decoded but is not a JSON object.');
+  return { header: header, payload: payload, signature: parts[2] };
+}
+
+function jwtStatus(payload, nowSec){
+  var now = (typeof nowSec === 'number') ? nowSec : Math.floor(Date.now() / 1000);
+  var exp = payload.exp;
+  if (typeof exp !== 'number') return { state: 'noexp', label: 'no exp claim' };
+  if (payload.nbf != null && typeof payload.nbf === 'number' && now < payload.nbf)
+    return { state: 'notyet', label: 'not yet valid', seconds: payload.nbf - now };
+  if (now >= exp) return { state: 'expired', label: 'expired', seconds: now - exp };
+  return { state: 'valid', label: 'valid', seconds: exp - now };
+}
+
+function fmtDuration(sec){
+  sec = Math.max(0, Math.floor(sec));
+  var d = Math.floor(sec / 86400), h = Math.floor(sec % 86400 / 3600),
+      m = Math.floor(sec % 3600 / 60), s = sec % 60;
+  var out = [];
+  if (d) out.push(d + 'd'); if (h) out.push(h + 'h'); if (m) out.push(m + 'm');
+  out.push(s + 's');
+  return out.join(' ');
+}
+
+function cleanHex(s){ return String(s == null ? '' : s).replace(/^\s*0x/i, '').replace(/[\s:_\-]/g, ''); }
+
+function isValidHex(s){
+  s = cleanHex(s);
+  return s.length > 0 && s.length % 2 === 0 && /^[0-9a-fA-F]+$/.test(s);
+}
+
+function textToHex(str, upper){
+  var bytes = new TextEncoder().encode(String(str));
+  var h = '';
+  for (var i = 0; i < bytes.length; i++) h += bytes[i].toString(16).padStart(2, '0');
+  return upper ? h.toUpperCase() : h;
+}
+
+function hexToText(hex){
+  hex = cleanHex(hex);
+  if (!isValidHex(hex)) throw new Error('Invalid hex: use an even number of 0–9/a–f characters.');
+  var bytes = new Uint8Array(hex.length / 2);
+  for (var i = 0; i < bytes.length; i++) bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+  try { return new TextDecoder('utf-8', { fatal: true }).decode(bytes); }
+  catch (e) { throw new Error('Hex bytes are not valid UTF-8 text.'); }
+}
+
+function hexToBytes(hex){
+  hex = cleanHex(hex);
+  if (!isValidHex(hex)) throw new Error('Invalid hex: use an even number of 0–9/a–f characters.');
+  var bytes = new Uint8Array(hex.length / 2);
+  for (var i = 0; i < bytes.length; i++) bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+  return bytes;
+}
+
+function bytesToHex(bytes, upper){
+  var h = '';
+  for (var i = 0; i < bytes.length; i++) h += bytes[i].toString(16).padStart(2, '0');
+  return upper ? h.toUpperCase() : h;
+}
+
+function b64ToHex(b64, upper){
+  var s = cleanB64(b64);
+  if (!isValidB64(s)) throw new Error('Invalid Base64: bad characters or padding.');
+  var bin;
+  try { bin = atob(s); } catch (e) { throw new Error('Invalid Base64: decoding failed.'); }
+  var bytes = new Uint8Array(bin.length);
+  for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytesToHex(bytes, upper);
+}
+
+function hexToB64(hex, urlSafe){
+  var bytes = hexToBytes(hex);
+  var bin = '';
+  for (var i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  var out = btoa(bin);
+  return urlSafe ? toB64Url(out) : out;
+}
+
+function formatBytes(n){
+  if (n < 1024) return n + ' B';
+  if (n < 1048576) return (n / 1024).toFixed(1) + ' KB';
+  return (n / 1048576).toFixed(2) + ' MB';
+}
+/* ==== BASECRAFT-LOGIC-END ==== */
+</script>
+<script>
+(function(){
+  'use strict';
+  var $ = function(id){ return document.getElementById(id); };
+
+  function setStatus(msg){ $('statusbar').textContent = msg; }
+  function showErr(el, msg){ el.textContent = '✕ ' + msg; el.classList.remove('hidden'); }
+  function hideErr(el){ el.classList.add('hidden'); }
+
+  /* ---------- tabs ---------- */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[data-tab]'));
+  var panes = Array.prototype.slice.call(document.querySelectorAll('[data-pane]'));
+  function setTab(name){
+    tabs.forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-tab') === name); });
+    panes.forEach(function(p){ p.classList.toggle('hidden', p.getAttribute('data-pane') !== name); });
+    try { localStorage.setItem('basecraft-tab', name); } catch (e) {}
+    setStatus('mode: $' + name + '_');
+  }
+  tabs.forEach(function(b){ b.addEventListener('click', function(){ setTab(b.getAttribute('data-tab')); }); });
+  var savedTab = 'text';
+  try { savedTab = localStorage.getItem('basecraft-tab') || 'text'; } catch (e) {}
+  if (!document.querySelector('[data-pane="' + savedTab + '"]')) savedTab = 'text';
+  setTab(savedTab);
+
+  function copyText(t, okMsg){
+    function done(){ setStatus(okMsg || 'copied to clipboard_'); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(t).then(done, function(){ fallbackCopy(t); done(); });
+    } else { fallbackCopy(t); done(); }
+  }
+  function fallbackCopy(t){
+    var ta = document.createElement('textarea');
+    ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+  function downloadText(name, text, mime){
+    var blob = new Blob([text], { type: mime || 'text/plain;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    setStatus('downloaded ' + name + '_');
+  }
+
+  /* ---------- text pane ---------- */
+  var mode = 'encode';
+  var modeBtns = { encode: $('mode-encode'), decode: $('mode-decode'), auto: $('mode-auto') };
+  function setMode(m){
+    mode = m;
+    Object.keys(modeBtns).forEach(function(k){ modeBtns[k].classList.toggle('active', k === m); });
+    $('io-run').textContent = m === 'decode' ? '[ decode ]' : m === 'auto' ? '[ auto-run ]' : '[ encode ]';
+  }
+  Object.keys(modeBtns).forEach(function(k){ modeBtns[k].addEventListener('click', function(){ setMode(k); }); });
+
+  function updateStats(){
+    var i = $('io-input').value, o = $('io-output').value;
+    var ib = new TextEncoder().encode(i).length;
+    $('io-stats').textContent = 'in: ' + i.length + ' chars / ' + formatBytes(ib) +
+      ' · out: ' + o.length + ' chars' +
+      (i.length && o.length ? ' · ratio ' + (o.length / Math.max(1, i.length)).toFixed(2) + 'x' : '');
+  }
+
+  function runIO(){
+    var input = $('io-input').value, urlSafe = $('opt-urlsafe').checked;
+    hideErr($('io-error'));
+    var m = mode, out = '';
+    try {
+      if (input === '') { out = ''; }
+      else {
+        if (m === 'auto') m = looksLikeB64(input) ? 'decode' : 'encode';
+        out = (m === 'decode') ? decodeText(input, urlSafe || /[-_]/.test(cleanB64(input))) : encodeText(input, urlSafe);
+      }
+      $('io-output').value = out;
+      updateStats();
+      setStatus(input === '' ? 'nothing to process_' : (m === 'decode' ? 'decoded' : 'encoded') + ' ' + formatBytes(new TextEncoder().encode(input).length) + ' → ' + out.length + ' chars_');
+    } catch (e) { showErr($('io-error'), e.message); setStatus('error_'); }
+  }
+  $('io-run').addEventListener('click', runIO);
+  $('io-input').addEventListener('input', updateStats);
+  $('io-swap').addEventListener('click', function(){
+    var a = $('io-input').value; $('io-input').value = $('io-output').value; $('io-output').value = a;
+    updateStats(); setStatus('swapped_');
+  });
+  $('io-copy').addEventListener('click', function(){
+    var v = $('io-output').value;
+    if (!v) { setStatus('nothing to copy_'); return; }
+    copyText(v, 'output copied_');
+  });
+  $('io-download').addEventListener('click', function(){
+    var v = $('io-output').value;
+    if (!v) { setStatus('nothing to download_'); return; }
+    downloadText('basecraft-output.txt', v);
+  });
+  $('io-clear').addEventListener('click', function(){
+    $('io-input').value = ''; $('io-output').value = '';
+    hideErr($('io-error')); updateStats(); setStatus('cleared_');
+  });
+
+  /* ---------- file pane ---------- */
+  var dz = $('dropzone'), fi = $('file-input'), currentFile = null, currentB64 = '', currentMime = '';
+  dz.addEventListener('click', function(){ fi.click(); });
+  fi.addEventListener('change', function(){ if (fi.files[0]) readFile(fi.files[0]); });
+  ['dragover', 'dragenter'].forEach(function(ev){ dz.addEventListener(ev, function(e){ e.preventDefault(); dz.classList.add('over'); }); });
+  ['dragleave', 'drop'].forEach(function(ev){ dz.addEventListener(ev, function(e){ e.preventDefault(); dz.classList.remove('over'); }); });
+  dz.addEventListener('drop', function(e){
+    var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) readFile(f);
+  });
+
+  function readFile(f){
+    if (f.size > 25 * 1048576) { showErr($('file-error'), 'File is ' + formatBytes(f.size) + ' — kept under 25 MB so the browser stays responsive.'); return; }
+    hideErr($('file-error'));
+    currentFile = f; currentMime = f.type || 'application/octet-stream';
+    $('file-info').textContent = f.name + ' · ' + formatBytes(f.size) + ' · ' + currentMime;
+    setStatus('reading ' + f.name + '…_');
+    var r = new FileReader();
+    r.onload = function(){
+      var dataUrl = r.result;
+      currentB64 = String(dataUrl).split(',')[1] || '';
+      $('file-b64').value = currentB64;
+      setStatus('encoded ' + formatBytes(f.size) + ' → ' + currentB64.length + ' chars_');
+    };
+    r.onerror = function(){ showErr($('file-error'), 'Could not read that file.'); };
+    r.readAsDataURL(f);
+  }
+
+  function filePreset(kind){
+    if (!currentB64) { setStatus('drop a file first_'); return; }
+    var name = currentFile ? currentFile.name : 'file';
+    var out = currentB64;
+    if (kind === 'dataurl') out = 'data:' + currentMime + ';base64,' + currentB64;
+    else if (kind === 'html') out = '<img src="data:' + currentMime + ';base64,' + currentB64 + '" alt="' + name + '">';
+    else if (kind === 'css') out = 'background-image: url("data:' + currentMime + ';base64,' + currentB64 + '");';
+    copyText(out, kind + ' snippet copied_');
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-preset]'), function(b){
+    b.addEventListener('click', function(){ filePreset(b.getAttribute('data-preset')); });
+  });
+  $('file-copy').addEventListener('click', function(){
+    if (!currentB64) { setStatus('drop a file first_'); return; }
+    copyText(currentB64, 'base64 copied_');
+  });
+  $('file-dl-b64').addEventListener('click', function(){
+    if (!currentB64) { setStatus('drop a file first_'); return; }
+    downloadText((currentFile ? currentFile.name : 'file') + '.b64.txt', currentB64);
+  });
+
+  $('file-decode-btn').addEventListener('click', function(){
+    hideErr($('file-error'));
+    var raw = $('file-decode-input').value.trim();
+    if (!raw) { showErr($('file-error'), 'Paste a Base64 string or data: URL first.'); return; }
+    var mime = 'application/octet-stream', b64 = raw;
+    var m = raw.match(/^data:([^;,]+)?(;base64)?,(.*)$/s);
+    if (m) { if (m[1]) mime = m[1]; b64 = m[3] || ''; }
+    try {
+      b64 = cleanB64(b64);
+      if (!isValidB64(b64)) throw new Error('Invalid Base64: bad characters or padding.');
+      var bin = atob(b64);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      var blob = new Blob([bytes], { type: mime });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = $('file-decode-name').value.trim() || 'decoded.bin';
+      document.body.appendChild(a); a.click();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+      setStatus('decoded → ' + a.download + ' (' + formatBytes(bytes.length) + ')_');
+    } catch (e) { showErr($('file-error'), e.message); }
+  });
+
+  /* ---------- jwt pane ---------- */
+  var jwtTimer = null;
+  function renderJwt(){
+    hideErr($('jwt-error'));
+    $('jwt-result').classList.add('hidden');
+    if (jwtTimer) { clearInterval(jwtTimer); jwtTimer = null; }
+    var token = $('jwt-input').value;
+    if (!token.trim()) { setStatus('paste a token_'); return; }
+    var parsed;
+    try { parsed = parseJwt(token); }
+    catch (e) { showErr($('jwt-error'), e.message); setStatus('invalid token_'); return; }
+
+    $('jwt-header').textContent = JSON.stringify(parsed.header, null, 2);
+    $('jwt-payload').textContent = JSON.stringify(parsed.payload, null, 2);
+    $('jwt-sig').textContent = parsed.signature + '  (' + parsed.signature.length + ' chars)';
+    $('jwt-alg').textContent = 'alg: ' + (parsed.header.alg || 'none') + (parsed.header.kid ? ' · kid: ' + parsed.header.kid : '');
+
+    function paintStatus(){
+      var st = jwtStatus(parsed.payload);
+      var badge = $('jwt-badge'), cd = $('jwt-countdown');
+      badge.className = 'text-xs font-bold px-3 py-1 border';
+      if (st.state === 'valid') { badge.textContent = '● VALID'; badge.classList.add('text-[#4ADE80]', 'border-[#4ADE80]'); cd.textContent = 'expires in ' + fmtDuration(st.seconds); }
+      else if (st.state === 'expired') { badge.textContent = '● EXPIRED'; badge.classList.add('text-red-400', 'border-red-500'); cd.textContent = 'expired ' + fmtDuration(st.seconds) + ' ago'; }
+      else if (st.state === 'notyet') { badge.textContent = '● NOT YET VALID'; badge.classList.add('text-amber-300', 'border-amber-400'); cd.textContent = 'valid in ' + fmtDuration(st.seconds); }
+      else { badge.textContent = '○ NO EXP CLAIM'; badge.classList.add('text-[#4d7c5f]', 'border-[#14532d]'); cd.textContent = ''; }
+    }
+    paintStatus();
+    jwtTimer = setInterval(paintStatus, 1000);
+
+    var rows = [];
+    [['exp', 'expires'], ['iat', 'issued at'], ['nbf', 'not before']].forEach(function(pair){
+      var k = pair[0], v = parsed.payload[k];
+      if (typeof v === 'number') rows.push('<div class="flex flex-wrap gap-x-3 border-b border-[#14532d] py-1.5"><span class="text-[#4ADE80] w-10">' + k + '</span><span class="text-[#bbf7d0]">' + new Date(v * 1000).toUTCString() + '</span><span class="text-[#4d7c5f]">(' + pair[1] + ' · ' + v + ')</span></div>');
+    });
+    ['iss', 'aud', 'sub'].forEach(function(k){
+      var v = parsed.payload[k];
+      if (v !== undefined) rows.push('<div class="flex flex-wrap gap-x-3 border-b border-[#14532d] py-1.5"><span class="text-[#4ADE80] w-10">' + k + '</span><span class="text-[#bbf7d0] break-all">' + String(v).replace(/</g, '&lt;') + '</span></div>');
+    });
+    $('jwt-claims').innerHTML = rows.length ? rows.join('') : '<p class="text-[#4d7c5f]">no standard time/identity claims found.</p>';
+    $('jwt-result').classList.remove('hidden');
+    setStatus('token decoded_');
+  }
+  var jwtDeb = null;
+  $('jwt-input').addEventListener('input', function(){
+    clearTimeout(jwtDeb);
+    jwtDeb = setTimeout(renderJwt, 400);
+  });
+  $('jwt-sample').addEventListener('click', function(){
+    var h = toB64Url(utf8ToB64(JSON.stringify({ alg: 'HS256', typ: 'JWT' })));
+    var p = toB64Url(utf8ToB64(JSON.stringify({ sub: 'user_42', name: 'Ada Lovelace', role: 'admin', iat: Math.floor(Date.now() / 1000) - 300, exp: Math.floor(Date.now() / 1000) + 3600 })));
+    $('jwt-input').value = h + '.' + p + '.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+    renderJwt();
+  });
+  $('jwt-copy-header').addEventListener('click', function(){ copyText($('jwt-header').textContent, 'header copied_'); });
+  $('jwt-copy-payload').addEventListener('click', function(){ copyText($('jwt-payload').textContent, 'payload copied_'); });
+
+  /* ---------- hex pane ---------- */
+  function runHex(){
+    hideErr($('hex-error'));
+    var dir = $('hex-dir').value, input = $('hex-input').value;
+    var upper = $('hex-upper').checked, urlSafe = $('hex-urlsafe').checked;
+    try {
+      var out = '';
+      if (input.trim() !== '') {
+        if (dir === 't2h') out = textToHex(input, upper);
+        else if (dir === 'h2t') out = hexToText(input);
+        else if (dir === 'b2h') out = b64ToHex(input, upper);
+        else if (dir === 'h2b') out = hexToB64(input, urlSafe);
+      }
+      $('hex-output').value = out;
+      setStatus('converted_');
+    } catch (e) { showErr($('hex-error'), e.message); setStatus('error_'); }
+  }
+  $('hex-run').addEventListener('click', runHex);
+  $('hex-copy').addEventListener('click', function(){
+    var v = $('hex-output').value;
+    if (!v) { setStatus('nothing to copy_'); return; }
+    copyText(v, 'hex output copied_');
+  });
+  $('hex-clear').addEventListener('click', function(){
+    $('hex-input').value = ''; $('hex-output').value = '';
+    hideErr($('hex-error')); setStatus('cleared_');
+  });
+
+  updateStats();
+})();
+</script>
+</body>
+</html>

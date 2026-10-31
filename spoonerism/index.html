@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spoonerism Generator — Swap Sounds, Make Tongue Twisters | Spoonerism</title>
+<meta name="description" content="Spoonerism generator: swap the opening sounds of any phrase, get a silliness rating, batch mode, and tongue-twister ladder. Free fun tool.">
+<link rel="canonical" href="https://text.fixoraa.tech/spoonerism/">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Spoonerism Generator — Swap Sounds, Make Tongue Twisters | Spoonerism">
+<meta property="og:description" content="Spoonerism generator: swap the opening sounds of any phrase, get a silliness rating, batch mode, and tongue-twister ladder. Free fun tool.">
+<meta property="og:url" content="https://text.fixoraa.tech/spoonerism/">
+<meta property="og:type" content="website">
+<script defer src="https://t.fixoraa.tech/track.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shrikhand:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Spoonerism",
+      "url": "https://text.fixoraa.tech/spoonerism/",
+      "applicationCategory": "Fun Tools",
+      "operatingSystem": "Web",
+      "description": "Spoonerism generator: swap the opening sounds of any phrase, get a silliness rating, batch mode, and tongue-twister ladder. Free fun tool.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is a spoonerism?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A spoonerism swaps the opening sounds of two words \u2014 for example, 'light fire' becomes 'fight lire.' It is named after Reverend William Archibald Spooner, an Oxford don famous (perhaps unfairly) for such slips of the tongue."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does this spoonerism generator work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The tool takes the leading consonant cluster of each of your first two words (everything before the first vowel) and swaps them. 'Funny bunny' becomes 'bunny funny'; single words are returned unchanged since a swap needs two words."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why do spoonerisms happen in real speech?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Psycholinguists call them phonological encoding errors: your brain plans the sounds of nearby words in parallel and occasionally slots the opening consonants into the wrong word frames. They reveal that speech is assembled in stages \u2014 words first, sounds second."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does the silliness rating mean?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The silliness rating scores onset distance (how different the swapped consonants sound), whether the results are real words, and how much the phrase changed. Consonant-heavy pairs like 'light fire' rate higher than near-identical pairs like 'funny bunny.'"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I spoonerize multiple phrases at once?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes \u2014 paste one phrase per line and batch mode spoonerizes each line independently. It is handy for testing lots of candidates when you are hunting for the perfect slip."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the tongue-twister ladder work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Keep feeding the output back in. Swapping onsets twice restores the original, so the ladder alternates between two forms \u2014 a neat demonstration that the spoonerism operation is its own inverse. Try it with 'light fire' and watch it flip back and forth."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+
+:root{
+  --bg:#F3F3F3; --surface:#FFFFFF; --accent:#3F3F46; --accent-ink:#FFFFFF;
+  --ink:#292524; --muted:#5A6478; --line:#DCDCDD;
+  --display:'Shrikhand',serif; --body:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.6;font-size:16px}
+.fx-container{max-width:72rem;margin:0 auto;padding-left:1rem;padding-right:1rem}
+@media(min-width:640px){.fx-container{padding-left:1.5rem;padding-right:1.5rem}}
+/* ad utilities (for the verbatim ad snippets) */
+.no-print{}
+.mx-auto{margin-left:auto;margin-right:auto}.max-w-6xl{max-width:72rem}
+.px-4{padding-left:1rem;padding-right:1rem}.pt-4{padding-top:1rem}.pb-4{padding-bottom:1rem}
+@media(min-width:640px){.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:scale-100{transform:scale(1)}}
+.text-center{text-align:center}.block{display:block}
+.text-\[10px\]{font-size:10px}.tracking-\[0\.18em\]{letter-spacing:.18em}.uppercase{text-transform:uppercase}
+.text-slate-400{color:#94a3b8}.mb-1\.5{margin-bottom:.375rem}
+.flex{display:flex}.justify-center{justify-content:center}.overflow-hidden{overflow:hidden}
+.origin-top{transform-origin:top}.scale-\[0\.44\]{transform:scale(.44)}.shrink-0{flex-shrink:0}
+/* header */
+.fx-header{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+.fx-header-in{display:flex;align-items:center;gap:.9rem;padding:.8rem 0;flex-wrap:wrap}
+.fx-logo{display:flex;align-items:center;gap:.65rem;text-decoration:none;color:var(--ink)}
+.fx-logo-tile{width:44px;height:44px;border-radius:14px;background:var(--accent);color:var(--accent-ink);
+  display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;flex-shrink:0;
+  box-shadow:0 4px 14px rgba(0,0,0,.12)}
+.fx-brand{font-family:var(--display);font-size:1.45rem;font-weight:700;letter-spacing:-.01em;line-height:1.1}
+.fx-nav{margin-left:auto;display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.fx-btn{display:inline-block;padding:.55rem 1.1rem;border-radius:999px;text-decoration:none;font-weight:600;font-size:.92rem;
+  border:2px solid var(--accent);color:var(--accent);background:transparent;transition:all .18s ease;min-height:44px;line-height:1.5}
+.fx-btn:hover{background:var(--accent);color:var(--accent-ink)}
+.fx-btn.solid{background:var(--accent);color:var(--accent-ink)}
+.fx-btn.solid:hover{filter:brightness(.94)}
+.fx-badge{display:inline-flex;align-items:center;gap:.35rem;font-size:.78rem;font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--accent);border:1.5px dashed var(--accent);border-radius:999px;padding:.3rem .8rem;white-space:nowrap}
+/* tool section */
+.tool-sec{padding:2.2rem 0 1rem}
+/* article */
+.article-sec{padding:2.5rem 0;max-width:46rem;margin:0 auto}
+.article-sec h2{font-family:var(--display);font-size:1.55rem;margin:2rem 0 .8rem;line-height:1.25;letter-spacing:-.01em}
+.article-sec h3{font-size:1.15rem;margin:1.5rem 0 .6rem}
+.article-sec p,.article-sec li{margin-bottom:.85rem;color:var(--ink)}
+.article-sec ul,.article-sec ol{padding-left:1.4rem;margin-bottom:1rem}
+.article-sec table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.95rem}
+.article-sec th,.article-sec td{border:1px solid var(--line);padding:.55rem .7rem;text-align:left}
+.article-sec th{background:var(--surface);font-weight:700}
+/* faq */
+.faq-sec{padding:1rem 0 3rem;max-width:46rem;margin:0 auto}
+.faq-sec h2{font-family:var(--display);font-size:1.55rem;margin-bottom:1.2rem}
+.faq-sec details{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-bottom:.7rem;overflow:hidden}
+.faq-sec summary{padding:1rem 1.2rem;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:1rem;min-height:44px}
+.faq-sec summary::-webkit-details-marker{display:none}
+.faq-sec summary::after{content:'+';font-size:1.4rem;color:var(--accent);flex-shrink:0}
+.faq-sec details[open] summary::after{content:'\2013'}
+.faq-sec details p{padding:0 1.2rem 1.1rem;color:var(--muted)}
+/* footer */
+.fx-footer{background:var(--surface);border-top:1px solid var(--line);padding:2.2rem 0;margin-top:1rem}
+.fx-footer .fx-brand{font-size:1.2rem}
+.fx-footer p{color:var(--muted);font-size:.95rem;max-width:44rem;margin:.5rem 0}
+.fx-footer nav{display:flex;gap:1.2rem;margin:1rem 0;flex-wrap:wrap}
+.fx-footer nav a{color:var(--accent);font-weight:600;text-decoration:none}
+.fx-footer nav a:hover{text-decoration:underline}
+.fx-credit{font-size:.9rem;color:var(--muted)}
+.fx-credit a{color:var(--accent);font-weight:700;text-decoration:none}
+@media(max-width:640px){.fx-brand{font-size:1.2rem}.tool-sec{padding:1.4rem 0 .6rem}}
+@media print{.no-print{display:none!important}}
+
+.sp-wrap{font-family:'Shrikhand',cursive;background:#F3F3F3;color:#292524;padding:56px 20px 72px;}.sp-hero{max-width:760px;margin:0 auto;text-align:center;}.sp-logo{font-size:56px;}.sp-hero h1{font-size:clamp(36px,6vw,60px);margin:8px 0 10px;font-weight:400;line-height:1.05;}.sp-tag{font-family:Inter,system-ui,sans-serif;color:#5A6478;font-size:18px;margin:0 0 30px;}.sp-card{max-width:760px;margin:0 auto;background:#FFFFFF;border:2px solid #3F3F46;border-radius:28px;padding:38px 34px;box-shadow:8px 8px 0 #3F3F46;}.sp-card h2{font-family:Inter,system-ui,sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:#5A6478;margin:0 0 10px;}.sp-input{width:100%;padding:16px;font-size:20px;border:2px solid #DCDCDD;border-radius:16px;font-family:Inter,system-ui,sans-serif;box-sizing:border-box;}.sp-input:focus{outline:none;border-color:#3F3F46;}.sp-btn{background:#3F3F46;color:#fff;border:none;border-radius:16px;padding:15px 34px;font-size:19px;cursor:pointer;font-family:'Shrikhand',cursive;margin-top:14px;width:100%;}.sp-btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 rgba(63,63,70,.25);}.sp-out{display:none;margin-top:22px;background:#F3F3F3;border-radius:18px;padding:26px;text-align:center;}.sp-out.show{display:block;}.sp-res{font-family:'Shrikhand',cursive;font-size:clamp(28px,4.6vw,44px);color:#3F3F46;line-height:1.2;word-break:break-word;}.sp-stars{font-size:22px;margin-top:10px;letter-spacing:4px;}.sp-sill{font-family:Inter,system-ui,sans-serif;color:#5A6478;font-size:14px;margin-top:6px;}.sp-actions{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap;font-family:Inter,system-ui,sans-serif;}.sp-actions button{border:2px solid #3F3F46;background:#fff;border-radius:12px;padding:9px 18px;font-size:14px;font-weight:700;cursor:pointer;color:#3F3F46;}.sp-tabs{display:flex;gap:8px;margin:26px 0 12px;font-family:Inter,system-ui,sans-serif;}.sp-tabs button{flex:1;border:2px solid #DCDCDD;background:#fff;border-radius:12px;padding:11px;font-size:14.5px;font-weight:700;cursor:pointer;color:#5A6478;}.sp-tabs button.on{border-color:#3F3F46;color:#3F3F46;background:#F3F3F3;}.sp-pane{display:none;font-family:Inter,system-ui,sans-serif;}.sp-pane.show{display:block;}.sp-pane textarea{width:100%;min-height:110px;padding:14px;font-size:15.5px;border:2px solid #DCDCDD;border-radius:14px;font-family:inherit;box-sizing:border-box;}.sp-batch-out{margin-top:12px;font-size:16px;line-height:1.9;}.sp-ladder{margin-top:12px;font-size:17px;line-height:2;}.sp-ladder .sp-rung{background:#F3F3F3;border-radius:10px;padding:8px 14px;margin-bottom:6px;font-family:'Shrikhand',cursive;}@media (max-width:560px){.sp-card{padding:26px 20px;}.sp-wrap{padding:40px 14px 56px;}}
+</style>
+</head>
+<body>
+<header class="fx-header">
+  <div class="fx-container fx-header-in">
+    <a class="fx-logo" href="https://fixoraa.tech" aria-label="Spoonerism home">
+      <span class="fx-logo-tile" aria-hidden="true">😜</span>
+      <span class="fx-brand">Spoonerism</span>
+    </a>
+    <nav class="fx-nav" aria-label="Site">
+      <a class="fx-btn" href="https://fixoraa.tech">Home</a>
+      <a class="fx-btn solid" href="https://fixoraa.tech">More Tools</a>
+      <span class="fx-badge" aria-label="Free forever">&#8734; Unlimited Free Usage</span>
+    </nav>
+  </div>
+</header>
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pt-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:728px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <div class="origin-top scale-[0.44] sm:scale-100 shrink-0">
+        <script>
+          atOptions = { 'key' : '4e68ac77881c17fe128a46565d9a4e8c', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+        </script>
+        <script src="https://www.highrevenueformat.com/4e68ac77881c17fe128a46565d9a4e8c/invoke.js"></script>
+      </div>
+    </div>
+  </div>
+</div>
+<main class="fx-container">
+  <section class="tool-sec tpl-hero-card" aria-label="Spoonerism tool">
+<section class='sp-wrap'><div class='sp-hero'><div class='sp-logo' aria-hidden='true'>😜</div><h1>Spoonerism Generator</h1><p class='sp-tag'>Trade the opening sounds, keep the giggles.</p></div><div class='sp-card'><h2>Spoonerize a phrase</h2><input class='sp-input' id='sp-in' type='text' value='light fire' maxlength='120' placeholder='Type two or more words…' aria-label='Phrase to spoonerize'><button class='sp-btn' id='sp-go' type='button'>Swap the sounds!</button><div class='sp-out' id='sp-out' role='status'><div class='sp-res' id='sp-res'></div><div class='sp-stars' id='sp-stars' aria-label='Silliness rating'></div><div class='sp-sill' id='sp-sill'></div><div class='sp-actions'><button id='sp-copy' type='button'>Copy result</button><button id='sp-ladder-btn' type='button'>Make it a ladder</button></div></div><div class='sp-tabs'><button id='sp-tab-batch' class='on' type='button'>Batch mode</button><button id='sp-tab-ladder' type='button'>Tongue-twister ladder</button></div><div class='sp-pane show' id='sp-pane-batch'><textarea id='sp-batch-in' placeholder='One phrase per line…'>funny bunny
+light fire
+well oiled bicycle</textarea><button class='sp-btn' id='sp-batch-go' type='button' style='margin-top:12px'>Spoonerize all</button><div class='sp-batch-out' id='sp-batch-out'></div></div><div class='sp-pane' id='sp-pane-ladder'><p style='color:#5A6478;font-size:14.5px;margin:0 0 10px'>Feed the result back in, rung by rung — watch it flip between two forms.</p><div class='sp-ladder' id='sp-ladder'></div></div></div></section>
+  </section>
+  <article class="article-sec" aria-label="Guide">
+<h2>What Is a Spoonerism?</h2><p>A spoonerism is what happens when the opening sounds of two words trade places: 'light fire' becomes 'fight lire,' 'funny bunny' becomes 'bunny funny,' and a 'well-oiled bicycle' becomes a 'well-boiled icicle.' The name comes from the Reverend William Archibald Spooner (1844–1930), an Oxford don and warden of New College whose alleged slips of the tongue became legendary — 'a blushing crow' for 'a crushing blow,' 'a well-boiled icicle' for 'a well-oiled bicycle,' and the famous toast to Queen Victoria as 'our queer old dean' instead of 'our dear old queen.'</p><p>Historians now suspect many of the attributed spoonerisms were invented by gleeful undergraduates rather than uttered by Spooner himself — he was, by most accounts, a sharp and careful speaker. But the name stuck, and it stuck because the phenomenon is real. Everybody spoonerizes occasionally, and psycholinguists consider these slips a precious window into how the brain assembles speech.</p><h2>The Science of the Slip: How Your Brain Builds Words</h2><p>Speech production happens in stages. First your brain selects the words (the <em>lemma</em> level — meanings), then it retrieves their sounds (the <em>phonological</em> level), then it slots those sounds into a rhythmic frame of syllables, and only then do your muscles move. Spoonerisms are <strong>phonological encoding errors</strong>: the sound plan gets assembled with the onsets — the consonants before the first vowel — swapped between two nearby words in the frame.</p><p>The pattern of real slips tells us the rules of the mental machinery. Swaps overwhelmingly involve <strong>word-initial consonants or consonant clusters</strong> ('queer old dean'), rarely whole syllables or random middle letters. The swapped sounds almost always land in <strong>matching syllable positions</strong> — an onset trades with an onset, never with a vowel. And content words (nouns, verbs, adjectives) swap far more than little function words like 'the' and 'of,' suggesting the sound frame is built around the meaningful words first. This tool mimics exactly that: it takes the leading consonant cluster of each of your first two words — everything up to the first vowel — and trades them.</p><h2>Famous Spoonerisms, Real and Apocryphal</h2><ul><li><strong>'A blushing crow'</strong> — for 'a crushing blow.' The ur-spoonerism, attributed to Spooner at a wedding speech.</li><li><strong>'The queer old dean'</strong> — for 'the dear old queen,' allegedly in a toast. Victoria was reportedly not amused; historians doubt it happened.</li><li><strong>'A well-boiled icicle'</strong> — for 'a well-oiled bicycle.' Perhaps the most quoted of all.</li><li><strong>'Is the bean dizzy?'</strong> — for 'is the dean busy?' A tidy minimal pair.</li><li><strong>'Go and shake a tower'</strong> — for 'go and take a shower.' The kind of slip that ends conversations.</li><li><strong>'Cackling stumps'</strong> — for 'stackling cumps'... no. For <strong>'cackling stumps'</strong> we will leave the original to your imagination. The Victorians loved this game precisely because it kept producing accidental innuendo.</li></ul><p>That last point deserves emphasis: spoonerisms are funny partly because sound-swaps so often land on taboo or bodily words. The linguist's term is <strong>lexical bias</strong> — slips of the tongue are statistically more likely to produce real words than nonsense, and among real words, the naughty ones are overrepresented. Your brain, it turns out, keeps a closer eye on the forbidden vocabulary than you do.</p><h2>Why Some Spoonerisms Are Funnier Than Others</h2><p>Not every swap lands. 'Funny bunny' → 'bunny funny' is barely a spoonerism at all — the words just trade places whole, because each word's onset is a single consonant and the rimes are identical. The great ones have three properties. First, <strong>phonetic distance</strong>: 'light fire' → 'fight lire' works because /l/ and /f/ are articulated in completely different parts of the mouth, so the swap feels like a real stumble. Second, <strong>real-word landing</strong>: 'fight' and 'lire' are both words (one Italian), which tickles the lexical-bias circuitry. Third, <strong>image collision</strong>: 'a crushing blow' becoming 'a blushing crow' paints an absurd picture — a red-faced bird — that the original never had. This tool's silliness rating scores your result on onset distance and word-validity, which is why consonant-heavy pairs rate higher than vowel-adjacent ones.</p><h2>Spoonerisms in Literature and Comedy</h2><table><thead><tr><th>Work</th><th>Spoonerism craft</th></tr></thead><tbody><tr><td>Finnegans Wake (Joyce)</td><td>Joyce built whole paragraphs on portmanteau and sound-swap; 'spoonerism' logic runs through the dream-language</td></tr><tr><td>Capital Radio's 'Spooner or later'</td><td>A long-running radio game asking callers to spoonerize celebrity names under time pressure</td></tr><tr><td>The Two Ronnies</td><td>Ronnie Barker's newsreader sketches weaponized spoonerisms ('a pismronunciation')</td></tr><tr><td>Cockney rhyming slang's cousins</td><td>Pub games like 'spoonerizing the regulars' names' are a folk tradition across Britain</td></tr></tbody></table><p>Comedy writers love spoonerisms because they are <strong>structured accidents</strong> — the audience hears both the intended phrase and the slip simultaneously, and the brain enjoys resolving the double image. It is the verbal equivalent of a visual pun, and like puns, the best ones feel both surprising and inevitable.</p><h2>How the Generator Works</h2><p>The algorithm is deliberately faithful to the psycholinguistics. For your first two words it finds the <strong>onset</strong> — the leading consonant cluster, defined as everything before the first vowel (a, e, i, o, u, case-insensitive). Then it swaps the onsets and reattaches the rimes. Single words pass through unchanged, because a spoonerism needs two words to tango. Extra words after the first two are left alone, matching how real slips cluster at the start of a phrase.</p><p>Try the tongue-twister ladder: feed the output back in repeatedly. Each rung re-swaps the onsets, so after a few iterations the phrase either returns to the original (even number of swaps) or settles into a stable swapped form — a neat little demonstration that the operation is its own inverse, mathematically an <strong>involution</strong>. Party trick and group theory in one.</p><h2>Tongue Twisters: Spoonerisms You Do on Purpose</h2><p>Tongue twisters are spoonerisms waiting to happen. 'She sells seashells,' 'red lorry, yellow lorry,' and 'toy boat' are engineered to overload the phonological frame: repeated similar onsets (/s/ vs /ʃ/) in rapid succession make the swap almost mandatory at speed. Speech therapists actually use this deliberately — practicing minimal-pair twisters trains precise articulatory control, and the errors themselves diagnose which sound contrasts a speaker finds hardest. If you want to manufacture a spoonerism on demand, just say 'toy boat' ten times fast. Your brain will do the rest.</p><h2>Spoonerisms Across Languages</h2><p>The slip is universal, but its shape follows the language's phonology. In Spanish, where syllables are simpler, swaps tend to trade whole syllables rather than clusters. In Mandarin, tone swaps join the party — speakers exchange lexical tones between syllables, producing errors with no English equivalent. Japanese slips respect the mora (the rhythmic unit smaller than a syllable), so a spoonerism might swap just the consonant of a mora. The underlying machinery — parallel planning, slot-and-frame assembly — looks the same everywhere; only the building blocks differ. Feed this tool words from other languages and watch the onset rule still produce plausible slips, because consonant-initial onsets are near-universal.</p><h2>Using Spoonerisms Well (and Wisely)</h2><p>A spoonerism is a spice, not a meal. In writing, one well-placed swap in a headline or a character's dialogue signals playfulness; a paragraph of them is exhausting. In speeches, they are high-risk: the accidental kind gets the laugh, the deliberate kind needs perfect timing or it reads as trying too hard. And a word of caution from the Victorians' experience — always spoonerize your phrase <em>before</em> saying it in polite company. The lexical bias toward unfortunate real words is not a theory; it is a statistical fact about your brain, and it does not care about your audience.</p><h2>Spoonerisms in Pop Culture and Word Games</h2><p>Spoonerisms never left the stage. British comedy made them a staple: beyond the Two Ronnies, modern panel shows run entire rounds on deliberate sound-swaps, and radio phone-ins still challenge callers to spoonerize celebrity names against the clock — a brutal test because the phonological frame has to be rebuilt live, under pressure, with an audience listening for the inevitable collapse into innuendo. Crossword setters use spoonerism clues ('a blushing crow' = crushing blow) as a beloved cryptic device, and pub quiz tie-breakers love them for the same reason: they reward the ear, not just the vocabulary.</p><p>Children's authors weaponize them too. Writers from Roald Dahl to Julia Donaldson sprinkle spoonerisms through dialogue to signal a flustered character — the reader hears the mistake and the meaning at once, which is inherently funny and instantly characterizes the speaker as nervous, pompous, or tipsy. It is one of the cheapest characterization tricks in prose and one of the most reliable.</p><h2>Practice Drills: Training Your Ear</h2><p>Want to get good at deliberate spoonerisms? Start with minimal pairs — phrases where the onsets differ by a single feature: 'light fire,' 'big pig,' 'sad dad.' Say them slowly, then accelerate; the swap will happen on its own around the third repetition. Graduate to cluster onsets ('cracking crystal,' 'stunning stunt') where the whole cluster trades, not just the first consonant. Finally, try the party classic: spoonerize your friends' names. 'Hannah Brooks' becomes 'Brannah Hooks' — and you will discover that some names resist spoonerizing entirely (vowel-initial names have no onset to trade), which is itself a neat lesson in phonology. Run your best candidates through the generator above to check your work — and through the silliness rater to see if the algorithm agrees with your audience.</p>
+  </article>
+  <section class="faq-sec" aria-label="Frequently asked questions">
+    <h2>Frequently asked questions</h2>
+<details><summary>What is a spoonerism?</summary><p>A spoonerism swaps the opening sounds of two words — for example, 'light fire' becomes 'fight lire.' It is named after Reverend William Archibald Spooner, an Oxford don famous (perhaps unfairly) for such slips of the tongue.</p></details>
+<details><summary>How does this spoonerism generator work?</summary><p>The tool takes the leading consonant cluster of each of your first two words (everything before the first vowel) and swaps them. 'Funny bunny' becomes 'bunny funny'; single words are returned unchanged since a swap needs two words.</p></details>
+<details><summary>Why do spoonerisms happen in real speech?</summary><p>Psycholinguists call them phonological encoding errors: your brain plans the sounds of nearby words in parallel and occasionally slots the opening consonants into the wrong word frames. They reveal that speech is assembled in stages — words first, sounds second.</p></details>
+<details><summary>What does the silliness rating mean?</summary><p>The silliness rating scores onset distance (how different the swapped consonants sound), whether the results are real words, and how much the phrase changed. Consonant-heavy pairs like 'light fire' rate higher than near-identical pairs like 'funny bunny.'</p></details>
+<details><summary>Can I spoonerize multiple phrases at once?</summary><p>Yes — paste one phrase per line and batch mode spoonerizes each line independently. It is handy for testing lots of candidates when you are hunting for the perfect slip.</p></details>
+<details><summary>How does the tongue-twister ladder work?</summary><p>Keep feeding the output back in. Swapping onsets twice restores the original, so the ladder alternates between two forms — a neat demonstration that the spoonerism operation is its own inverse. Try it with 'light fire' and watch it flip back and forth.</p></details>
+  </section>
+</main>
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pb-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:300px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <script>
+      (function(grnp){
+      var d = document,
+          s = d.createElement('script'),
+          l = d.currentScript || d.scripts[d.scripts.length - 1];
+      s.settings = grnp || {};
+      s.src = "\/\/peacefulbicycle.com\/bnXtVJsnd.GElF0oYVWQcY\/Qe\/mf9qu-ZqUtlZk\/PzTHcx1LM\/jWIZwkMTj\/U\/t-NrzmUnyOMsj\/AzydO\/Qx";
+      s.async = true;
+      s.referrerPolicy = 'no-referrer-when-downgrade';
+      l.parentNode.insertBefore(s, l);
+      })({})
+      </script>
+    </div>
+  </div>
+</div>
+<footer class="fx-footer">
+  <div class="fx-container">
+    <div class="fx-brand">Spoonerism</div>
+    <p>Spoonerism swaps the opening sounds of your words into glorious nonsense — with a silliness rating, batch mode, and a tongue-twister ladder.</p>
+    <nav aria-label="Footer">
+      <a href="https://fixoraa.tech">Home</a>
+      <a href="https://fixoraa.tech">More Tools</a>
+    </nav>
+    <p class="fx-credit">Made by <a href="https://fixoraa.tech">Fixoraa</a> &middot; Free forever, no signup.</p>
+  </div>
+</footer>
+<script>
+function spoonerize(phrase){var words=String(phrase==null?'':phrase).split(/\s+/).filter(function(w){return w.length>0;});if(words.length<2)return words.join(' ');function split(w){var i=w.toLowerCase().search(/[aeiou]/);if(i<0)return[w,''];return[w.slice(0,i),w.slice(i)];}var a=split(words[0]),b=split(words[1]);words[0]=b[0]+a[1];words[1]=a[0]+b[1];return words.join(' ');}
+if(typeof document!=='undefined'){document.addEventListener('DOMContentLoaded',function(){var inp=document.getElementById('sp-in'),go=document.getElementById('sp-go'),out=document.getElementById('sp-out'),res=document.getElementById('sp-res'),stars=document.getElementById('sp-stars'),sill=document.getElementById('sp-sill'),copyBtn=document.getElementById('sp-copy'),ladderBtn=document.getElementById('sp-ladder-btn');if(!inp||!go)return;function onset(w){var i=String(w).toLowerCase().search(/[aeiou]/);return i<0?w:w.slice(0,i);}function silliness(orig,result){var wo=orig.split(/\s+/).filter(Boolean),wr=result.split(/\s+/).filter(Boolean);if(wo.length<2||wr.length<2)return 1;var o1=onset(wo[0]),o2=onset(wo[1]);var dist=(o1!==o2?2:0)+Math.abs(o1.length-o2.length);var changed=0;for(var i=0;i<Math.min(orig.length,result.length);i++){if(orig[i]!==result[i])changed++;}var score=1+Math.min(4,Math.round(dist/2+changed/6));return Math.max(1,Math.min(5,score));}function show(phrase){var r=spoonerize(phrase);if(res)res.textContent=r||'(type something first)';var s=silliness(phrase,r);if(stars)stars.textContent='★'.repeat(s)+'☆'.repeat(5-s);if(sill)sill.textContent='Silliness '+s+'/5 — '+(s>=4?'gloriously absurd':s===3?'a proper stumble':s===2?'mildly mangled':'barely a wobble');if(out)out.classList.add('show');return r;}go.addEventListener('click',function(){show(inp.value);});inp.addEventListener('keydown',function(e){if(e.key==='Enter')show(inp.value);});if(copyBtn)copyBtn.addEventListener('click',function(){var t=res?res.textContent:'';if(navigator.clipboard&&t){navigator.clipboard.writeText(t).then(function(){copyBtn.textContent='Copied!';setTimeout(function(){copyBtn.textContent='Copy result';},1500);});}});function buildLadder(seed){var lad=document.getElementById('sp-ladder');if(!lad)return;var cur=seed||inp.value||'light fire';var html='';for(var i=0;i<6;i++){html+='<div class="sp-rung">'+(i+1)+'. '+cur.replace(/</g,'&lt;')+'</div>';cur=spoonerize(cur);}lad.innerHTML=html;var tabL=document.getElementById('sp-tab-ladder');if(tabL)tabL.click();}if(ladderBtn)ladderBtn.addEventListener('click',function(){buildLadder(res?res.textContent:inp.value);});var tabB=document.getElementById('sp-tab-batch'),tabL2=document.getElementById('sp-tab-ladder'),paneB=document.getElementById('sp-pane-batch'),paneL=document.getElementById('sp-pane-ladder');function tab(which){if(tabB)tabB.classList.toggle('on',which==='b');if(tabL2)tabL2.classList.toggle('on',which==='l');if(paneB)paneB.classList.toggle('show',which==='b');if(paneL)paneL.classList.toggle('show',which==='l');}if(tabB)tabB.addEventListener('click',function(){tab('b');});if(tabL2)tabL2.addEventListener('click',function(){tab('l');});var bIn=document.getElementById('sp-batch-in'),bGo=document.getElementById('sp-batch-go'),bOut=document.getElementById('sp-batch-out');if(bGo)bGo.addEventListener('click',function(){var lines=(bIn?bIn.value:'').split('\n');var html='';lines.forEach(function(line){if(line.trim()){var r=spoonerize(line);html+='<div>→ <b>'+r.replace(/</g,'&lt;')+'</b> <span style="color:#5A6478">('+line.trim().replace(/</g,'&lt;')+')</span></div>';}});if(bOut)bOut.innerHTML=html||'<span style="color:#5A6478">Add some phrases above first.</span>';});});}
+</script>
+</body>
+</html>

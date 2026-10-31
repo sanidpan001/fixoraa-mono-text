@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SRT Subtitle Shifter — Sync Subtitles Online Free</title>
+<meta name="description" content="Shift every SRT timestamp forward or back by seconds or milliseconds. Fix out-of-sync subtitles free — preview changes live, then download the corrected .srt file.">
+<link rel="canonical" href="https://text.fixoraa.tech/srtshift/">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="SRT Subtitle Shifter — Sync Subtitles Online Free">
+<meta property="og:description" content="Shift every SRT timestamp forward or back by seconds or milliseconds. Fix out-of-sync subtitles free — preview changes live, then download the corrected .srt file.">
+<meta property="og:url" content="https://text.fixoraa.tech/srtshift/">
+<meta property="og:type" content="website">
+<script defer src="https://t.fixoraa.tech/track.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "SrtShift",
+      "url": "https://text.fixoraa.tech/srtshift/",
+      "applicationCategory": "Text Tools",
+      "operatingSystem": "Web",
+      "description": "Shift every SRT timestamp forward or back by seconds or milliseconds. Fix out-of-sync subtitles free \u2014 preview changes live, then download the corrected .srt file.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I know my subtitle file is in SRT format?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Open the .srt in a text editor, or play the video in VLC and use Tools \u2192 Codec Information while the subtitle track is selected. A quick heuristic: SubRip (.srt) files have numbered blocks with timestamps like 00:00:01,000 --> 00:00:04,000, while .vtt files start with a WEBVTT header."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I convert seconds to the millisecond offset the tool wants?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Use the millisecond field: 1,000 ms = 1 second. For 2.5 seconds enter 2500; for a 750 ms nudge enter 750. The preset buttons cover common values (\u00b1500 ms, \u00b12 s) if you want to iterate quickly."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens if a negative shift pushes a timestamp below zero?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is safe. Times that would go below zero are clamped to 00:00:00,000 instead of becoming negative, which keeps the file valid. However, if a large negative shift clamps many early subtitles, those lines will all pile up at the start \u2014 a sign the offset is too big."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will shifting change or damage the subtitle text?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No \u2014 the tool rewrites only the numeric timestamps. Subtitle text, sequence numbers, blank lines, and basic tags like <i> are preserved exactly as they were."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "My subtitles start fine but drift later in the film \u2014 will shifting help?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Almost certainly a frame-rate mismatch rather than a constant offset. Check the sync at the start and near the end: if the error grows over time, you need proportional re-timing (stretching all timestamps), not a fixed shift. A fixed shift only helps when the delay is identical throughout."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I make my video player use the fixed subtitle file?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Rename the downloaded file to match the video filename (e.g. Movie.mp4 \u2192 Movie.srt) and keep both in the same folder. Most players \u2014 VLC, Plex, Kodi, MX Player \u2014 then load it automatically."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+
+:root{
+  --bg:#FFF9F3; --surface:#FFFFFF; --accent:#C2410C; --accent-ink:#FFFFFF;
+  --ink:#2A1E14; --muted:#5F4B38; --line:#F1E3D3;
+  --display:'Bricolage Grotesque',serif; --body:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.6;font-size:16px}
+.fx-container{max-width:72rem;margin:0 auto;padding-left:1rem;padding-right:1rem}
+@media(min-width:640px){.fx-container{padding-left:1.5rem;padding-right:1.5rem}}
+/* ad utilities (for the verbatim ad snippets) */
+.no-print{}
+.mx-auto{margin-left:auto;margin-right:auto}.max-w-6xl{max-width:72rem}
+.px-4{padding-left:1rem;padding-right:1rem}.pt-4{padding-top:1rem}.pb-4{padding-bottom:1rem}
+@media(min-width:640px){.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:scale-100{transform:scale(1)}}
+.text-center{text-align:center}.block{display:block}
+.text-\[10px\]{font-size:10px}.tracking-\[0\.18em\]{letter-spacing:.18em}.uppercase{text-transform:uppercase}
+.text-slate-400{color:#94a3b8}.mb-1\.5{margin-bottom:.375rem}
+.flex{display:flex}.justify-center{justify-content:center}.overflow-hidden{overflow:hidden}
+.origin-top{transform-origin:top}.scale-\[0\.44\]{transform:scale(.44)}.shrink-0{flex-shrink:0}
+/* header */
+.fx-header{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+.fx-header-in{display:flex;align-items:center;gap:.9rem;padding:.8rem 0;flex-wrap:wrap}
+.fx-logo{display:flex;align-items:center;gap:.65rem;text-decoration:none;color:var(--ink)}
+.fx-logo-tile{width:44px;height:44px;border-radius:14px;background:var(--accent);color:var(--accent-ink);
+  display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;flex-shrink:0;
+  box-shadow:0 4px 14px rgba(0,0,0,.12)}
+.fx-brand{font-family:var(--display);font-size:1.45rem;font-weight:700;letter-spacing:-.01em;line-height:1.1}
+.fx-nav{margin-left:auto;display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.fx-btn{display:inline-block;padding:.55rem 1.1rem;border-radius:999px;text-decoration:none;font-weight:600;font-size:.92rem;
+  border:2px solid var(--accent);color:var(--accent);background:transparent;transition:all .18s ease;min-height:44px;line-height:1.5}
+.fx-btn:hover{background:var(--accent);color:var(--accent-ink)}
+.fx-btn.solid{background:var(--accent);color:var(--accent-ink)}
+.fx-btn.solid:hover{filter:brightness(.94)}
+.fx-badge{display:inline-flex;align-items:center;gap:.35rem;font-size:.78rem;font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--accent);border:1.5px dashed var(--accent);border-radius:999px;padding:.3rem .8rem;white-space:nowrap}
+/* tool section */
+.tool-sec{padding:2.2rem 0 1rem}
+/* article */
+.article-sec{padding:2.5rem 0;max-width:46rem;margin:0 auto}
+.article-sec h2{font-family:var(--display);font-size:1.55rem;margin:2rem 0 .8rem;line-height:1.25;letter-spacing:-.01em}
+.article-sec h3{font-size:1.15rem;margin:1.5rem 0 .6rem}
+.article-sec p,.article-sec li{margin-bottom:.85rem;color:var(--ink)}
+.article-sec ul,.article-sec ol{padding-left:1.4rem;margin-bottom:1rem}
+.article-sec table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.95rem}
+.article-sec th,.article-sec td{border:1px solid var(--line);padding:.55rem .7rem;text-align:left}
+.article-sec th{background:var(--surface);font-weight:700}
+/* faq */
+.faq-sec{padding:1rem 0 3rem;max-width:46rem;margin:0 auto}
+.faq-sec h2{font-family:var(--display);font-size:1.55rem;margin-bottom:1.2rem}
+.faq-sec details{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-bottom:.7rem;overflow:hidden}
+.faq-sec summary{padding:1rem 1.2rem;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:1rem;min-height:44px}
+.faq-sec summary::-webkit-details-marker{display:none}
+.faq-sec summary::after{content:'+';font-size:1.4rem;color:var(--accent);flex-shrink:0}
+.faq-sec details[open] summary::after{content:'\2013'}
+.faq-sec details p{padding:0 1.2rem 1.1rem;color:var(--muted)}
+/* footer */
+.fx-footer{background:var(--surface);border-top:1px solid var(--line);padding:2.2rem 0;margin-top:1rem}
+.fx-footer .fx-brand{font-size:1.2rem}
+.fx-footer p{color:var(--muted);font-size:.95rem;max-width:44rem;margin:.5rem 0}
+.fx-footer nav{display:flex;gap:1.2rem;margin:1rem 0;flex-wrap:wrap}
+.fx-footer nav a{color:var(--accent);font-weight:600;text-decoration:none}
+.fx-footer nav a:hover{text-decoration:underline}
+.fx-credit{font-size:.9rem;color:var(--muted)}
+.fx-credit a{color:var(--accent);font-weight:700;text-decoration:none}
+@media(max-width:640px){.fx-brand{font-size:1.2rem}.tool-sec{padding:1.4rem 0 .6rem}}
+@media print{.no-print{display:none!important}}
+
+.ss-wrap{max-width:1080px;margin:0 auto;padding:24px 16px 64px;font-family:Inter,system-ui,sans-serif;color:#2A1E14}
+.ss-hero{text-align:center;margin:8px 0 28px}
+.ss-hero h1{font-family:'Bricolage Grotesque',Inter,sans-serif;font-size:clamp(30px,5vw,46px);margin:0 0 8px;color:#2A1E14}
+.ss-tag{color:#5F4B38;font-size:17px;margin:0}
+.ss-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.ss-card{background:#FFFFFF;border:1px solid #F1E3D3;border-radius:20px;padding:22px;box-shadow:0 6px 24px rgba(194,65,12,.07)}
+.ss-card h2{font-family:'Bricolage Grotesque',Inter,sans-serif;font-size:19px;margin:0 0 12px;color:#2A1E14}
+.ss-card h2:not(:first-child){margin-top:20px}
+#ss-srt{width:100%;min-height:220px;box-sizing:border-box;border:1.5px solid #F1E3D3;border-radius:12px;padding:12px;font-family:ui-monospace,monospace;font-size:13px;color:#2A1E14;background:#FFF9F3;resize:vertical}
+#ss-srt:focus{outline:2px solid #C2410C;outline-offset:1px}
+.ss-offset{display:flex;gap:8px;align-items:stretch}
+.ss-offset button{width:52px;min-height:48px;font-size:22px;border-radius:12px;border:1.5px solid #F1E3D3;background:#FFF9F3;color:#C2410C;cursor:pointer}
+#ss-ms{flex:1;min-height:48px;border:1.5px solid #F1E3D3;border-radius:12px;padding:0 14px;font-size:18px;text-align:center;color:#2A1E14;background:#fff}
+.ss-unit{align-self:center;color:#5F4B38;font-size:14px}
+.ss-presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.ss-presets button{padding:10px 14px;min-height:44px;border-radius:999px;border:1.5px solid #F1E3D3;background:#FFF9F3;color:#2A1E14;font-size:14px;cursor:pointer}
+.ss-presets button:hover{border-color:#C2410C;color:#C2410C}
+.ss-actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+#ss-apply{flex:1;min-height:52px;border:0;border-radius:14px;background:#C2410C;color:#FFFFFF;font-size:17px;font-weight:700;cursor:pointer;padding:0 18px}
+#ss-download{min-height:52px;border-radius:14px;border:2px solid #C2410C;background:#fff;color:#C2410C;font-size:16px;font-weight:700;cursor:pointer;padding:0 18px}
+#ss-list{display:flex;flex-direction:column;gap:10px;max-height:420px;overflow:auto}
+.ss-item{border:1px solid #F1E3D3;border-radius:12px;padding:10px 12px;background:#FFF9F3;font-size:13px}
+.ss-item .ss-times{font-family:ui-monospace,monospace;font-size:12px;color:#5F4B38}
+.ss-item .ss-new{color:#C2410C;font-weight:700}
+.ss-item .ss-text{margin-top:4px;color:#2A1E14}
+#ss-count{color:#5F4B38;font-size:14px;margin:12px 0 0}
+.ss-empty{color:#5F4B38;font-size:14px;background:#FFF9F3;border:1px dashed #F1E3D3;border-radius:12px;padding:18px;text-align:center}
+@media (max-width:640px){.ss-grid{grid-template-columns:1fr}.ss-card{padding:16px}.ss-actions{flex-direction:column}#ss-download{width:100%}}
+</style>
+</head>
+<body>
+<header class="fx-header">
+  <div class="fx-container fx-header-in">
+    <a class="fx-logo" href="https://fixoraa.tech" aria-label="SrtShift home">
+      <span class="fx-logo-tile" aria-hidden="true">⏱</span>
+      <span class="fx-brand">SrtShift</span>
+    </a>
+    <nav class="fx-nav" aria-label="Site">
+      <a class="fx-btn" href="https://fixoraa.tech">Home</a>
+      <a class="fx-btn solid" href="https://fixoraa.tech">More Tools</a>
+      <span class="fx-badge" aria-label="Free forever">&#8734; Unlimited Free Usage</span>
+    </nav>
+  </div>
+</header>
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pt-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:728px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <div class="origin-top scale-[0.44] sm:scale-100 shrink-0">
+        <script>
+          atOptions = { 'key' : '4e68ac77881c17fe128a46565d9a4e8c', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+        </script>
+        <script src="https://www.highrevenueformat.com/4e68ac77881c17fe128a46565d9a4e8c/invoke.js"></script>
+      </div>
+    </div>
+  </div>
+</div>
+<main class="fx-container">
+  <section class="tool-sec tpl-split-panel" aria-label="SrtShift tool">
+<div class='ss-wrap'>
+<div class='ss-hero'><h1>SRT Subtitle Shifter</h1><p class='ss-tag'>Nudge every subtitle forward or back — perfectly in sync in seconds.</p></div>
+<div class='ss-grid'>
+<section class='ss-card' aria-label='Subtitle input'>
+<h2>1 · Paste your subtitles</h2>
+<textarea id='ss-srt' placeholder='1&#10;00:00:01,000 --> 00:00:04,000&#10;Hello world&#10;&#10;2&#10;00:00:05,000 --> 00:00:07,500&#10;…' aria-label='SRT subtitle text'></textarea>
+<h2>2 · Shift amount</h2>
+<div class='ss-offset'>
+<button id='ss-minus' aria-label='Decrease by 500 milliseconds'>−</button>
+<input id='ss-ms' type='number' value='2000' step='100' aria-label='Offset in milliseconds'><span class='ss-unit'>ms</span>
+<button id='ss-plus' aria-label='Increase by 500 milliseconds'>+</button>
+</div>
+<div class='ss-presets'>
+<button data-ms='500'>+0.5s</button><button data-ms='2000'>+2s</button><button data-ms='5000'>+5s</button>
+<button data-ms='-500'>−0.5s</button><button data-ms='-2000'>−2s</button><button data-ms='0'>Reset</button>
+</div>
+<div class='ss-actions'>
+<button id='ss-apply'>Shift subtitles</button>
+<button id='ss-download'>Download .srt</button>
+</div>
+</section>
+<section class='ss-card' aria-label='Shift preview'>
+<h2>Live preview</h2>
+<div id='ss-list'><div class='ss-empty'>Shifted timings will appear here, line by line.</div></div>
+<p id='ss-count'></p>
+</section>
+</div>
+</div>
+  </section>
+  <article class="article-sec" aria-label="Guide">
+<h2>Why subtitles fall out of sync</h2>
+<p>Almost everyone who watches films or shows with external subtitle files has met the same annoyance: the dialogue appears a second too early, or a line lingers after the actor has stopped speaking. The video is fine, the subtitles are fine — they are simply not aligned. This usually happens for one of a handful of boring, technical reasons. The subtitle file may have been timed for a different release of the same video — a theatrical cut versus a director's cut, a Blu-ray rip versus a streaming version, or a PAL release running at 25 frames per second versus an NTSC one at 23.976. Sometimes a few seconds of studio logos were trimmed from the start of one copy but not the other, so every single line is off by the same constant amount. Occasionally a file is just mistimed by whoever created it.</p>
+<p>The good news is that when the offset is constant — every line early or late by the same amount — the fix is trivial: add or subtract that amount from every timestamp in the file. That is exactly what an <strong>srt subtitle shifter</strong> does. Instead of editing hundreds of timestamps by hand, you measure the delay once, apply it to the whole file, and download a corrected copy.</p>
+<h2>How to measure the offset</h2>
+<p>Before you shift anything, you need one number: how far off are the subtitles, and in which direction? Play the video in a player like VLC, find a sharp, unmistakable line of dialogue — a door slamming shut as someone shouts, the first word after a long silence — and watch when the subtitle appears relative to the sound. Most players let you nudge subtitle timing live: in VLC, press <strong>G</strong> to delay subtitles by 50 ms or <strong>H</strong> to advance them by 50 ms. Keep tapping until the lines land perfectly, then check the current delay value (Tools → Track Synchronization shows it). If VLC says the subtitle delay is +1,250 ms, your file needs a +1,250 ms shift. If it says −800 ms, shift by −800 ms. Write the number down, then apply it permanently with SrtShift so every player shows the fixed timing.</p>
+<h2>What the SRT format actually looks like</h2>
+<p>An SRT file is plain text, which is why shifting it is so reliable. Each subtitle is a numbered block: a sequence number, a timing line, one or two lines of text, and a blank line. The timing line uses the format <code>HH:MM:SS,mmm --&gt; HH:MM:SS,mmm</code> — hours, minutes, seconds, then milliseconds after a comma. A shifter parses every timing line, adds your offset in milliseconds, clamps anything that would go below zero, and writes the file back out. Nothing else in the file changes: the numbering, the text, and any basic formatting tags stay exactly as they were. Because the operation is purely arithmetic on timestamps, it cannot corrupt the dialogue.</p>
+<h3>A quick example</h3>
+<p>Say a subtitle reads <code>00:00:01,000 --&gt; 00:00:04,000</code> and you measured that subtitles appear 2.5 seconds too early. Shifting by +2,500 ms turns it into <code>00:00:03,500 --&gt; 00:00:06,500</code>. Every other line moves by the same amount, so the relative spacing between lines — the rhythm of the conversation — is preserved perfectly.</p>
+<h2>When shifting is the right fix (and when it is not)</h2>
+<p>A constant offset is the most common sync problem, but not the only one. Shifting is the right fix when the delay is the same at the start of the video and at the end — check a line in the first five minutes and another in the last five minutes. If both are off by the same amount, shift away. If the drift grows over time — fine at the start, two seconds off by the middle, five seconds off by the end — you have a frame-rate mismatch, and no constant shift will fix it. In that case you need to re-time the file (stretching or compressing all timestamps proportionally), which is a different operation. Also note: shifting moves both the start and end of every subtitle, so a line that originally had a comfortable on-screen duration keeps it.</p>
+<h2>Step-by-step: fixing your subtitles</h2>
+<ol>
+<li><strong>Open your .srt file</strong> in any text editor and copy its contents, or just keep the file handy.</li>
+<li><strong>Measure the delay</strong> using the VLC method above, or simply estimate: count “one-one-thousand” between the spoken word and the subtitle.</li>
+<li><strong>Paste the subtitles</strong> into SrtShift's input panel.</li>
+<li><strong>Enter the offset</strong> in milliseconds (positive if subtitles appear too early, negative if too late) or use the preset buttons.</li>
+<li><strong>Check the live preview</strong> — the first subtitles are shown with their old and new timings side by side.</li>
+<li><strong>Download the corrected .srt</strong> and place it next to your video with a matching filename.</li>
+</ol>
+<h2>Tips for a perfect result</h2>
+<ul>
+<li><strong>Work in milliseconds.</strong> A 250 ms error is clearly visible in dialogue; rounding to whole seconds often is not precise enough. SrtShift accepts exact millisecond values.</li>
+<li><strong>Mind the direction.</strong> If subtitles show up <em>before</em> the dialogue, they need a <em>positive</em> shift (push them later). If they lag behind, use a negative shift.</li>
+<li><strong>Watch the clamp.</strong> A large negative shift can push the first subtitles before 00:00:00,000. SrtShift clamps those at zero rather than writing invalid negative timestamps — but if many early lines get clamped, your offset is probably too aggressive.</li>
+<li><strong>Keep a backup.</strong> Save the original file before overwriting, in case you want to try a different offset.</li>
+<li><strong>Match filenames.</strong> Most players auto-load <code>moviename.srt</code> sitting next to <code>moviename.mp4</code>. Name the downloaded file accordingly.</li>
+</ul>
+<h2>Common causes of constant subtitle offsets</h2>
+<table>
+<thead><tr><th>Cause</th><th>Typical offset</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td>Trimmed studio logos / intros</td><td>5–30 seconds</td><td>Positive shift</td></tr>
+<tr><td>Theatrical vs extended cut</td><td>Seconds to minutes</td><td>Positive or negative shift</td></tr>
+<tr><td>Advertisement segments removed</td><td>Varies per segment</td><td>Shift (if uniform) or re-time</td></tr>
+<tr><td>Wrong file for the release</td><td>Any constant</td><td>Measure and shift</td></tr>
+<tr><td>Player-specific delay setting</td><td>Any</td><td>Reset player delay first</td></tr>
+</tbody>
+</table>
+<h2>Shift vs re-time vs re-download</h2>
+<p>If the subtitles are from a completely different cut of the film — scenes added or removed in the middle — shifting will fix one section and break another. In that situation, downloading subtitles made for your exact release (matching runtime to the second) is faster than any editing. Re-timing, the proportional stretch, is for frame-rate drift. Shifting sits in the sweet spot: one number, one click, whole file fixed. For roughly eight out of ten sync complaints, it is all you need.</p>
+<h2>Privacy and file safety</h2>
+<p>SRT files sometimes contain fan-made translations people care about. SrtShift processes everything in your browser — your subtitle text is never uploaded to a server. The output is a plain-text .srt identical in structure to the input, so it works in VLC, Plex, Kodi, YouTube uploads, and every other player that accepts SubRip files.</p>
+<h2>Frequently asked subtitling questions</h2>
+<p>Beyond the FAQ below, two practical notes: YouTube and most editors accept shifted SRT files without complaint, because the format is unchanged. And if you only need a temporary fix for one viewing session, your player's subtitle-delay hotkeys are quicker — use SrtShift when you want the correction baked into the file forever.</p>
+<h2>Batch-fixing a whole series</h2>
+<p>When every episode of a series is off by the same amount — common with TV rips from a single source — you don't need to measure each file separately. Measure the offset once on episode one, then apply the identical shift to every episode's subtitle file. Keep a tiny log (episode number → offset used) so you can spot the odd episode that came from a different source and needs its own measurement. Name the outputs consistently, e.g. <code>show.s01e01.fixed.srt</code> during processing, then rename to match the video files when you're done.</p>
+<h2>Subtitle formats beyond SRT</h2>
+<p>SRT (SubRip) is the universal plain-text format, but you'll also meet <strong>WebVTT</strong> (.vtt, used by HTML5 video and most streaming players — same timestamps, different header), <strong>SSA/ASS</strong> (Advanced Substation Alpha, with styling and positioning for anime fansubs), and <strong>PGS/SUP</strong> (image-based subtitles on Blu-rays, which can't be shifted as text at all). If your file is WebVTT, the same constant-offset logic applies — only the timestamp format differs slightly (a period instead of a comma before milliseconds). For ASS files, shifting works the same way on the dialogue timestamps, though you'll want a dedicated subtitle editor to preserve the styling blocks.</p>
+<h2>Creating subtitles from scratch vs fixing</h2>
+<p>Sometimes the file is so broken — missing lines, garbage timing throughout — that shifting can't save it. Signs it's time to start over: the offset varies randomly line to line, large sections are missing, or the text is machine-translated gibberish. In that case, auto-transcription tools (YouTube's auto-captions, Whisper-based apps) produce a rough timed transcript in minutes; you then correct the text rather than the timing, which is usually faster than repairing a hopelessly mistimed file. But when the text is good and only the timing is off by a constant — the overwhelmingly common case — a single shift is always the fastest path.</p>
+  </article>
+  <section class="faq-sec" aria-label="Frequently asked questions">
+    <h2>Frequently asked questions</h2>
+<details><summary>How do I know my subtitle file is in SRT format?</summary><p>Open the .srt in a text editor, or play the video in VLC and use Tools → Codec Information while the subtitle track is selected. A quick heuristic: SubRip (.srt) files have numbered blocks with timestamps like 00:00:01,000 --> 00:00:04,000, while .vtt files start with a WEBVTT header.</p></details>
+<details><summary>How do I convert seconds to the millisecond offset the tool wants?</summary><p>Use the millisecond field: 1,000 ms = 1 second. For 2.5 seconds enter 2500; for a 750 ms nudge enter 750. The preset buttons cover common values (±500 ms, ±2 s) if you want to iterate quickly.</p></details>
+<details><summary>What happens if a negative shift pushes a timestamp below zero?</summary><p>It is safe. Times that would go below zero are clamped to 00:00:00,000 instead of becoming negative, which keeps the file valid. However, if a large negative shift clamps many early subtitles, those lines will all pile up at the start — a sign the offset is too big.</p></details>
+<details><summary>Will shifting change or damage the subtitle text?</summary><p>No — the tool rewrites only the numeric timestamps. Subtitle text, sequence numbers, blank lines, and basic tags like <i> are preserved exactly as they were.</p></details>
+<details><summary>My subtitles start fine but drift later in the film — will shifting help?</summary><p>Almost certainly a frame-rate mismatch rather than a constant offset. Check the sync at the start and near the end: if the error grows over time, you need proportional re-timing (stretching all timestamps), not a fixed shift. A fixed shift only helps when the delay is identical throughout.</p></details>
+<details><summary>How do I make my video player use the fixed subtitle file?</summary><p>Rename the downloaded file to match the video filename (e.g. Movie.mp4 → Movie.srt) and keep both in the same folder. Most players — VLC, Plex, Kodi, MX Player — then load it automatically.</p></details>
+  </section>
+</main>
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pb-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:300px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <script>
+      (function(grnp){
+      var d = document,
+          s = d.createElement('script'),
+          l = d.currentScript || d.scripts[d.scripts.length - 1];
+      s.settings = grnp || {};
+      s.src = "\/\/peacefulbicycle.com\/bnXtVJsnd.GElF0oYVWQcY\/Qe\/mf9qu-ZqUtlZk\/PzTHcx1LM\/jWIZwkMTj\/U\/t-NrzmUnyOMsj\/AzydO\/Qx";
+      s.async = true;
+      s.referrerPolicy = 'no-referrer-when-downgrade';
+      l.parentNode.insertBefore(s, l);
+      })({})
+      </script>
+    </div>
+  </div>
+</div>
+<footer class="fx-footer">
+  <div class="fx-container">
+    <div class="fx-brand">SrtShift</div>
+    <p>SrtShift shifts every timestamp in an SRT subtitle file by an exact offset and hands you a corrected download.</p>
+    <nav aria-label="Footer">
+      <a href="https://fixoraa.tech">Home</a>
+      <a href="https://fixoraa.tech">More Tools</a>
+    </nav>
+    <p class="fx-credit">Made by <a href="https://fixoraa.tech">Fixoraa</a> &middot; Free forever, no signup.</p>
+  </div>
+</footer>
+<script>
+function shiftSrt(srtText, offsetMs){function toMs(t){var m=/^(\d+):(\d{2}):(\d{2}),(\d{3})$/.exec(String(t).trim());if(!m)return null;return (+m[1])*3600000+(+m[2])*60000+(+m[3])*1000+(+m[4]);}function pad(n,l){n=String(n);while(n.length<l)n='0'+n;return n;}function toSrt(ms){ms=Math.max(0,Math.round(ms));var h=Math.floor(ms/3600000);ms%=3600000;var m=Math.floor(ms/60000);ms%=60000;var s=Math.floor(ms/1000);var x=ms%1000;return pad(h,2)+':'+pad(m,2)+':'+pad(s,2)+','+pad(x,3);}var blocks=String(srtText).split(/\r?\n\r?\n/);var out=blocks.map(function(b){var lines=b.split(/\r?\n/);for(var i=0;i<lines.length;i++){var mt=/(\d+:\d{2}:\d{2},\d{3})\s*-->\s*(\d+:\d{2}:\d{2},\d{3})/.exec(lines[i]);if(mt){var a=toMs(mt[1]),c=toMs(mt[2]);if(a===null||c===null)continue;lines[i]=toSrt(a+offsetMs)+' --> '+toSrt(c+offsetMs);break;}}return lines.join('\n');});return out.join('\n\n');}
+if(typeof document!=='undefined'){document.addEventListener('DOMContentLoaded',function(){var srt=document.getElementById('ss-srt'),ms=document.getElementById('ss-ms'),list=document.getElementById('ss-list'),count=document.getElementById('ss-count');function getMs(){return parseInt(ms.value||'0',10)||0;}function render(){var text=srt.value;if(!text.trim()){list.innerHTML='<div class=\'ss-empty\'>Paste an .srt file to see the shifted preview.</div>';count.textContent='';return;}var shifted=shiftSrt(text,getMs());var blocks=shifted.split(/\n\n/).slice(0,12);var html='';var total=(shifted.match(/-->/g)||[]).length;blocks.forEach(function(b){var lines=b.split('\n');var tm=lines[1]||'';var txt=lines.slice(2).join(' ');html+='<div class=\'ss-item\'><div class=\'ss-times\'>'+'#'+(lines[0]||'')+' &nbsp;→&nbsp; <span class=\'ss-new\'>'+tm.replace(/</g,'&lt;')+'</span></div><div class=\'ss-text\'>'+txt.replace(/</g,'&lt;').slice(0,120)+'</div></div>';});list.innerHTML=html;count.textContent=total+' subtitles shifted by '+(getMs()>=0?'+':'')+getMs()+' ms.';}document.getElementById('ss-apply').addEventListener('click',render);srt.addEventListener('input',render);ms.addEventListener('input',render);document.getElementById('ss-minus').addEventListener('click',function(){ms.value=getMs()-500;render();});document.getElementById('ss-plus').addEventListener('click',function(){ms.value=getMs()+500;render();});var pr=document.querySelectorAll('.ss-presets button');for(var i=0;i<pr.length;i++){pr[i].addEventListener('click',function(){ms.value=this.getAttribute('data-ms');render();});}document.getElementById('ss-download').addEventListener('click',function(){var shifted=shiftSrt(srt.value,getMs());if(!srt.value.trim()){alert('Paste your subtitles first.');return;}var blob=new Blob([shifted],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='shifted.srt';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},500);});render();});}
+</script>
+</body>
+</html>

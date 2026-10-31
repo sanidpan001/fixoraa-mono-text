@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zalgo Text Generator — Cursed Corrupted Text Maker | ZalgoText</title>
+<meta name="description" content="Zalgo text generator: corrupt any text with adjustable intensity, invert mode, safe preview, and one-click copy. Free cursed text tool.">
+<link rel="canonical" href="https://text.fixoraa.tech/zalgotext/">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Zalgo Text Generator — Cursed Corrupted Text Maker | ZalgoText">
+<meta property="og:description" content="Zalgo text generator: corrupt any text with adjustable intensity, invert mode, safe preview, and one-click copy. Free cursed text tool.">
+<meta property="og:url" content="https://text.fixoraa.tech/zalgotext/">
+<meta property="og:type" content="website">
+<script defer src="https://t.fixoraa.tech/track.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nosifer:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "ZalgoText",
+      "url": "https://text.fixoraa.tech/zalgotext/",
+      "applicationCategory": "Text Tools",
+      "operatingSystem": "Web",
+      "description": "Zalgo text generator: corrupt any text with adjustable intensity, invert mode, safe preview, and one-click copy. Free cursed text tool.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is zalgo text and how does it work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Zalgo text is normal text with many Unicode combining marks (accents and symbols from U+0300\u2013U+036F) stacked on each letter. Unicode allows unlimited combining marks per character, so generators pile them on until the text looks glitched or corrupted."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why is it called zalgo text?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The name comes from Zalgo, a creepypasta horror meme from the late 2000s about an entity that corrupts comics and text, always announced with 'HE COMES.' Fans rendered its speech in corrupted text and the style spread across the internet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does the intensity setting control?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Intensity sets how many combining marks attach to each character: 1 (mini) is a subtle shimmer, 3 (normal) is the classic cursed look, 8+ (max) is full reality-breaking chaos. The total mark count is always intensity \u00d7 text length."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I paste zalgo text anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Usually yes \u2014 the marks are real Unicode characters, so copy-paste preserves them. But some platforms (Discord usernames, Xbox gamertags) sanitize or limit combining marks, and rendering varies between browsers and phones."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does invert mode do?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Invert mode flips the corruption vertically: marks that would stack above the letters dangle below instead, and vice versa. It produces a 'dripping downward' look rather than the classic upward tower."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is zalgo text accessible to screen readers?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Poorly \u2014 most screen readers skip the combining marks or read them as noise, so zalgo should never be the only carrier of meaning. Keep it decorative, keep the plain text nearby, and avoid it in usernames and shared interfaces."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+
+:root{
+  --bg:#F6F1F9; --surface:#FFFFFF; --accent:#6B21A8; --accent-ink:#FFFFFF;
+  --ink:#23272F; --muted:#5B6472; --line:#E4D7EF;
+  --display:'Nosifer',serif; --body:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.6;font-size:16px}
+.fx-container{max-width:72rem;margin:0 auto;padding-left:1rem;padding-right:1rem}
+@media(min-width:640px){.fx-container{padding-left:1.5rem;padding-right:1.5rem}}
+/* ad utilities (for the verbatim ad snippets) */
+.no-print{}
+.mx-auto{margin-left:auto;margin-right:auto}.max-w-6xl{max-width:72rem}
+.px-4{padding-left:1rem;padding-right:1rem}.pt-4{padding-top:1rem}.pb-4{padding-bottom:1rem}
+@media(min-width:640px){.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:scale-100{transform:scale(1)}}
+.text-center{text-align:center}.block{display:block}
+.text-\[10px\]{font-size:10px}.tracking-\[0\.18em\]{letter-spacing:.18em}.uppercase{text-transform:uppercase}
+.text-slate-400{color:#94a3b8}.mb-1\.5{margin-bottom:.375rem}
+.flex{display:flex}.justify-center{justify-content:center}.overflow-hidden{overflow:hidden}
+.origin-top{transform-origin:top}.scale-\[0\.44\]{transform:scale(.44)}.shrink-0{flex-shrink:0}
+/* header */
+.fx-header{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+.fx-header-in{display:flex;align-items:center;gap:.9rem;padding:.8rem 0;flex-wrap:wrap}
+.fx-logo{display:flex;align-items:center;gap:.65rem;text-decoration:none;color:var(--ink)}
+.fx-logo-tile{width:44px;height:44px;border-radius:14px;background:var(--accent);color:var(--accent-ink);
+  display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;flex-shrink:0;
+  box-shadow:0 4px 14px rgba(0,0,0,.12)}
+.fx-brand{font-family:var(--display);font-size:1.45rem;font-weight:700;letter-spacing:-.01em;line-height:1.1}
+.fx-nav{margin-left:auto;display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.fx-btn{display:inline-block;padding:.55rem 1.1rem;border-radius:999px;text-decoration:none;font-weight:600;font-size:.92rem;
+  border:2px solid var(--accent);color:var(--accent);background:transparent;transition:all .18s ease;min-height:44px;line-height:1.5}
+.fx-btn:hover{background:var(--accent);color:var(--accent-ink)}
+.fx-btn.solid{background:var(--accent);color:var(--accent-ink)}
+.fx-btn.solid:hover{filter:brightness(.94)}
+.fx-badge{display:inline-flex;align-items:center;gap:.35rem;font-size:.78rem;font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--accent);border:1.5px dashed var(--accent);border-radius:999px;padding:.3rem .8rem;white-space:nowrap}
+/* tool section */
+.tool-sec{padding:2.2rem 0 1rem}
+/* article */
+.article-sec{padding:2.5rem 0;max-width:46rem;margin:0 auto}
+.article-sec h2{font-family:var(--display);font-size:1.55rem;margin:2rem 0 .8rem;line-height:1.25;letter-spacing:-.01em}
+.article-sec h3{font-size:1.15rem;margin:1.5rem 0 .6rem}
+.article-sec p,.article-sec li{margin-bottom:.85rem;color:var(--ink)}
+.article-sec ul,.article-sec ol{padding-left:1.4rem;margin-bottom:1rem}
+.article-sec table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.95rem}
+.article-sec th,.article-sec td{border:1px solid var(--line);padding:.55rem .7rem;text-align:left}
+.article-sec th{background:var(--surface);font-weight:700}
+/* faq */
+.faq-sec{padding:1rem 0 3rem;max-width:46rem;margin:0 auto}
+.faq-sec h2{font-family:var(--display);font-size:1.55rem;margin-bottom:1.2rem}
+.faq-sec details{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-bottom:.7rem;overflow:hidden}
+.faq-sec summary{padding:1rem 1.2rem;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:1rem;min-height:44px}
+.faq-sec summary::-webkit-details-marker{display:none}
+.faq-sec summary::after{content:'+';font-size:1.4rem;color:var(--accent);flex-shrink:0}
+.faq-sec details[open] summary::after{content:'\2013'}
+.faq-sec details p{padding:0 1.2rem 1.1rem;color:var(--muted)}
+/* footer */
+.fx-footer{background:var(--surface);border-top:1px solid var(--line);padding:2.2rem 0;margin-top:1rem}
+.fx-footer .fx-brand{font-size:1.2rem}
+.fx-footer p{color:var(--muted);font-size:.95rem;max-width:44rem;margin:.5rem 0}
+.fx-footer nav{display:flex;gap:1.2rem;margin:1rem 0;flex-wrap:wrap}
+.fx-footer nav a{color:var(--accent);font-weight:600;text-decoration:none}
+.fx-footer nav a:hover{text-decoration:underline}
+.fx-credit{font-size:.9rem;color:var(--muted)}
+.fx-credit a{color:var(--accent);font-weight:700;text-decoration:none}
+@media(max-width:640px){.fx-brand{font-size:1.2rem}.tool-sec{padding:1.4rem 0 .6rem}}
+@media print{.no-print{display:none!important}}
+
+.zt-wrap{font-family:'Nosifer',cursive;background:#F6F1F9;color:#23272F;padding:56px 20px 72px;}.zt-note{max-width:780px;margin:0 auto;background:#FFFFFF;border:1px solid #E4D7EF;border-radius:22px;padding:36px 32px;box-shadow:0 18px 44px rgba(107,33,168,.08);}.zt-logo{font-size:44px;}.zt-note h1{font-size:clamp(28px,4.6vw,44px);margin:10px 0 8px;font-weight:400;line-height:1.15;}.zt-tag{font-family:Inter,system-ui,sans-serif;color:#5B6472;font-size:16.5px;margin:0 0 24px;}.zt-field{margin-bottom:16px;font-family:Inter,system-ui,sans-serif;}.zt-field label{display:block;font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#5B6472;margin-bottom:8px;}.zt-field textarea{width:100%;min-height:90px;padding:14px;font-size:17px;border:2px solid #E4D7EF;border-radius:14px;font-family:inherit;box-sizing:border-box;resize:vertical;}.zt-field textarea:focus{outline:none;border-color:#6B21A8;}.zt-introw{display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-family:Inter,system-ui,sans-serif;}.zt-introw input[type=range]{flex:1;min-width:160px;accent-color:#6B21A8;}.zt-presets{display:flex;gap:8px;}.zt-presets button{border:2px solid #E4D7EF;background:#fff;border-radius:999px;padding:8px 16px;font-size:13.5px;font-weight:700;cursor:pointer;color:#6B21A8;font-family:inherit;}.zt-presets button.on{background:#6B21A8;color:#fff;border-color:#6B21A8;}.zt-btn{background:#6B21A8;color:#fff;border:none;border-radius:14px;padding:15px 30px;font-size:17px;cursor:pointer;font-family:'Nosifer',cursive;width:100%;margin-top:6px;}.zt-btn:hover{filter:brightness(1.1);}.zt-out{display:none;margin-top:20px;}.zt-out.show{display:block;}.zt-corrupt{background:#23272F;color:#E4D7EF;border-radius:16px;padding:26px 20px;font-size:22px;line-height:2.4;word-break:break-word;text-align:center;overflow-wrap:anywhere;}.zt-meta{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:12px;font-family:Inter,system-ui,sans-serif;flex-wrap:wrap;}.zt-count{font-size:14px;color:#5B6472;}.zt-actions{display:flex;gap:8px;flex-wrap:wrap;}.zt-actions button{border:2px solid #6B21A8;background:#fff;border-radius:12px;padding:9px 18px;font-size:14px;font-weight:700;cursor:pointer;color:#6B21A8;font-family:inherit;}.zt-actions button.on{background:#6B21A8;color:#fff;}.zt-safe{margin-top:12px;font-family:Inter,system-ui,sans-serif;font-size:14px;color:#5B6472;background:#F6F1F9;border:1px dashed #6B21A8;border-radius:12px;padding:14px;line-height:1.65;}@media (max-width:560px){.zt-note{padding:26px 20px;}.zt-wrap{padding:40px 14px 56px;}}
+</style>
+</head>
+<body>
+<header class="fx-header">
+  <div class="fx-container fx-header-in">
+    <a class="fx-logo" href="https://fixoraa.tech" aria-label="ZalgoText home">
+      <span class="fx-logo-tile" aria-hidden="true">👹</span>
+      <span class="fx-brand">ZalgoText</span>
+    </a>
+    <nav class="fx-nav" aria-label="Site">
+      <a class="fx-btn" href="https://fixoraa.tech">Home</a>
+      <a class="fx-btn solid" href="https://fixoraa.tech">More Tools</a>
+      <span class="fx-badge" aria-label="Free forever">&#8734; Unlimited Free Usage</span>
+    </nav>
+  </div>
+</header>
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pt-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:728px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <div class="origin-top scale-[0.44] sm:scale-100 shrink-0">
+        <script>
+          atOptions = { 'key' : '4e68ac77881c17fe128a46565d9a4e8c', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+        </script>
+        <script src="https://www.highrevenueformat.com/4e68ac77881c17fe128a46565d9a4e8c/invoke.js"></script>
+      </div>
+    </div>
+  </div>
+</div>
+<main class="fx-container">
+  <section class="tool-sec tpl-field-notes" aria-label="ZalgoText tool">
+<section class='zt-wrap'><div class='zt-note'><div class='zt-logo' aria-hidden='true'>👹</div><h1>Zalgo Text Generator</h1><p class='zt-tag'>Type it pure. Corrupt it completely.</p><div class='zt-field'><label for='zt-in'>Your text (keep it short — corruption multiplies)</label><textarea id='zt-in' maxlength='120'>HE COMES</textarea></div><div class='zt-field'><label>Corruption intensity: <span id='zt-ival'>3</span></label><div class='zt-introw'><input type='range' id='zt-intensity' min='1' max='10' value='3'><div class='zt-presets'><button data-i='1' type='button'>mini</button><button data-i='3' type='button' class='on'>normal</button><button data-i='8' type='button'>max</button></div></div></div><button class='zt-btn' id='zt-go' type='button'>Corrupt it</button><div class='zt-out' id='zt-out'><div class='zt-corrupt' id='zt-corrupt' aria-label='Corrupted text output'></div><div class='zt-meta'><span class='zt-count' id='zt-count'></span><div class='zt-actions'><button id='zt-invert' type='button'>Invert: off</button><button id='zt-safe' type='button'>Safe preview</button><button id='zt-copy' type='button'>Copy</button></div></div><div class='zt-safe' id='zt-safebox' style='display:none'></div></div></div></section>
+  </section>
+  <article class="article-sec" aria-label="Guide">
+<h2>What Is Zalgo Text?</h2><p>Zalgo text is what happens when typography has a bad dream. Normal characters get buried under stacks of <strong>combining diacritical marks</strong> — the tiny accents, tildes, and hooks that Unicode lets you pile onto any letter — until the text looks like it is glitching, melting, or being consumed by some digital entity. A simple 'hello' becomes a towering stack of corrupted glyphs that spills into the lines above and below.</p><p>The name comes from <strong>Zalgo</strong>, a creepypasta meme from the late 2000s: an eldritch horror said to corrupt comics, text, and eventually reality itself, always announced with the phrase 'HE COMES.' Forum users began rendering Zalgo's speech in corrupted text, and the aesthetic escaped into the wider internet. Today zalgo text is the visual language of cursed memes, horror ARGs, Halloween posts, and anyone who wants their username to look possessed.</p><h2>How It Works: The Unicode Trick</h2><p>Unicode — the standard behind all modern text — includes hundreds of <strong>combining characters</strong> in the range U+0300–U+036F. These are marks designed to sit on top of, below, or through a base letter: accents like é, tildes like ñ, and dozens of more exotic hooks, rings, and strokes. Crucially, Unicode places <em>no limit</em> on how many combining marks can attach to a single character. Your text renderer is obligated to try to stack them all.</p><p>Zalgo generators exploit this mercilessly. For each letter of your input, the generator attaches a chosen number of random combining marks — some above (U+0300–U+0314: acute, grave, circumflex, tilde, macron, and friends), some through the middle (U+0315–U+0338), and some below (U+0334–U+0363). The <strong>intensity</strong> setting in this tool controls exactly how many marks per character: intensity 1 ('mini') adds a subtle shimmer of corruption, intensity 3 ('normal') gives the classic cursed look, and intensity 8+ ('max') produces the full reality-breaking tower. The count is deterministic — intensity × text length marks total — so the same input and intensity always produce the same corruption.</p><h2>Why It Renders Differently Everywhere</h2><p>Zalgo text is a stress test for text rendering, and renderers respond differently. Browsers stack the marks vertically using font metrics; some fonts handle 20 stacked marks gracefully, others give up and draw tofu boxes. <strong>Line height explodes</strong> because the stacked marks overflow the line box — this is why zalgo text famously 'eats' the lines above and below it in comment sections. Mobile renderers are often stricter: iOS historically clipped excessive combining marks, while Android stacked them enthusiastically. Copy-paste usually preserves the marks (they are real characters), but some platforms sanitize them — Discord, for instance, has at various times stripped or limited zalgo in usernames precisely because of the chaos it caused in chat layouts.</p><h2>The Three Zones: Up, Mid, and Down</h2><table><thead><tr><th>Zone</th><th>Unicode range</th><th>Effect</th></tr></thead><tbody><tr><td>Above</td><td>U+0300 – U+0314</td><td>Marks stack upward: the classic 'tower' growing into the line above</td></tr><tr><td>Middle</td><td>U+0315 – U+0338</td><td>Marks strike through the letter: glitchy, corrupted, redacted feel</td></tr><tr><td>Below</td><td>U+0334 – U+0363</td><td>Marks dangle downward: dripping, melting, tentacled look</td></tr></tbody></table><p>This tool distributes marks across all three zones for the classic look. <strong>Invert mode</strong> flips the distribution — marks that would go above go below and vice versa — producing a 'dripping downward' corruption instead of the usual upward tower. It is the same corruption, mirrored, and it reads as a distinctly different monster.</p><h2>A Brief History of Cursed Text</h2><p>The raw material is older than the meme. Combining characters existed for Vietnamese, polytonic Greek, and phonetic transcription long before anyone thought to abuse them. The abuse began around <strong>2004–2006</strong> on the Something Awful forums, where Zalgo comics — innocent <em>Garfield</em> and <em>Dilbert</em> strips redrawn with cosmic horror — spread with corrupted captions. The <strong>'HE COMES'</strong> copypasta ('To invoke the hive-mind representing chaos...') became the canonical Zalgo text, and generators followed within a couple of years.</p><p>From there it colonized everything: early Facebook display names, Xbox gamertags (until Microsoft banned them), Minecraft signs, YouTube comments, and the 'cursed' aesthetic of late-2010s meme culture. Each platform's attempt to contain it — character limits on combining marks, username sanitizers — just proved how disruptive a few hundred bytes of Unicode could be to billion-dollar rendering pipelines.</p><h2>Zalgo vs. Its Cousins</h2><ul><li><strong>Vaporwave / fullwidth text (ＡＥＳＴＨＥＴＩＣ):</strong> uses fullwidth Unicode forms for a clean retro look — the aesthetic opposite of zalgo's chaos. (Try our VaporText tool for that.)</li><li><strong>Upside-down text (ʇxǝʇ):</strong> flips characters using lookalike glyphs. Often combined with zalgo for maximum damage.</li><li><strong>Spoiler / strikethrough:</strong> single combining marks (like U+0336, the long stroke overlay) used decoratively — zalgo's polite cousin.</li><li><strong>'Aesthetic' spacing (h e l l o):</strong> wide letter-spacing for a soft, dreamy feel — zalgo's mirror universe.</li></ul><h2>Practical Uses (Yes, Really)</h2><p>Beyond memes, corrupted text has legitimate niches. <strong>Horror writers and ARG designers</strong> use it for in-universe corrupted transmissions. <strong>QA engineers</strong> use zalgo strings as test input — if your app's layout survives a max-intensity paste, it survives anything (this is genuinely part of some fuzz-testing suites). <strong>Designers</strong> mock up 'glitch' aesthetics with it before committing to image assets. And <strong>streamers</strong> use it for Halloween overlays and jump-scare alerts. The safe preview in this tool exists for the QA use case: it shows you the mark count and a truncated sample so you can gauge the blast radius before pasting into production.</p><h2>The Etiquette of Corruption</h2><p>Zalgo text is the typographic equivalent of shouting — powerful in small doses, exhausting everywhere. A few community norms have emerged: <strong>never put it in usernames or display names</strong> on shared platforms (it breaks layouts for everyone, including screen-reader users, for whom stacked marks are read as gibberish or skipped entirely — an accessibility disaster). Keep it to your own posts, memes, and creative projects. Use mini intensity in mixed company; save max for Halloween. And remember that some platforms will strip or mangle it — always check the safe preview and test-paste before announcing HE COMES to your audience.</p><h2>Accessibility Note</h2><p>Screen readers handle zalgo text poorly: most announce the base letters and either skip the combining marks or read them as a stream of 'combining acute accent' noise. If your audience includes screen-reader users — and it does — treat zalgo as a purely visual effect, never as the sole carrier of meaning. Put the plain version nearby, or keep the corruption decorative around readable text. Cursed for the eyes should not mean invisible to the ears.</p><h2>Zalgo in Gaming, Usernames, and Chat Chaos</h2><p>Zalgo text found its natural habitat in multiplayer games and chat platforms, where a corrupted username renders inside everyone else's interface. Early Xbox Live and PlayStation Network gamertags, Minecraft server signs, and MMO character names all went through a zalgo phase — until platform after platform added sanitizers specifically to strip combining marks from display names. The arms race was instructive: each new filter (limit marks per character, strip non-spacing marks entirely, normalize to NFC form) was a tacit admission that a few bytes of legal Unicode could defeat million-dollar UI layouts. Discord's username system, Minecraft's chat filter, and most modern games now cap or strip zalgo — which is why the generator's safe preview matters: what works in your notes app may vanish in the game client.</p><p>Speedrunners and ARG communities still use it deliberately. Horror game ARGs hide corrupted text in fake terminal outputs and 'possessed' NPC dialogue; streamers trigger zalgo alerts for jump scares. In these contexts the rendering chaos is the point — the text is supposed to look like the system is breaking.</p><h2>Making Cursed Text by Hand</h2><p>You can corrupt text manually once you know the trick. On most systems, combining marks live in the Unicode range U+0300–U+036F: open a character map, pick marks like U+0301 (combining acute), U+0303 (tilde), U+0313 (comma above), and U+034F, and paste several after any letter. Each additional mark stacks higher or lower. Ten marks per character gives the classic look; thirty gives the reality-breaking tower. The generator above just automates this with a seeded randomizer so the same input always yields the same corruption — handy when you need a consistent 'voice' for a character or a repeatable test string for QA. For quick manual work, remember the three zones: marks U+0300–U+0314 climb upward, U+0334–U+0363 dangle below, and mixing both with a few midline strikethroughs (U+0336) gives the fullest corruption per character.</p><h2>Zalgo as a QA and Security Test Input</h2><p>Beyond memes, zalgo strings belong in every test suite that handles user text. Paste max-intensity corruption into usernames, comments, search boxes, and bios, and watch for: layout breakage (line boxes exploding), database truncation (some byte-length limits count marks as characters), and rendering hangs (a few pathological fonts choke on deep stacks). Security teams use it in fuzzing because combining marks have historically triggered bugs in text shaping engines — the same code path that draws your UI. If your app survives zalgo, it survives nearly anything users paste. Keep a max-intensity sample in your test fixtures; future you will be grateful.</p>
+  </article>
+  <section class="faq-sec" aria-label="Frequently asked questions">
+    <h2>Frequently asked questions</h2>
+<details><summary>What is zalgo text and how does it work?</summary><p>Zalgo text is normal text with many Unicode combining marks (accents and symbols from U+0300–U+036F) stacked on each letter. Unicode allows unlimited combining marks per character, so generators pile them on until the text looks glitched or corrupted.</p></details>
+<details><summary>Why is it called zalgo text?</summary><p>The name comes from Zalgo, a creepypasta horror meme from the late 2000s about an entity that corrupts comics and text, always announced with 'HE COMES.' Fans rendered its speech in corrupted text and the style spread across the internet.</p></details>
+<details><summary>What does the intensity setting control?</summary><p>Intensity sets how many combining marks attach to each character: 1 (mini) is a subtle shimmer, 3 (normal) is the classic cursed look, 8+ (max) is full reality-breaking chaos. The total mark count is always intensity × text length.</p></details>
+<details><summary>Can I paste zalgo text anywhere?</summary><p>Usually yes — the marks are real Unicode characters, so copy-paste preserves them. But some platforms (Discord usernames, Xbox gamertags) sanitize or limit combining marks, and rendering varies between browsers and phones.</p></details>
+<details><summary>What does invert mode do?</summary><p>Invert mode flips the corruption vertically: marks that would stack above the letters dangle below instead, and vice versa. It produces a 'dripping downward' look rather than the classic upward tower.</p></details>
+<details><summary>Is zalgo text accessible to screen readers?</summary><p>Poorly — most screen readers skip the combining marks or read them as noise, so zalgo should never be the only carrier of meaning. Keep it decorative, keep the plain text nearby, and avoid it in usernames and shared interfaces.</p></details>
+  </section>
+</main>
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pb-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:300px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <script>
+      (function(grnp){
+      var d = document,
+          s = d.createElement('script'),
+          l = d.currentScript || d.scripts[d.scripts.length - 1];
+      s.settings = grnp || {};
+      s.src = "\/\/peacefulbicycle.com\/bnXtVJsnd.GElF0oYVWQcY\/Qe\/mf9qu-ZqUtlZk\/PzTHcx1LM\/jWIZwkMTj\/U\/t-NrzmUnyOMsj\/AzydO\/Qx";
+      s.async = true;
+      s.referrerPolicy = 'no-referrer-when-downgrade';
+      l.parentNode.insertBefore(s, l);
+      })({})
+      </script>
+    </div>
+  </div>
+</div>
+<footer class="fx-footer">
+  <div class="fx-container">
+    <div class="fx-brand">ZalgoText</div>
+    <p>ZalgoText turns plain text into gloriously cursed zalgo — intensity control, invert mode, safe preview, and one-click copy.</p>
+    <nav aria-label="Footer">
+      <a href="https://fixoraa.tech">Home</a>
+      <a href="https://fixoraa.tech">More Tools</a>
+    </nav>
+    <p class="fx-credit">Made by <a href="https://fixoraa.tech">Fixoraa</a> &middot; Free forever, no signup.</p>
+  </div>
+</footer>
+<script>
+function zalgoMarks(text,intensity){return String(text==null?'':text).length*intensity;}
+if(typeof document!=='undefined'){document.addEventListener('DOMContentLoaded',function(){var inp=document.getElementById('zt-in'),rng=document.getElementById('zt-intensity'),ival=document.getElementById('zt-ival'),go=document.getElementById('zt-go'),out=document.getElementById('zt-out'),corrupt=document.getElementById('zt-corrupt'),count=document.getElementById('zt-count'),invertBtn=document.getElementById('zt-invert'),safeBtn=document.getElementById('zt-safe'),safeBox=document.getElementById('zt-safebox'),copyBtn=document.getElementById('zt-copy');if(!inp||!go)return;var UP=[],MID=[],DOWN=[];for(var c=0x300;c<=0x314;c++)UP.push(c);for(c=0x315;c<=0x338;c++)MID.push(c);for(c=0x334;c<=0x363;c++)DOWN.push(c);var inverted=false;function hash(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}function mulberry(seed){var a=seed;return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}function generate(text,intensity){var rnd=mulberry(hash(text+'|'+intensity+'|'+(inverted?'1':'0')));var res='';for(var i=0;i<text.length;i++){var ch=text[i];res+=ch;if(ch===' '||ch==='\n')continue;var n=intensity;for(var k=0;k<n;k++){var zone=rnd();var arr=zone<0.45?UP:zone<0.7?MID:DOWN;if(inverted){arr=arr===UP?DOWN:arr===DOWN?UP:MID;}res+=String.fromCharCode(arr[Math.floor(rnd()*arr.length)]);}}return res;}function setIntensity(i){rng.value=i;if(ival)ival.textContent=i;var btns=document.querySelectorAll('.zt-presets button');for(var j=0;j<btns.length;j++){btns[j].classList.toggle('on',parseInt(btns[j].getAttribute('data-i'),10)===i);}}rng.addEventListener('input',function(){setIntensity(parseInt(rng.value,10));});var pbtns=document.querySelectorAll('.zt-presets button');for(var p=0;p<pbtns.length;p++){pbtns[p].addEventListener('click',function(){setIntensity(parseInt(this.getAttribute('data-i'),10));render();});}function render(){var t=inp.value||'';var inten=parseInt(rng.value,10)||3;var z=generate(t,inten);if(corrupt)corrupt.textContent=z;if(count)count.textContent=zalgoMarks(t,inten)+' combining marks on '+t.length+' characters';if(out)out.classList.add('show');if(safeBox){safeBox.style.display='none';}return z;}go.addEventListener('click',render);if(invertBtn)invertBtn.addEventListener('click',function(){inverted=!inverted;invertBtn.textContent='Invert: '+(inverted?'on':'off');invertBtn.classList.toggle('on',inverted);if(out&&out.classList.contains('show'))render();});if(safeBtn)safeBtn.addEventListener('click',function(){var t=inp.value||'';var inten=parseInt(rng.value,10)||3;var z=generate(t,inten);if(safeBox){safeBox.style.display='block';safeBox.innerHTML='<b>Safe preview</b> — '+zalgoMarks(t,inten)+' marks total. First 60 chars: '+z.slice(0,60).replace(/</g,'&lt;')+'…<br>Tip: test-paste into your target app before posting; some platforms strip combining marks.';}});if(copyBtn)copyBtn.addEventListener('click',function(){var t=corrupt?corrupt.textContent:'';if(navigator.clipboard&&t){navigator.clipboard.writeText(t).then(function(){copyBtn.textContent='Copied!';setTimeout(function(){copyBtn.textContent='Copy';},1500);});}});render();});}
+</script>
+</body>
+</html>

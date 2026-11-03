@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+<link rel="preconnect" href="https://www.highrevenueformat.com">
+<link rel="preconnect" href="https://peacefulbicycle.com">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sonnet Checker: Shakespearean &amp; Petrarchan Sonnet Validator</title>
+<meta name="description" content="Check whether a poem is a Shakespearean or Petrarchan sonnet, with line count, rhyme scheme, and form validation.">
+<link rel="canonical" href="https://text.fixoraa.tech/sonnetcheck/">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Sonnet Checker: Shakespearean &amp; Petrarchan Sonnet Validator">
+<meta property="og:description" content="Check whether a poem is a Shakespearean or Petrarchan sonnet, with line count, rhyme scheme, and form validation.">
+<meta property="og:url" content="https://text.fixoraa.tech/sonnetcheck/">
+<meta property="og:type" content="website">
+<script defer src="https://t.fixoraa.tech/track.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "SonnetCheck",
+      "url": "https://text.fixoraa.tech/sonnetcheck/",
+      "applicationCategory": "Text",
+      "operatingSystem": "Web",
+      "description": "Check whether a poem is a Shakespearean or Petrarchan sonnet, with line count, rhyme scheme, and form validation.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How many lines does a sonnet have?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Exactly 14 lines. A poem with 12 or 16 lines may be beautiful, but it is not a sonnet, whatever its rhyme scheme."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the Shakespearean rhyme scheme?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ABAB CDCD EFEF GG: three quatrains with alternating rhymes followed by a rhyming couplet that often delivers the poem's twist."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the Petrarchan rhyme scheme?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An octave rhyming ABBAABBA followed by a sestet, commonly CDECDE or CDCDCD, with the turn falling between the two parts."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the volta in a sonnet?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The volta is the turn where the poem's argument pivots, usually at line 9 in a Petrarchan sonnet or at the final couplet in a Shakespearean one."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is iambic pentameter?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ten syllables per line in five iambic feet, each an unstressed syllable followed by a stressed one: da-DUM repeated five times."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can a sonnet have a different rhyme scheme?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Many modern sonnets keep 14 lines and a turn while varying rhyme or metre. SonnetCheck reports these as other 14-line forms rather than failures."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I work out a rhyme scheme?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Label the first line's ending A, label later lines that rhyme with it A, label the first new ending B, and continue. The resulting letter string is the scheme."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a Spenserian sonnet?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A variant with interlocking quatrains rhyming ABAB BCBC CDCD EE, where each quatrain's second rhyme becomes the next quatrain's first."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+
+:root{
+  --bg:#F5F0EB; --surface:#FFFFFF; --accent:#1E3A8A; --accent-ink:#FFFFFF;
+  --ink:#1E1E24; --muted:#45455A; --line:#DCD2C6;
+  --display:'Lexend',serif; --body:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.6;font-size:16px}
+.fx-container{max-width:72rem;margin:0 auto;padding-left:1rem;padding-right:1rem}
+@media(min-width:640px){.fx-container{padding-left:1.5rem;padding-right:1.5rem}}
+/* ad utilities (for the verbatim ad snippets) */
+.no-print{}
+.mx-auto{margin-left:auto;margin-right:auto}.max-w-6xl{max-width:72rem}
+.px-4{padding-left:1rem;padding-right:1rem}.pt-4{padding-top:1rem}.pb-4{padding-bottom:1rem}
+@media(min-width:640px){.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:scale-100{transform:scale(1)}}
+.text-center{text-align:center}.block{display:block}
+.text-\[10px\]{font-size:10px}.tracking-\[0\.18em\]{letter-spacing:.18em}.uppercase{text-transform:uppercase}
+.text-slate-400{color:#94a3b8}.mb-1\.5{margin-bottom:.375rem}
+.flex{display:flex}.justify-center{justify-content:center}.overflow-hidden{overflow:hidden}
+.origin-top{transform-origin:top}.scale-\[0\.44\]{transform:scale(.44)}.shrink-0{flex-shrink:0}
+/* header */
+.fx-header{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+.fx-header-in{display:flex;align-items:center;gap:.9rem;padding:.8rem 0;flex-wrap:wrap}
+.fx-logo{display:flex;align-items:center;gap:.65rem;text-decoration:none;color:var(--ink)}
+.fx-logo-tile{width:44px;height:44px;border-radius:14px;background:var(--accent);color:var(--accent-ink);
+  display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;flex-shrink:0;
+  box-shadow:0 4px 14px rgba(0,0,0,.12)}
+.fx-brand{font-family:var(--display);font-size:1.45rem;font-weight:700;letter-spacing:-.01em;line-height:1.1}
+.fx-nav{margin-left:auto;display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.fx-btn{display:inline-block;padding:.55rem 1.1rem;border-radius:999px;text-decoration:none;font-weight:600;font-size:.92rem;
+  border:2px solid var(--accent);color:var(--accent);background:transparent;transition:all .18s ease;min-height:44px;line-height:1.5}
+.fx-btn:hover{background:var(--accent);color:var(--accent-ink)}
+.fx-btn.solid{background:var(--accent);color:var(--accent-ink)}
+.fx-btn.solid:hover{filter:brightness(.94)}
+.fx-badge{display:inline-flex;align-items:center;gap:.35rem;font-size:.78rem;font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--accent);border:1.5px dashed var(--accent);border-radius:999px;padding:.3rem .8rem;white-space:nowrap}
+/* tool section */
+.tool-sec{padding:2.2rem 0 1rem}
+/* article */
+.article-sec{padding:2.5rem 0;max-width:46rem;margin:0 auto}
+.article-sec h2{font-family:var(--display);font-size:1.55rem;margin:2rem 0 .8rem;line-height:1.25;letter-spacing:-.01em}
+.article-sec h3{font-size:1.15rem;margin:1.5rem 0 .6rem}
+.article-sec p,.article-sec li{margin-bottom:.85rem;color:var(--ink)}
+.article-sec ul,.article-sec ol{padding-left:1.4rem;margin-bottom:1rem}
+.article-sec table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.95rem}
+.article-sec th,.article-sec td{border:1px solid var(--line);padding:.55rem .7rem;text-align:left}
+.article-sec th{background:var(--surface);font-weight:700}
+/* faq */
+.faq-sec{padding:1rem 0 3rem;max-width:46rem;margin:0 auto}
+.faq-sec h2{font-family:var(--display);font-size:1.55rem;margin-bottom:1.2rem}
+.faq-sec details{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-bottom:.7rem;overflow:hidden}
+.faq-sec summary{padding:1rem 1.2rem;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:1rem;min-height:44px}
+.faq-sec summary::-webkit-details-marker{display:none}
+.faq-sec summary::after{content:'+';font-size:1.4rem;color:var(--accent);flex-shrink:0}
+.faq-sec details[open] summary::after{content:'\2013'}
+.faq-sec details p{padding:0 1.2rem 1.1rem;color:var(--muted)}
+/* footer */
+.fx-footer{background:var(--surface);border-top:1px solid var(--line);padding:2.2rem 0;margin-top:1rem}
+.fx-footer .fx-brand{font-size:1.2rem}
+.fx-footer p{color:var(--muted);font-size:.95rem;max-width:44rem;margin:.5rem 0}
+.fx-footer nav{display:flex;gap:1.2rem;margin:1rem 0;flex-wrap:wrap}
+.fx-footer nav a{color:var(--accent);font-weight:600;text-decoration:none}
+.fx-footer nav a:hover{text-decoration:underline}
+.fx-credit{font-size:.9rem;color:var(--muted)}
+.fx-credit a{color:var(--accent);font-weight:700;text-decoration:none}
+@media(max-width:640px){.fx-brand{font-size:1.2rem}.tool-sec{padding:1.4rem 0 .6rem}}
+@media print{.no-print{display:none!important}}
+
+
+.tool-card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:1.4rem;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.tool-card h1{font-family:var(--display);font-size:1.7rem;line-height:1.2;margin-bottom:.4rem}
+.tool-card .sub{color:var(--muted);margin-bottom:1.1rem}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem}
+.fld label{display:block;font-weight:600;margin-bottom:.3rem}
+.fld input,.fld select,.fld textarea{width:100%;padding:.65rem .8rem;border:1.5px solid var(--line);border-radius:10px;font-size:1rem;background:var(--surface);color:var(--ink);min-height:44px}
+.presets{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+.presets button{padding:.5rem 1rem;border-radius:999px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-weight:600;cursor:pointer;min-height:40px}
+.btn{background:var(--accent);color:var(--accent-ink);border:none;border-radius:999px;padding:.8rem 1.6rem;font-size:1rem;font-weight:700;cursor:pointer;min-height:48px}
+.btn2{background:transparent;color:var(--accent);border:1.5px solid var(--accent);border-radius:999px;padding:.6rem 1.2rem;font-weight:600;cursor:pointer;min-height:44px}
+.result{margin-top:1.1rem;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:1rem;font-size:1.05rem}
+.result b{font-size:1.2rem}
+.hist{margin-top:.8rem;color:var(--muted);font-size:.9rem}
+@media (max-width:640px){.row{grid-template-columns:1fr}.tool-card{padding:1rem}.tool-card h1{font-size:1.4rem}}
+
+.lines{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:.8rem 1rem;margin-top:1rem;color:var(--muted);font-weight:600}
+.fld textarea{resize:vertical}
+
+</style>
+</head>
+<body>
+<header class="fx-header">
+  <div class="fx-container fx-header-in">
+    <a class="fx-logo" href="https://fixoraa.tech" aria-label="SonnetCheck home">
+      <span class="fx-logo-tile" aria-hidden="true">🪶</span>
+      <span class="fx-brand">SonnetCheck</span>
+    </a>
+    <nav class="fx-nav" aria-label="Site">
+      <a class="fx-btn" href="https://fixoraa.tech">Home</a>
+      <a class="fx-btn solid" href="https://fixoraa.tech">More Tools</a>
+      <span class="fx-badge" aria-label="Free forever">&#8734; Unlimited Free Usage</span>
+    </nav>
+  </div>
+</header>
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pt-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:728px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <div class="origin-top scale-[0.44] sm:scale-100 shrink-0">
+        <script>
+          atOptions = { 'key' : '4e68ac77881c17fe128a46565d9a4e8c', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+        </script>
+        <script src="https://www.highrevenueformat.com/4e68ac77881c17fe128a46565d9a4e8c/invoke.js"></script>
+      </div>
+    </div>
+  </div>
+</div>
+<main class="fx-container">
+  <section class="tool-sec tpl-sonnet-quill" aria-label="SonnetCheck tool">
+<div class="tool-card"><h1>Sonnet Checker</h1><p class="sub">Paste your 14 lines, enter the rhyme scheme, and check whether it matches a Shakespearean or Petrarchan form.</p>
+<div class="presets"><button type="button" data-preset="scheme:ABABCDCDEFEFGG">Shakespearean scheme</button><button type="button" data-preset="scheme:ABBAABBACDECDE">Petrarchan scheme</button></div>
+<div class="fld"><label for="poem">Your poem (one line per row)</label><textarea id="poem" rows="6">Shall I compare thee to a summer's day?
+Thou art more lovely and more temperate:
+Rough winds do shake the darling buds of May,
+And summer's lease hath all too short a date:</textarea></div>
+<div class="row"><div class="fld"><label for="scheme">Rhyme scheme (letters, e.g. ABABCDCDEFEFGG)</label><input id="scheme" type="text" value="ABABCDCDEFEFGG"></div>
+<div class="fld"><label>&nbsp;</label><button class="btn" id="calcBtn" type="button">Check sonnet form</button></div></div>
+<div class="lines" id="linesOut" aria-live="polite">Lines counted: 4 so far. A sonnet needs 14.</div>
+<div class="result" id="res" aria-live="polite">Enter a poem and a rhyme scheme to check its form.</div>
+<p><button class="btn2" id="copyBtn" type="button">Copy result</button></p><p class="hist" id="hist"></p></div>
+  </section>
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pb-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:300px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <script>
+      (function(grnp){
+      var d = document,
+          s = d.createElement('script'),
+          l = d.currentScript || d.scripts[d.scripts.length - 1];
+      s.settings = grnp || {};
+      s.src = "\/\/peacefulbicycle.com\/bnXtVJsnd.GElF0oYVWQcY\/Qe\/mf9qu-ZqUtlZk\/PzTHcx1LM\/jWIZwkMTj\/U\/t-NrzmUnyOMsj\/AzydO\/Qx";
+      s.async = true;
+      s.referrerPolicy = 'no-referrer-when-downgrade';
+      l.parentNode.insertBefore(s, l);
+      })({})
+      </script>
+    </div>
+  </div>
+</div>
+  <article class="article-sec" aria-label="Guide">
+<h2>What is a sonnet?</h2>
+<p>A sonnet is a fourteen-line poem, traditionally written in iambic pentameter, with a defined rhyme scheme and a turn, or volta, where the argument shifts. The form has survived for more than seven centuries because its constraints are productive: fourteen lines is long enough to develop a thought, pose a problem, or describe a beloved, and short enough to demand precision, so every word must earn its place. Poets have used the sonnet for love, politics, grief, satire, and philosophy, and the form's history runs from Petrarch in fourteenth-century Italy through Shakespeare in Elizabethan England to the present day, where sonnets still appear in literary magazines, competitions, and classrooms. Checking a sonnet means checking its architecture: line count first, then rhyme scheme, then metre, then the turn, each layer revealing whether the poem honours the form or deliberately breaks it.</p>
+<p>The two dominant traditions are the Petrarchan, or Italian, sonnet and the Shakespearean, or English, sonnet, and they differ in how they divide the fourteen lines and how they rhyme. A Petrarchan sonnet divides into an octave of eight lines and a sestet of six lines, with the octave usually rhyming ABBAABBA and the sestet using various patterns, commonly CDECDE or CDCDCD, and the volta falls between the two parts, where the problem posed in the octave meets its resolution, or at least its complication, in the sestet. A Shakespearean sonnet divides into three quatrains of four lines and a final couplet of two lines, rhyming ABAB CDCD EFEF GG, with the volta often arriving at the couplet, which delivers a twist, a summary, or a punchline that reframes everything before it. Both forms are sonnets, but they argue differently, and recognising which architecture a poem uses is the first step to reading it well.</p>
+<h2>How SonnetCheck works</h2>
+<p>SonnetCheck validates the structural facts of a poem: it counts non-empty lines, compares the rhyme scheme you enter against the two classic patterns, and reports a verdict. Paste your poem, one line per row, enter the rhyme scheme as a string of letters, such as ABABCDCDEFEFGG for a Shakespearean sonnet or ABBAABBACDECDE for a Petrarchan sonnet, and the checker tells you whether the line count is correct and which form the scheme matches. If the poem has fourteen lines but a different scheme, it reports an other fourteen-line form, which is not a failure: many excellent modern sonnets vary the rhyme scheme while keeping the length and the turn, and the checker distinguishes a structural mismatch from a creative variation by naming what it finds rather than simply passing or failing. If the poem does not have fourteen lines, the verdict is plain: it is not a sonnet yet, whatever its other virtues.</p>
+<p>The checker deliberately asks you to supply the rhyme scheme rather than guessing it from the words, because rhyme is a matter of sound, not spelling, and an automated guesser would frequently be wrong about slant rhymes, eye rhymes, and archaic pronunciations. Determining a rhyme scheme yourself is also a valuable exercise: label the last word of the first line A, label every later line that rhymes with it A, label the first non-rhyming ending B, and continue, until you have a fourteen-letter string that describes the poem's rhyme architecture. That string is the fingerprint of the sonnet's form, and comparing it with the classic patterns tells you at once whether you are reading a Shakespearean, Petrarchan, or variant sonnet, and where the rhymes cluster and resolve.</p>
+<h2>Iambic pentameter, explained simply</h2>
+<p>Beyond line count and rhyme, the traditional sonnet is written in iambic pentameter: ten syllables per line, arranged in five feet, each foot an unstressed syllable followed by a stressed one, da-DUM da-DUM da-DUM da-DUM da-DUM. Shakespeare's famous opening, Shall I compare thee to a summer's day, scans almost perfectly in this pattern, and the regularity creates a heartbeat-like pulse that readers feel even without analysing it. Real poets rarely keep the pattern perfectly for fourteen lines: they invert a foot for emphasis, add an extra unstressed syllable at a line ending, which is called a feminine ending, or break the pattern at a moment of emotional intensity, and those variations are meaningful precisely because the underlying pattern is stable. A sonnet that never varies can feel mechanical, while a sonnet that varies everywhere has no pattern to vary from, and the art lies in the balance.</p>
+<p>Counting syllables is the practical first step to checking metre. Read each line aloud, clap or tap the beats, and mark the stressed syllables, looking for roughly five stresses and ten syllables, with allowance for the variations just described. Reading aloud matters because metre is an acoustic phenomenon: a line that looks regular on the page may stumble when spoken, and a line that looks irregular may flow beautifully in speech, especially where elision or a natural pause changes the syllable count. If you are writing a sonnet, draft for meaning first and then revise toward the metre, rather than forcing meaning to fit the count, because a line that scans perfectly but says nothing is a worse sonnet than a line with a small metrical liberty that says something true.</p>
+<h2>The volta: where the sonnet turns</h2>
+<p>The volta, Italian for turn, is the moment in a sonnet where the argument pivots, and it is what separates a sonnet from fourteen rhymed lines that happen to share a page. In a Petrarchan sonnet the volta usually falls at line nine, the start of the sestet, where the octave's problem, question, or description gives way to an answer, a qualification, or a new perspective. In a Shakespearean sonnet the volta often falls at the final couplet, where a twist reframes the three quatrains, though skilled poets place it earlier, at line nine or line thirteen, to surprise the reader. Common volta markers include words like but, yet, however, and so, though the turn can also be purely conceptual, a shift from description to reflection, from past to present, or from a general claim to a personal application, and the strongest voltas feel both surprising and inevitable when the poem is reread.</p>
+<p>When you check a sonnet, locate the volta before you judge it. Read the poem twice: once for the surface meaning, and once watching for the pivot, marking the line where the poem stops doing one thing and starts doing another. If you cannot find a turn, the poem may still be beautiful, but it is missing the structural drama that makes a sonnet feel like a sonnet, and if you are writing one, consider whether your fourteenth line earns its place or merely fills a slot. A useful drafting exercise is to write the volta first, as a single sentence stating the twist, and then build the preceding lines toward it, so the poem's architecture serves its argument rather than constraining it.</p>
+<h2>Shakespearean versus Petrarchan: which to write?</h2>
+<p>The choice between forms is a choice about how you want your argument to move. The Shakespearean form, with its three quatrains and closing couplet, suits an argument that develops in three stages or offers three examples before a conclusion: each quatrain can explore a facet of the subject, and the couplet can deliver a verdict, a joke, or a sting. The form's alternating rhymes keep the poem moving forward, and the final couplet's rhyme, GG, gives a satisfying click of closure, which is why the form suits epigrams and witty conclusions. The Petrarchan form, with its octave and sestet, suits a problem and resolution structure: the octave builds tension through its enclosed ABBA rhymes, which feel circular and contained, and the sestet releases it with a more open pattern, mirroring the emotional movement from complication to clarity.</p>
+<p>Neither form is better in the abstract, and the history of the sonnet includes poets who mastered both, poets who blended them, and poets who invented variants, such as the Spenserian sonnet, which links its quatrains with interlocking rhymes ABAB BCBC CDCD EE, and the Miltonic sonnet, which carries the Petrarchan octave and sestet across the volta without a full stop, creating a single flowing sentence. Modern poets often keep the fourteen lines and the turn while loosening rhyme and metre, producing sonnets that are recognisably in the tradition while sounding contemporary. When checking such poems, the honest verdict is often variant or other fourteen-line form, and that verdict is information, not condemnation: it tells you which conventions the poet kept and which they set aside, and that knowledge deepens the reading.</p>
+<h2>Common sonnet mistakes</h2>
+<p>The most common mistake for new sonnet writers is miscounting lines, usually by writing twelve or sixteen lines because the thought needed more or less room, and then calling the result a sonnet anyway. The second is forcing rhymes, choosing a word for its sound rather than its sense, which produces lines that rhyme neatly and mean little, and which readers notice immediately. The third is neglecting the volta, so the poem describes beautifully for fourteen lines without ever turning, and ends with a whimper rather than a resolution. The fourth is padding lines to reach ten syllables with filler words, such as do, indeed, and very, which dilute the diction. The fifth is the opposite: cramming too much meaning into a line so the metre collapses and the line must be read twice to parse. Each mistake is fixable in revision, and the checker helps by making the structural facts visible before you revise the language.</p>
+<p>Rhyme scheme errors have their own patterns. A Shakespearean sonnet with the scheme ABAB CDCD EFEF GG must not repeat a rhyme across quatrains unless it is deliberate, because repeated rhymes blur the quatrain divisions, and the couplet must rhyme with itself, not with a previous quatrain, or the closing click is lost. A Petrarchan octave must rhyme ABBAABBA exactly, and a sestet that introduces too many new rhymes can feel scattered, which is why CDECDE, with only three rhyme sounds, is popular. Keep a rhyme inventory while drafting: list each rhyme sound and the lines that use it, and check that the pattern matches your intention, which is exactly the discipline the checker encourages by asking for the scheme as a string.</p>
+<h2>Reading sonnets well</h2>
+<p>To read a sonnet well, start with the structure and then move to the language. Count the lines, derive the rhyme scheme, find the volta, and only then ask what the poem says, because the structure frames the argument and the volta tells you where to look for the point. Read the poem aloud, listening for the pentameter pulse and for the places where it breaks, and notice how those breaks coincide with emotional peaks. Look at the couplet or the sestet as a response to what precedes it, and ask whether the ending resolves, complicates, or undercuts the opening, because that relationship is the poem's real subject. Finally, read the sonnet in sequence with others, since sonnets were often written as sequences, and a single sonnet's meaning deepens when its neighbours' arguments are in view.</p>
+<table><tr><th>Form</th><th>Structure</th><th>Rhyme scheme</th><th>Volta</th></tr>
+<tr><td>Shakespearean</td><td>3 quatrains + couplet</td><td>ABAB CDCD EFEF GG</td><td>Often at the couplet</td></tr>
+<tr><td>Petrarchan</td><td>Octave + sestet</td><td>ABBAABBA CDECDE</td><td>At line 9, start of sestet</td></tr>
+<tr><td>Spenserian</td><td>3 quatrains + couplet</td><td>ABAB BCBC CDCD EE</td><td>Often at the couplet</td></tr></table>
+<ul><li>A sonnet has exactly 14 lines; anything else is a different form.</li><li>Derive the rhyme scheme by labelling matching end sounds with letters.</li><li>Find the volta: the line where the argument turns.</li><li>Read aloud to hear the iambic pentameter and its meaningful variations.</li><li>A variant scheme is not a failure; name what the poet kept and changed.</li></ul>
+<p>Fourteen lines, a rhyme scheme, a pulse, and a turn: check those four things, and you will know whether the poem in front of you is a sonnet, which kind it is, and where its argument pivots, which is everything a reader needs to begin reading it well.</p>
+  </article>
+  <section class="faq-sec" aria-label="Frequently asked questions">
+    <h2>Frequently asked questions</h2>
+<details><summary>How many lines does a sonnet have?</summary><p>Exactly 14 lines. A poem with 12 or 16 lines may be beautiful, but it is not a sonnet, whatever its rhyme scheme.</p></details>
+<details><summary>What is the Shakespearean rhyme scheme?</summary><p>ABAB CDCD EFEF GG: three quatrains with alternating rhymes followed by a rhyming couplet that often delivers the poem's twist.</p></details>
+<details><summary>What is the Petrarchan rhyme scheme?</summary><p>An octave rhyming ABBAABBA followed by a sestet, commonly CDECDE or CDCDCD, with the turn falling between the two parts.</p></details>
+<details><summary>What is the volta in a sonnet?</summary><p>The volta is the turn where the poem's argument pivots, usually at line 9 in a Petrarchan sonnet or at the final couplet in a Shakespearean one.</p></details>
+<details><summary>What is iambic pentameter?</summary><p>Ten syllables per line in five iambic feet, each an unstressed syllable followed by a stressed one: da-DUM repeated five times.</p></details>
+<details><summary>Can a sonnet have a different rhyme scheme?</summary><p>Yes. Many modern sonnets keep 14 lines and a turn while varying rhyme or metre. SonnetCheck reports these as other 14-line forms rather than failures.</p></details>
+<details><summary>How do I work out a rhyme scheme?</summary><p>Label the first line's ending A, label later lines that rhyme with it A, label the first new ending B, and continue. The resulting letter string is the scheme.</p></details>
+<details><summary>What is a Spenserian sonnet?</summary><p>A variant with interlocking quatrains rhyming ABAB BCBC CDCD EE, where each quatrain's second rhyme becomes the next quatrain's first.</p></details>
+  </section>
+</main>
+<footer class="fx-footer">
+  <div class="fx-container">
+    <div class="fx-brand">SonnetCheck</div>
+    <p>SonnetCheck validates sonnet form, line count, and rhyme scheme for Shakespearean and Petrarchan poems.</p>
+    <nav aria-label="Footer">
+      <a href="https://fixoraa.tech">Home</a>
+      <a href="https://fixoraa.tech">More Tools</a>
+    </nav>
+    <p class="fx-credit">Made by <a href="https://fixoraa.tech">Fixoraa</a> &middot; Free forever, no signup.</p>
+  </div>
+</footer>
+<script>
+function checkSonnet(lines, scheme) {
+  var is14 = lines === 14;
+  var form = !is14 ? 'Not a sonnet (needs 14 lines)' : scheme === 'ABABCDCDEFEFGG' ? 'Shakespearean' : scheme === 'ABBAABBACDECDE' ? 'Petrarchan' : 'Other 14-line form';
+  return { lines: lines, is14: is14, form: form };
+}
+
+if (typeof document !== 'undefined') {
+  function showHist() {
+    try {
+      var h = JSON.parse(localStorage.getItem('fxhist-sonnetcheck') || '[]');
+      var el = document.getElementById('hist');
+      if (el && h.length) { el.textContent = 'Recent: ' + h.slice(-3).join('  |  '); }
+    } catch (e) {}
+  }
+  function saveHist(s) {
+    try {
+      var h = JSON.parse(localStorage.getItem('fxhist-sonnetcheck') || '[]');
+      h.push(s); if (h.length > 5) { h.shift(); }
+      localStorage.setItem('fxhist-sonnetcheck', JSON.stringify(h));
+    } catch (e) {}
+  }
+  var btn = document.getElementById('calcBtn');
+  if (btn) { btn.onclick = function () {
+
+        var text = document.getElementById('poem').value || '';
+        var lines = text.split('\n').filter(function (l) { return l.trim().length > 0; }).length;
+        var scheme = (document.getElementById('scheme').value || '').trim().toUpperCase();
+        var out = checkSonnet(lines, scheme);
+        var lo = document.getElementById('linesOut');
+        if (lo) { lo.textContent = 'Lines counted: ' + lines + (out.is14 ? '. A full sonnet length.' : '. A sonnet needs 14 lines.'); }
+        document.getElementById('res').innerHTML = '<b>' + out.form + '</b> &mdash; ' + lines + ' lines, rhyme scheme ' + (scheme || '(none given)') + '. ' + (out.is14 ? 'Line count is correct for a sonnet.' : 'Add or remove lines to reach 14.');
+        saveHist(lines + ' lines / ' + scheme + ' = ' + out.form);
+
+  }; }
+  var cp = document.getElementById('copyBtn');
+  if (cp) { cp.onclick = function () {
+    var el = document.getElementById('res');
+    if (!el) { return; }
+    try { if (typeof navigator !== 'undefined' && navigator.clipboard) { navigator.clipboard.writeText(el.textContent || ''); } } catch (e) {}
+  }; }
+  var ps = document.querySelectorAll('[data-preset]');
+  for (var i = 0; i < ps.length; i++) {
+    (function (b) {
+      b.onclick = function () {
+        var v = b.getAttribute('data-preset');
+        var parts = v.split(',');
+        for (var j = 0; j < parts.length; j++) {
+          var kv = parts[j].split(':');
+          var inp = document.getElementById(kv[0]);
+          if (inp) { inp.value = kv[1]; }
+        }
+        if (btn) { btn.click(); }
+      };
+    })(ps[i]);
+  }
+  showHist();
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+<link rel="preconnect" href="https://peacefulbicycle.com">
+<link rel="preconnect" href="https://www.highrevenueformat.com">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Journal Prompt Planner: Daily Prompts and Writing Targets</title>
+<meta name="description" content="Plan a journaling habit: pick a prompt number, minutes, and writing speed to get a word target and a prompt to start with.">
+<link rel="canonical" href="https://text.fixoraa.tech/journalprompt/">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Journal Prompt Planner: Daily Prompts and Writing Targets">
+<meta property="og:description" content="Plan a journaling habit: pick a prompt number, minutes, and writing speed to get a word target and a prompt to start with.">
+<meta property="og:url" content="https://text.fixoraa.tech/journalprompt/">
+<meta property="og:type" content="website">
+<script defer src="https://t.fixoraa.tech/track.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;600;700;800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "JournalPrompt",
+      "url": "https://text.fixoraa.tech/journalprompt/",
+      "applicationCategory": "Everyday",
+      "operatingSystem": "Web",
+      "description": "Plan a journaling habit: pick a prompt number, minutes, and writing speed to get a word target and a prompt to start with.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is a good journaling word target?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Two hundred words, about ten minutes of writing, is a good daily target. It captures a day's main event and feeling without demanding an essay."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I choose a journal prompt?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pick a number you have not used this week and let it set the direction: gratitude, review, feelings, decisions, or tomorrow's intentions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Should I edit while journaling?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Write without editing for the full minutes. Editing turns reflection into performance and slows the session to a crawl."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is handwriting or typing better for journaling?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Handwriting is slower and more reflective; typing is faster and searchable. Choose one method and keep it for a month so the ritual sticks."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What if I have nothing to write?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Start with the prompt's first sentence anyway. Writing generates thinking, and an uninspired start often becomes the most revealing entry."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Should I reread my journal?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Monthly, not daily. Patterns across weeks only become visible at that scale, and early entries are supposed to be clumsy."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+
+:root{
+  --bg:#F5F3FF; --surface:#FFFFFF; --accent:#6D28D9; --accent-ink:#FFFFFF;
+  --ink:#2E1065; --muted:#453E5C; --line:#DDD6FE;
+  --display:'Libre Baskerville',serif; --body:'Work Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.6;font-size:16px}
+.fx-container{max-width:72rem;margin:0 auto;padding-left:1rem;padding-right:1rem}
+@media(min-width:640px){.fx-container{padding-left:1.5rem;padding-right:1.5rem}}
+/* ad utilities (for the verbatim ad snippets) */
+.no-print{}
+.mx-auto{margin-left:auto;margin-right:auto}.max-w-6xl{max-width:72rem}
+.px-4{padding-left:1rem;padding-right:1rem}.pt-4{padding-top:1rem}.pb-4{padding-bottom:1rem}
+@media(min-width:640px){.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:scale-100{transform:scale(1)}}
+.text-center{text-align:center}.block{display:block}
+.text-\[10px\]{font-size:10px}.tracking-\[0\.18em\]{letter-spacing:.18em}.uppercase{text-transform:uppercase}
+.text-slate-400{color:#94a3b8}.mb-1\.5{margin-bottom:.375rem}
+.flex{display:flex}.justify-center{justify-content:center}.overflow-hidden{overflow:hidden}
+.origin-top{transform-origin:top}.scale-\[0\.44\]{transform:scale(.44)}.shrink-0{flex-shrink:0}
+/* header */
+.fx-header{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+.fx-header-in{display:flex;align-items:center;gap:.9rem;padding:.8rem 0;flex-wrap:wrap}
+.fx-logo{display:flex;align-items:center;gap:.65rem;text-decoration:none;color:var(--ink)}
+.fx-logo-tile{width:44px;height:44px;border-radius:14px;background:var(--accent);color:var(--accent-ink);
+  display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;flex-shrink:0;
+  box-shadow:0 4px 14px rgba(0,0,0,.12)}
+.fx-brand{font-family:var(--display);font-size:1.45rem;font-weight:700;letter-spacing:-.01em;line-height:1.1}
+.fx-nav{margin-left:auto;display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.fx-btn{display:inline-block;padding:.55rem 1.1rem;border-radius:999px;text-decoration:none;font-weight:600;font-size:.92rem;
+  border:2px solid var(--accent);color:var(--accent);background:transparent;transition:all .18s ease;min-height:44px;line-height:1.5}
+.fx-btn:hover{background:var(--accent);color:var(--accent-ink)}
+.fx-btn.solid{background:var(--accent);color:var(--accent-ink)}
+.fx-btn.solid:hover{filter:brightness(.94)}
+.fx-badge{display:inline-flex;align-items:center;gap:.35rem;font-size:.78rem;font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--accent);border:1.5px dashed var(--accent);border-radius:999px;padding:.3rem .8rem;white-space:nowrap}
+/* tool section */
+.tool-sec{padding:2.2rem 0 1rem}
+/* article */
+.article-sec{padding:2.5rem 0;max-width:46rem;margin:0 auto}
+.article-sec h2{font-family:var(--display);font-size:1.55rem;margin:2rem 0 .8rem;line-height:1.25;letter-spacing:-.01em}
+.article-sec h3{font-size:1.15rem;margin:1.5rem 0 .6rem}
+.article-sec p,.article-sec li{margin-bottom:.85rem;color:var(--ink)}
+.article-sec ul,.article-sec ol{padding-left:1.4rem;margin-bottom:1rem}
+.article-sec table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.95rem}
+.article-sec th,.article-sec td{border:1px solid var(--line);padding:.55rem .7rem;text-align:left}
+.article-sec th{background:var(--surface);font-weight:700}
+/* faq */
+.faq-sec{padding:1rem 0 3rem;max-width:46rem;margin:0 auto}
+.faq-sec h2{font-family:var(--display);font-size:1.55rem;margin-bottom:1.2rem}
+.faq-sec details{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-bottom:.7rem;overflow:hidden}
+.faq-sec summary{padding:1rem 1.2rem;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:1rem;min-height:44px}
+.faq-sec summary::-webkit-details-marker{display:none}
+.faq-sec summary::after{content:'+';font-size:1.4rem;color:var(--accent);flex-shrink:0}
+.faq-sec details[open] summary::after{content:'\2013'}
+.faq-sec details p{padding:0 1.2rem 1.1rem;color:var(--muted)}
+/* footer */
+.fx-footer{background:var(--surface);border-top:1px solid var(--line);padding:2.2rem 0;margin-top:1rem}
+.fx-footer .fx-brand{font-size:1.2rem}
+.fx-footer p{color:var(--muted);font-size:.95rem;max-width:44rem;margin:.5rem 0}
+.fx-footer nav{display:flex;gap:1.2rem;margin:1rem 0;flex-wrap:wrap}
+.fx-footer nav a{color:var(--accent);font-weight:600;text-decoration:none}
+.fx-footer nav a:hover{text-decoration:underline}
+.fx-credit{font-size:.9rem;color:var(--muted)}
+.fx-credit a{color:var(--accent);font-weight:700;text-decoration:none}
+@media(max-width:640px){.fx-brand{font-size:1.2rem}.tool-sec{padding:1.4rem 0 .6rem}}
+@media print{.no-print{display:none!important}}
+
+.tool-stack{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1.6rem;box-shadow:0 12px 30px rgba(0,0,0,.06)}
+.tool-stack h1{font-family:var(--display);font-size:1.8rem;line-height:1.15;margin-bottom:.5rem}
+.tool-stack .sub{color:var(--muted);margin-bottom:1.1rem}
+.fld{margin-bottom:.9rem}
+.fld label{display:block;font-weight:700;margin-bottom:.3rem}
+.fld input,.fld select{width:100%;padding:.7rem .85rem;border:1.5px solid var(--line);border-radius:12px;font-size:1rem;background:var(--surface);color:var(--ink);min-height:46px}
+.presets{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+.presets button{padding:.5rem 1rem;border-radius:999px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-weight:700;cursor:pointer;min-height:40px}
+.btn{background:var(--accent);color:var(--accent-ink);border:none;border-radius:999px;padding:.9rem 1.8rem;font-size:1rem;font-weight:800;cursor:pointer;min-height:48px}
+.btn2{background:transparent;color:var(--accent);border:1.5px solid var(--accent);border-radius:999px;padding:.6rem 1.2rem;font-weight:700;cursor:pointer;min-height:44px}
+.result{margin-top:1.1rem;background:var(--bg);border-left:5px solid var(--accent);border-radius:0 14px 14px 0;padding:1rem;font-size:1.05rem}
+.result b{font-size:1.25rem}
+.hist{margin-top:.8rem;color:var(--muted);font-size:.9rem}
+.note{margin-top:.8rem;color:var(--muted);font-size:.92rem}
+@media (max-width:640px){.tool-stack{padding:1rem}.tool-stack h1{font-size:1.45rem}}
+
+</style>
+</head>
+<body>
+<header class="fx-header">
+  <div class="fx-container fx-header-in">
+    <a class="fx-logo" href="https://fixoraa.tech" aria-label="JournalPrompt home">
+      <span class="fx-logo-tile" aria-hidden="true">📝</span>
+      <span class="fx-brand">JournalPrompt</span>
+    </a>
+    <nav class="fx-nav" aria-label="Site">
+      <a class="fx-btn" href="https://fixoraa.tech">Home</a>
+      <a class="fx-btn solid" href="https://fixoraa.tech">More Tools</a>
+      <span class="fx-badge" aria-label="Free forever">&#8734; Unlimited Free Usage</span>
+    </nav>
+  </div>
+</header>
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pt-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:728px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <div class="origin-top scale-[0.44] sm:scale-100 shrink-0">
+        <script>
+          atOptions = { 'key' : '4e68ac77881c17fe128a46565d9a4e8c', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+        </script>
+        <script src="https://www.highrevenueformat.com/4e68ac77881c17fe128a46565d9a4e8c/invoke.js"></script>
+      </div>
+    </div>
+  </div>
+</div>
+<main class="fx-container">
+  <section class="tool-sec tpl-journalprompt-inkwell" aria-label="JournalPrompt tool">
+<div class="tool-stack"><h1>Journal Prompt Planner</h1><p class="sub">Enter a prompt number, minutes, and words per minute to set your writing target.</p>
+<div class="presets"><button type="button" data-preset="prompt:7,minutes:10,wpm:20">Prompt 7, 10 min, 20 wpm</button><button type="button" data-preset="prompt:1,minutes:5,wpm:15">Prompt 1, 5 min, 15 wpm</button><button type="button" data-preset="prompt:12,minutes:15,wpm:25">Prompt 12, 15 min, 25 wpm</button></div>
+<div class="fld"><label for="prompt">Prompt number (1-30)</label><input id="prompt" type="number" value="7" min="0"></div>
+<div class="fld"><label for="minutes">Writing minutes</label><input id="minutes" type="number" value="10" min="0"></div>
+<div class="fld"><label for="wpm">Words per minute</label><input id="wpm" type="number" value="20" min="0"></div>
+<div><button class="btn" id="calcBtn" type="button">Set my journal target</button></div>
+<div class="result" id="res" aria-live="polite">Enter your numbers to see the result.</div>
+<p><button class="btn2" id="copyBtn" type="button">Copy result</button></p><p class="hist" id="hist"></p><p class="note">Write without editing for the full minutes; messy first drafts are the habit, polished pages are a bonus.</p></div>
+  </section>
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pb-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:300px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <script>
+      (function(grnp){
+      var d = document,
+          s = d.createElement('script'),
+          l = d.currentScript || d.scripts[d.scripts.length - 1];
+      s.settings = grnp || {};
+      s.src = "\/\/peacefulbicycle.com\/bnXtVJsnd.GElF0oYVWQcY\/Qe\/mf9qu-ZqUtlZk\/PzTHcx1LM\/jWIZwkMTj\/U\/t-NrzmUnyOMsj\/AzydO\/Qx";
+      s.async = true;
+      s.referrerPolicy = 'no-referrer-when-downgrade';
+      l.parentNode.insertBefore(s, l);
+      })({})
+      </script>
+    </div>
+  </div>
+</div>
+  <article class="article-sec" aria-label="Guide">
+<h2>Journaling works when the blank page disappears</h2>
+<p>Journaling fails for most people at the same place, the blank page, because sitting down with nothing but a vague intention to write about your day produces either a weather report or nothing at all, and both feel pointless enough to abandon by the third day. A prompt removes that obstacle by giving the first sentence a direction, such as what went well today, what you are avoiding, or what you would tell a friend in the same situation, and once the first sentence exists, the rest usually follows, because writing generates thinking rather than recording it. The planner on this page adds the second ingredient that prompts alone lack, a target, by turning minutes and writing speed into a word count, so a ten-minute session at twenty words per minute becomes a two-hundred-word goal, which is concrete, achievable, and satisfying to reach.</p>
+<p>Word targets work because they are honest about what journaling is: a timed practice, not a literary performance, and a modest target completed daily beats an ambitious target completed once. Two hundred words is roughly a short paragraph or two, enough to capture a day's main event, a feeling, and a decision, without demanding an essay, and the habit forms precisely because the bar is low enough to clear on a tired day. Speed matters less than people think, since handwriting runs slower than typing and thinking runs slower than both, so choose a speed that matches your method, fifteen words per minute for handwriting, twenty to twenty-five for typing, and let the target follow the method rather than forcing the method to match an impressive number.</p>
+<h2>How the writing target is calculated</h2>
+<p>The target is minutes multiplied by words per minute, and the prompt number simply selects which prompt you start with, from a rotating set of thirty, so prompt seven with ten minutes at twenty words per minute gives two hundred words, prompt one with five minutes at fifteen gives seventy-five, and prompt twelve with fifteen minutes at twenty-five gives three hundred and seventy-five. The simplicity is deliberate, because a journaling tool should disappear into the practice, and the only numbers that matter are the minutes you will protect and the words that will result. If the target feels too high, shorten the minutes rather than raising the speed, since calm writing produces better reflection than rushed writing, and reflection is the benefit being sought.</p>
+<p>Prompts work best when they rotate through a few types rather than repeating one formula: gratitude prompts, which name three good things, review prompts, which ask what worked and what did not, feeling prompts, which name the day's dominant emotion, decision prompts, which clarify a choice, and future prompts, which describe the day you want tomorrow. Rotating types prevents the journal from becoming a repetitive log and keeps it a thinking tool, and the prompt number in the planner is a simple way to enforce rotation, by picking a number you have not used this week and letting it choose the direction. Over months, the variety produces a record that is genuinely interesting to reread, which is the reward that sustains the habit.</p>
+<h2>Building a journaling habit that lasts</h2>
+<p>Attach journaling to an existing anchor, such as morning coffee, the end of the workday, or the wind-down before bed, and keep the materials ready, a notebook open on the desk or a document already open on the computer, because friction at the start is where habits die. Write by hand if you want slower, more reflective thinking, or type if you want speed and searchability, and do not switch methods mid-month, since the habit includes the ritual of the method. Protect the minutes fiercely at first, even five minutes, and treat the session as complete when the minutes end, regardless of word count, because a completed short session builds the habit while an abandoned long session breaks it.</p>
+<p>Privacy is part of the practice, and it deserves a decision rather than an accident: a journal that might be read is a journal that gets censored, so keep it somewhere private, whether a locked drawer, a password-protected file, or simply a notebook nobody opens, and write as if nobody will ever read it, because honesty is the mechanism by which journaling helps. Rereading is optional and powerful, monthly rather than daily, since patterns across weeks, recurring worries, repeated wins, and slow changes, only become visible at that scale, and a monthly reread turns the journal from a diary into a mirror.</p>
+<h2>Worked example and common mistakes</h2>
+<p>Take prompt seven, ten minutes, and twenty words per minute. The target is two hundred words, enough for a paragraph about the day's main event, a sentence about how it felt, and a line about tomorrow, written without editing and finished when the minutes end. Compare that with an unplanned intention to journal someday, which produces zero words and a vague sense of failure, and the value of the plan is obvious: a small target, a chosen prompt, and protected minutes together produce a habit, while good intentions alone produce nothing.</p>
+<p>The most common journaling mistake is editing while writing, which turns reflection into performance and slows the session to a crawl, so write first and edit never, or at least not during the session. Another mistake is setting a huge word target that fails on busy days, when a small target would have kept the habit alive. A third mistake is writing only when inspired, which means writing rarely, instead of writing on schedule, which means writing through uninspired days that often turn out to be the most revealing. A fourth mistake is rereading too soon and judging early entries, when early entries are supposed to be clumsy.</p>
+<h2>A simple journaling checklist</h2>
+<table><tr><th>Prompt</th><th>Minutes</th><th>Words/min</th><th>Word target</th></tr><tr><td>7</td><td>10</td><td>20</td><td>200</td></tr><tr><td>1</td><td>5</td><td>15</td><td>75</td></tr><tr><td>12</td><td>15</td><td>25</td><td>375</td></tr><tr><td>3</td><td>10</td><td>15</td><td>150</td></tr><tr><td>20</td><td>20</td><td>20</td><td>400</td></tr></table>
+<h3>Checklist</h3>
+<ul><li>Pick a prompt before you sit down; never face a blank page.</li><li>Set a small word target you can hit on tired days.</li><li>Write without editing for the full minutes.</li><li>Anchor journaling to coffee, work end, or bedtime wind-down.</li><li>Keep the journal private and reread monthly, not daily.</li></ul>
+<p>How this planner works: enter a prompt number, minutes, and words per minute, and it calculates your word target instantly, so you can test different combinations before committing to a routine. Try the presets for a quick start, then adjust one number at a time to see how the answer moves, because the sensitivity of the result matters as much as the result itself. For example, prompt 7 with 10 minutes at 20 words per minute gives a target of 200 words, and changing any single input shows whether the plan is robust or fragile. Use that comparison to choose a routine with a little slack in it, rather than one that only works when every number is exactly right, and save or copy the result so the agreed target is visible. Revisit the numbers once real writing settles, because a target updated with real data stays useful, while one frozen at the first estimate slowly stops matching reality.</p>
+<h2>Prompts for difficult days</h2>
+<p>Journaling is most valuable on difficult days and hardest on exactly those days, which is why prompt choice matters more when life is hard than when it is easy. On a bad day, avoid prompts that demand positivity or solutions, and choose instead prompts that allow honesty, such as what happened today, what feels heaviest right now, or what would help even a little, since a journal that only accepts good news stops being a thinking tool and becomes a performance. Writing about difficulties in a structured way, describing what happened, how it felt, and what might come next, helps many people process events rather than ruminate on them, though it can stir strong feelings, and if writing regularly leaves you distressed, pause and seek support rather than pushing through. Prompts about decisions are particularly useful under stress, because writing clarifies options that feel tangled when held only in the mind, and a short written list of choices, costs, and next steps often reveals that a situation has more room than it seemed to. Keep the session short on hard days, five minutes and a single prompt, since a short honest entry maintains the habit and the habit maintains the tool for better days.</p>
+  </article>
+  <section class="faq-sec" aria-label="Frequently asked questions">
+    <h2>Frequently asked questions</h2>
+<details><summary>What is a good journaling word target?</summary><p>Two hundred words, about ten minutes of writing, is a good daily target. It captures a day's main event and feeling without demanding an essay.</p></details>
+<details><summary>How do I choose a journal prompt?</summary><p>Pick a number you have not used this week and let it set the direction: gratitude, review, feelings, decisions, or tomorrow's intentions.</p></details>
+<details><summary>Should I edit while journaling?</summary><p>No. Write without editing for the full minutes. Editing turns reflection into performance and slows the session to a crawl.</p></details>
+<details><summary>Is handwriting or typing better for journaling?</summary><p>Handwriting is slower and more reflective; typing is faster and searchable. Choose one method and keep it for a month so the ritual sticks.</p></details>
+<details><summary>What if I have nothing to write?</summary><p>Start with the prompt's first sentence anyway. Writing generates thinking, and an uninspired start often becomes the most revealing entry.</p></details>
+<details><summary>Should I reread my journal?</summary><p>Monthly, not daily. Patterns across weeks only become visible at that scale, and early entries are supposed to be clumsy.</p></details>
+  </section>
+</main>
+<footer class="fx-footer">
+  <div class="fx-container">
+    <div class="fx-brand">JournalPrompt</div>
+    <p>JournalPrompt turns minutes and writing speed into a word target with a prompt number.</p>
+    <nav aria-label="Footer">
+      <a href="https://fixoraa.tech">Home</a>
+      <a href="https://fixoraa.tech">More Tools</a>
+    </nav>
+    <p class="fx-credit">Made by <a href="https://fixoraa.tech">Fixoraa</a> &middot; Free forever, no signup.</p>
+  </div>
+</footer>
+<script>
+
+function calcJournalPrompt(prompt, minutes, wpm) {
+  var targetWords = minutes * wpm; return { targetWords: targetWords, promptNo: prompt };
+}
+
+if (typeof document !== 'undefined') {
+  function showHist() { try { var h = JSON.parse(localStorage.getItem('fxhist') || '[]'); var el = document.getElementById('hist'); if (el && h.length) { el.textContent = 'Recent: ' + h.slice(-3).join('  |  '); } } catch (e) {} }
+  function saveHist(s) { try { var h = JSON.parse(localStorage.getItem('fxhist') || '[]'); h.push(s); if (h.length > 5) { h.shift(); } localStorage.setItem('fxhist', JSON.stringify(h)); } catch (e) {} }
+  var btn = document.getElementById('calcBtn');
+  if (btn) { btn.onclick = function () {
+    var vals = [];
+    var bad = false;
+    var IDS = ["prompt","minutes","wpm"];
+    for (var k = 0; k < IDS.length; k++) { var v = parseFloat(document.getElementById(IDS[k]).value); if (isNaN(v) || v < 0) { bad = true; } vals.push(v || 0); }
+    if (bad) { document.getElementById('res').textContent = 'Please enter valid numbers (zero is allowed only where it makes sense), then try again.'; return; }
+    var r = calcJournalPrompt.apply(null, vals);
+    document.getElementById('res').innerHTML = '<b>' + r.targetWords + ' words</b> — start with prompt ' + r.promptNo + ' and write without stopping.';
+    saveHist(document.getElementById('res').textContent.slice(0, 80));
+    showHist();
+  }; }
+  var cp = document.getElementById('copyBtn');
+  if (cp) { cp.onclick = function () { try { if (navigator.clipboard) { navigator.clipboard.writeText(document.getElementById('res').textContent || ''); } } catch (e) {} }; }
+  var ps = document.querySelectorAll('[data-preset]');
+  for (var i = 0; i < ps.length; i++) { (function (b) { b.onclick = function () { var v = b.getAttribute('data-preset'); var parts = v.split(','); for (var j = 0; j < parts.length; j++) { var kv = parts[j].split(':'); var inp = document.getElementById(kv[0]); if (inp) { inp.value = kv[1]; } } if (btn) { btn.click(); } }; })(ps[i]); }
+  showHist();
+}
+
+</script>
+</body>
+</html>
